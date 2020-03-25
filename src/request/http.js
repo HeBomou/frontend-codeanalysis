@@ -35,3 +35,17 @@ export function post(url, params) {
         })
     });
 }
+
+export function del(url, params) {
+    return new Promise((resolve, reject) => {
+        axios.delete('/delete', {	
+            params: {	// 请求参数拼接在url上
+              id: 12
+            }
+          }).then(res => {
+            console.log(res)
+          })
+    }
+
+    );
+}
