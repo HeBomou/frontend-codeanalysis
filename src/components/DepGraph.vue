@@ -3,13 +3,15 @@
 </template>
 
 <script>
+import cytoscape from "cytoscape";
+
 export default {
   mounted() {
     this.initGraph();
   },
   methods: {
     initGraph() {
-      var cy = this.$cytoscape({
+      var cy = cytoscape({
         container: document.getElementById("cy"),
         // layout: {
         //   name: "grid",
@@ -82,7 +84,7 @@ export default {
               opacity: 0
             }
           }
-        ],
+        ]
         // elements: {
         //   nodes: this.nodes,
         //   edges: this.edges
@@ -94,7 +96,7 @@ export default {
       cy.edges().on("click", evt => {
         console.log("Click on Edge ", evt);
       });
-      cy.add(this.nodes)
+      cy.add(this.nodes);
       cy.add(this.edges);
     }
   },
