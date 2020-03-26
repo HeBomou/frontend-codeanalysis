@@ -1,0 +1,144 @@
+<template>
+  <div id="cy" style="width: 100%;height: 100%"></div>
+</template>
+
+<script>
+export default {
+  mounted() {
+    this.initGraph();
+  },
+  methods: {
+    initGraph() {
+      var cy = this.$cytoscape({
+        container: document.getElementById("cy"),
+        // layout: {
+        //   name: "grid",
+        //   rows: 2,
+        //   cols: 2
+        // },
+        style: [
+          {
+            selector: "node",
+            style: {
+              content: "data(name)",
+              "background-color": "magenta",
+              "background-image": "url(img/shixian.png)"
+            }
+          },
+          {
+            selector: "edge",
+            style: {
+              content: "data(relationship)",
+              "curve-style": "bezier",
+              "target-arrow-shape": "triangle",
+              color: "red"
+            }
+          },
+          // some style for the extension
+          {
+            selector: ".eh-handle",
+            style: {
+              "background-color": "red",
+              width: 12,
+              height: 12,
+              shape: "ellipse",
+              "overlay-opacity": 0,
+              "border-width": 12, // makes the handle easier to hit
+              "border-opacity": 0
+            }
+          },
+          {
+            selector: ".eh-hover",
+            style: {
+              "background-color": "red"
+            }
+          },
+          {
+            selector: ".eh-source",
+            style: {
+              "border-width": 2,
+              "border-color": "red"
+            }
+          },
+          {
+            selector: ".eh-target",
+            style: {
+              "border-width": 2,
+              "border-color": "red"
+            }
+          },
+          {
+            selector: ".eh-preview, .eh-ghost-edge",
+            style: {
+              "background-color": "red",
+              "line-color": "red",
+              "target-arrow-color": "red",
+              "source-arrow-color": "red"
+            }
+          },
+          {
+            selector: ".eh-ghost-edge.eh-preview-active",
+            style: {
+              opacity: 0
+            }
+          }
+        ],
+        // elements: {
+        //   nodes: this.nodes,
+        //   edges: this.edges
+        // }
+      });
+      cy.nodes().on("click", evt => {
+        console.log("Click on vertex ", evt);
+      });
+      cy.edges().on("click", evt => {
+        console.log("Click on Edge ", evt);
+      });
+      cy.add(this.nodes)
+      cy.add(this.edges);
+    }
+  },
+  props: {
+    graphData: Object
+  },
+  data() {
+    return {};
+  },
+  computed: {
+    nodes() {
+      let res = [];
+      this.graphData.vertices.forEach(v => {
+        res.push({
+          group: "nodes",
+          data: {
+            id: v.id,
+            name: v.functionName
+          },
+          position: {
+            x: 500,
+            y: Math.random() * 500
+          }
+        });
+      });
+      return res;
+    },
+    edges() {
+      let res = [];
+      this.graphData.edges.forEach(e => {
+        res.push({
+          group: "edges",
+          data: {
+            source: e.fromId,
+            target: e.toId,
+            relationship: e.closeness
+          }
+        });
+      });
+      return res;
+    }
+  }
+};
+</script>
+
+<style lang="sass">
+</style>
