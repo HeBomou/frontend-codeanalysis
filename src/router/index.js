@@ -5,26 +5,27 @@ import HelloWorld from '@/components/HelloWorld'
 Vue.use(Router)
 
 export default new Router({
+  mode: 'history',
   routes: [
     {
       path: '/',
       name: 'HelloWorld',
       component: HelloWorld
     }, {
-        path: '/login',
-        name: 'Login', 
-        component: () => import("@/views/login.vue"),
-        meta:{
-            title:"登陆",
-            keepAlive: true
-        }
+      path: '/login',
+      name: 'Login',
+      component: () => import("@/views/login.vue"),
+      meta: {
+        title: "登陆",
+        keepAlive: true
+      }
     }, {
       path: '/404',
       name: 'faid',
       component: () => import('@/views/404.vue'),
-      meta:{
-          title:"404",
-          keepAlive: true
+      meta: {
+        title: "404",
+        keepAlive: true
       }
     }, {
       path: '*',
