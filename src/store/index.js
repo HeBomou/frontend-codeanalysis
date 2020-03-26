@@ -21,13 +21,18 @@ export default new Vuex.Store({
     }
   },
   mutations: {
+    moveVertex(state, p) {
+      var v = state.project.vertexMap.get(p.id)
+      v.x = p.x
+      v.y = p.y
+    }
   },
   actions: {
   },
   modules: {
   },
   getters: {
-    projectDynamicVo: state => {
+    projectDynamicVo(state) {
       return {
         id: state.project.id,
         projectName: state.project.projectName,

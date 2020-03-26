@@ -3,14 +3,16 @@
 </template>
 
 <script>
-import cytoscape from "cytoscape"
+import cytoscape from "cytoscape";
 
 export default {
   mounted() {
-    this.initGraph()
+    this.initGraph();
   },
   methods: {
     initGraph() {
+      var nodes = this.nodes;
+      var edges = this.edges;
       var cy = cytoscape({
         container: document.getElementById("cy"),
         // layout: {
@@ -86,22 +88,33 @@ export default {
           }
         ]
         // elements: {
-        //   nodes: this.nodes,
-        //   edges: this.edges
+        //   nodes: nodes,
+        //   edges: edges
         // }
-      })
-      cy.nodes().on("click", evt => {
-        console.log("Click on vertex ", evt)
-      })
-      cy.edges().on("click", evt => {
-        console.log("Click on Edge ", evt)
-      })
-      cy.add(this.nodes)
-      cy.add(this.edges)
+      });
+      cy.add(nodes);
+      cy.add(edges);
+      cy.nodes().on("select", evt => {
+        console.log(
+          "Select on vertex",
+          evt.target._private.data.id.substring(1)
+        );
+      });
+      cy.nodes().on("dragfree", evt => {
+        let node = evt.target._private;
+        this.$store.commit("moveVertex", {
+          id: parseInt(node.data.id.substring(1)),
+          x: node.position.x,
+          y: node.position.y
+        });
+      });
+      cy.edges().on("select", evt => {
+        console.log("Select on Edge", evt.target._private.data.id.substring(1));
+      });
     }
   },
   data() {
-    return {}
+    return {};
   },
   computed: {
     nodes() {
@@ -109,30 +122,31 @@ export default {
         return {
           group: "nodes",
           data: {
-            id: v.id,
+            id: "n" + v.id,
             name: v.functionName
           },
           position: {
-            x: 500,
-            y: Math.random() * 500
+            x: v.x,
+            y: v.y
           }
-        }
-      })
+        };
+      });
     },
     edges() {
       return this.$store.getters.edges.map(e => {
         return {
           group: "edges",
           data: {
-            source: e.fromId,
-            target: e.toId,
+            id: "e" + e.id,
+            source: "n" + e.fromId,
+            target: "n" + e.toId,
             relationship: e.closeness
           }
-        }
-      })
+        };
+      });
     }
   }
-}
+};
 </script>
 
 <style lang="sass">
