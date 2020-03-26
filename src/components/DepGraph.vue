@@ -95,10 +95,10 @@ export default {
       cy.add(nodes);
       cy.add(edges);
       cy.nodes().on("select", evt => {
-        console.log(
-          "Select on vertex",
-          evt.target._private.data.id.substring(1)
-        );
+        this.$emit("vertexSelected", parseInt(evt.target._private.data.id.substring(1)))
+      });
+      cy.edges().on("select", evt => {
+        this.$emit("edgeSelected", parseInt(evt.target._private.data.id.substring(1)))
       });
       cy.nodes().on("dragfree", evt => {
         let node = evt.target._private;
@@ -107,9 +107,6 @@ export default {
           x: node.position.x,
           y: node.position.y
         });
-      });
-      cy.edges().on("select", evt => {
-        console.log("Select on Edge", evt.target._private.data.id.substring(1));
       });
     }
   },

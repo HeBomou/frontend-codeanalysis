@@ -1,6 +1,6 @@
 <template>
   <div style="width: 100%; height: 100%;">
-    <DepGraph></DepGraph>
+    <DepGraph @vertexSelected="cnmdVertex" @edgeSelected="cnmdEdge"></DepGraph>
   </div>
 </template>
 <script>
@@ -10,8 +10,15 @@ export default {
     DepGraph
   },
   data() {
-    return {
+    return {};
+  },
+  methods: {
+    cnmdVertex(id) {
+      console.log("Select on vertex", id);
+    },
+    cnmdEdge(id) {
+      console.log("Select on edge", id);
     }
   }
-}
+};
 </script>
