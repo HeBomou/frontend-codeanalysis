@@ -18,6 +18,17 @@ export default new Router({
             title:"登陆",
             keepAlive: true
         }
+    }, {
+      path: '/404',
+      name: 'faid',
+      component: () => import('@/views/404.vue'),
+      meta:{
+          title:"404",
+          keepAlive: true
+      }
+    }, {
+      path: '*',
+      redirect: "/404"
     }
   ]
 })
