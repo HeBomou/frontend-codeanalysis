@@ -3,11 +3,11 @@
 </template>
 
 <script>
-import cytoscape from "cytoscape";
+import cytoscape from "cytoscape"
 
 export default {
   mounted() {
-    this.initGraph();
+    this.initGraph()
   },
   methods: {
     initGraph() {
@@ -89,28 +89,24 @@ export default {
         //   nodes: this.nodes,
         //   edges: this.edges
         // }
-      });
+      })
       cy.nodes().on("click", evt => {
-        console.log("Click on vertex ", evt);
-      });
+        console.log("Click on vertex ", evt)
+      })
       cy.edges().on("click", evt => {
-        console.log("Click on Edge ", evt);
-      });
-      cy.add(this.nodes);
-      cy.add(this.edges);
+        console.log("Click on Edge ", evt)
+      })
+      cy.add(this.nodes)
+      cy.add(this.edges)
     }
   },
-  props: {
-    graphData: Object
-  },
   data() {
-    return {};
+    return {}
   },
   computed: {
     nodes() {
-      let res = [];
-      this.graphData.vertices.forEach(v => {
-        res.push({
+      return this.$store.getters.vertices.map(v => {
+        return {
           group: "nodes",
           data: {
             id: v.id,
@@ -120,26 +116,23 @@ export default {
             x: 500,
             y: Math.random() * 500
           }
-        });
-      });
-      return res;
+        }
+      })
     },
     edges() {
-      let res = [];
-      this.graphData.edges.forEach(e => {
-        res.push({
+      return this.$store.getters.edges.map(e => {
+        return {
           group: "edges",
           data: {
             source: e.fromId,
             target: e.toId,
             relationship: e.closeness
           }
-        });
-      });
-      return res;
+        }
+      })
     }
   }
-};
+}
 </script>
 
 <style lang="sass">
