@@ -1,66 +1,53 @@
 <template>
-  <v-container>
-    <h1>
-      haha
-    </h1>
-  </v-container>
+  <div>
+        <!--    <v-parallax src="https://cdn.vuetifyjs.com/images/parallax/material.jpg" height="100%">-->
+    <v-carousel
+                cycle
+                :height="screenHeight"
+                hide-delimiter-background
+                show-arrows-on-hover
+                fluid
+    >
+      <v-carousel-item
+                    v-for="(item,i) in imageUrls"
+                    :key="i"
+                    :src="item.src">
+        <v-overlay absolute
+                           opacity="0.8"
+        >
+        </v-overlay>
+      </v-carousel-item>
+    </v-carousel>
+  </div>
 </template>
 
 <script>
   export default {
-    name: 'HelloWorld',
+    name: 'Login',
+    computed: {
+      screenHeight() {
+        return document.documentElement.clientHeight;
+      }
+    },
 
     data: () => ({
-      ecosystem: [
+      imageUrls: [
         {
-          text: 'vuetify-loader',
-          href: 'https://github.com/vuetifyjs/vuetify-loader',
+            src: require("@/assets/images/login/1.jpg"),
         },
         {
-          text: 'github',
-          href: 'https://github.com/vuetifyjs/vuetify',
+            src: require("@/assets/images/login/2.jpg"),
         },
         {
-          text: 'awesome-vuetify',
-          href: 'https://github.com/vuetifyjs/awesome-vuetify',
-        },
-      ],
-      importantLinks: [
-        {
-          text: 'Documentation',
-          href: 'https://vuetifyjs.com',
+            src: require("@/assets/images/login/3.jpg"),
         },
         {
-          text: 'Chat',
-          href: 'https://community.vuetifyjs.com',
+            src: require("@/assets/images/login/4.jpg"),
         },
         {
-          text: 'Made with Vuetify',
-          href: 'https://madewithvuejs.com/vuetify',
-        },
-        {
-          text: 'Twitter',
-          href: 'https://twitter.com/vuetifyjs',
-        },
-        {
-          text: 'Articles',
-          href: 'https://medium.com/vuetify',
-        },
-      ],
-      whatsNext: [
-        {
-          text: 'Explore components',
-          href: 'https://vuetifyjs.com/components/api-explorer',
-        },
-        {
-          text: 'Select a layout',
-          href: 'https://vuetifyjs.com/layout/pre-defined',
-        },
-        {
-          text: 'Frequently Asked Questions',
-          href: 'https://vuetifyjs.com/getting-started/frequently-asked-questions',
-        },
-      ],
+            src: require("@/assets/images/login/5.jpg"),
+        }
+    ],
     }),
   }
 </script>
