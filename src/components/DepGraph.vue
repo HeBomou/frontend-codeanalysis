@@ -4,6 +4,7 @@
 
 <script>
 import cytoscape from "cytoscape";
+import { mapGetters } from "vuex";
 
 export default {
   mounted() {
@@ -82,54 +83,41 @@ export default {
   },
   methods: {
     refreshGraph() {
-      let e = this.elements;
+      let e = this.getElements();
       this.cy.nodes().remove();
       this.cy.edges().remove();
       this.cy.add(e.nodes);
       this.cy.add(e.edges);
-    this.cy.nodes().on("select", evt => {
-      this.$emit(
-        "vertexSelected",
-        parseInt(evt.target._private.data.id.substring(1))
-      );
-      this.$emit(
-        "connectiveDomainSelected",
-        evt.target._private.data.connectiveDomainId
-      );
-    });
-    this.cy.edges().on("select", evt => {
-      this.$emit(
-        "edgeSelected",
-        parseInt(evt.target._private.data.id.substring(1))
-      );
-      this.$emit(
-        "connectiveDomainSelected",
-        evt.target._private.data.connectiveDomainId
-      );
-    });
-    this.cy.nodes().on("dragfree", evt => {
-      let node = evt.target._private;
-      this.$store.commit("moveVertex", {
-        id: parseInt(node.data.id.substring(1)),
-        x: node.position.x,
-        y: node.position.y
+      this.cy.nodes().on("select", evt => {
+        this.$emit(
+          "vertexSelected",
+          parseInt(evt.target._private.data.id.substring(1))
+        );
+        this.$emit(
+          "connectiveDomainSelected",
+          evt.target._private.data.connectiveDomainId
+        );
       });
-    });
-    }
-  },
-  props: {
-    subgraphId: Number
-  },
-  data() {
-    return {};
-  },
-  watch: {
-    subgraphId() {
-      this.refreshGraph();
-    }
-  },
-  computed: {
-    elements() {
+      this.cy.edges().on("select", evt => {
+        this.$emit(
+          "edgeSelected",
+          parseInt(evt.target._private.data.id.substring(1))
+        );
+        this.$emit(
+          "connectiveDomainSelected",
+          evt.target._private.data.connectiveDomainId
+        );
+      });
+      this.cy.nodes().on("dragfree", evt => {
+        let node = evt.target._private;
+        this.$store.commit("moveVertex", {
+          id: parseInt(node.data.id.substring(1)),
+          x: node.position.x,
+          y: node.position.y
+        });
+      });
+    },
+    getElements() {
       if (this.subgraphId == undefined) return { nodes: [], edges: [] };
       let subgraph = this.$store.state.project.subgraphMap.get(this.subgraphId);
       let vMap = this.$store.state.project.vertexMap;
@@ -185,6 +173,23 @@ export default {
         edges: [...edgeMap.values()]
       };
     }
+  },
+  props: {
+    subgraphId: Number
+  },
+  data() {
+    return {};
+  },
+  watch: {
+    subgraphId() {
+      this.refreshGraph();
+    },
+    connectiveDomainMapColorChangeTracker() {
+      this.refreshGraph();
+    }
+  },
+  computed: {
+    ...mapGetters(["connectiveDomainMapColorChangeTracker"])
   }
 };
 </script>
