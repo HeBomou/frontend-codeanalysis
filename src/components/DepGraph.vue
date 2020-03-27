@@ -11,25 +11,21 @@ export default {
   },
   methods: {
     initGraph() {
-      let nodes = this.nodes;
-      let edges = this.edges;
+      let e = this.elements;
       // TODO: 初始化点的位置可以把锅扔给后端，或者前端加一个重新布局的按钮
-      let init = !nodes.some(node => {
+      let init = !e.nodes.some(node => {
         return node.position.x != 0 && node.position.y != 0;
       });
-      let elements = init ? { nodes, edges } : { nodes: [], edges: [] };
+      let elements = init ? e : { nodes: [], edges: [] };
       let cy = cytoscape({
         container: document.getElementById("cy"),
-        // layout: {
-        //   name: "grid",
-        //   rows: 2,
-        //   cols: 2
-        // },
+        // layout: { name: "grid", rows: 2, cols: 2 },
         style: [
           {
             selector: "node",
             style: {
-              content: "data(name)"
+              content: "data(name)",
+              "background-color": "data(color)"
             }
           },
           {
@@ -37,8 +33,9 @@ export default {
             style: {
               content: "data(relationship)",
               "curve-style": "bezier",
-              "target-arrow-shape": "triangle",
-              color: "red"
+              "line-color": "data(color)",
+              "target-arrow-color": "data(color)",
+              "target-arrow-shape": "triangle"
             }
           },
           // some style for the extension
@@ -93,8 +90,8 @@ export default {
         elements
       });
       if (!init) {
-        cy.add(nodes);
-        cy.add(edges);
+        cy.add(e.nodes);
+        cy.add(e.edges);
       }
       cy.nodes().on("select", evt => {
         this.$emit(
@@ -122,34 +119,83 @@ export default {
     return {};
   },
   computed: {
-    nodes() {
-      return this.$store.getters.vertices.map(v => {
-        return {
+    elements() {
+      let vMap = this.$store.state.project.vertexMap;
+      let eMap = this.$store.state.project.edgeMap;
+      let dMap = this.$store.state.project.connectiveDomainMap;
+      let subgraph = this.$store.state.project.subgraphMap.get(2);
+
+      let nodeMap = new Map();
+      vMap.forEach((v, k) => {
+        nodeMap.set(k, {
           group: "nodes",
           data: {
             id: "n" + v.id,
-            name: v.functionName
+            name: v.functionName,
+            color: "#999999"
           },
           position: {
             x: v.x,
             y: v.y
           }
-        };
+        });
       });
-    },
-    edges() {
-      return this.$store.getters.edges.map(e => {
-        return {
+      let edgeMap = new Map();
+      eMap.forEach((e, k) => {
+        edgeMap.set(k, {
           group: "edges",
           data: {
             id: "e" + e.id,
             source: "n" + e.fromId,
             target: "n" + e.toId,
-            relationship: e.closeness
+            relationship: e.closeness,
+            color: "#999999"
           }
-        };
+        });
       });
+
+      // 着色
+      subgraph.connectiveDomainIds.forEach(id => {
+        let domain = dMap.get(id);
+        domain.vertexIds.forEach(id => {
+          nodeMap.get(id).data.color = domain.color;
+        });
+        domain.edgeIds.forEach(id => {
+          edgeMap.get(id).data.color = domain.color;
+        });
+      });
+
+      return {
+        nodes: [...nodeMap.values()],
+        edges: [...edgeMap.values()]
+      };
+      // return this.$store.getters.vertices.map(v => {
+      //   return {
+      //     group: "nodes",
+      //     data: {
+      //       id: "n" + v.id,
+      //       name: v.functionName
+      //     },
+      //     position: {
+      //       x: v.x,
+      //       y: v.y
+      //     }
+      //   };
+      // });
     }
+    // edges() {
+    //   return this.$store.getters.edges.map(e => {
+    //     return {
+    //       group: "edges",
+    //       data: {
+    //         id: "e" + e.id,
+    //         source: "n" + e.fromId,
+    //         target: "n" + e.toId,
+    //         relationship: e.closeness
+    //       }
+    //     };
+    //   });
+    // }
   }
 };
 </script>
