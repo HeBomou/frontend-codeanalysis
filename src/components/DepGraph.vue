@@ -78,6 +78,15 @@ export default {
         }
       ]
     });
+    this.refreshGraph();
+  },
+  methods: {
+    refreshGraph() {
+      let e = this.elements;
+      this.cy.nodes().remove();
+      this.cy.edges().remove();
+      this.cy.add(e.nodes);
+      this.cy.add(e.edges);
     this.cy.nodes().on("select", evt => {
       this.$emit(
         "vertexSelected",
@@ -106,15 +115,6 @@ export default {
         y: node.position.y
       });
     });
-    this.refreshGraph();
-  },
-  methods: {
-    refreshGraph() {
-      let e = this.elements;
-      this.cy.nodes().remove();
-      this.cy.edges().remove();
-      this.cy.add(e.nodes);
-      this.cy.add(e.edges);
     }
   },
   props: {
