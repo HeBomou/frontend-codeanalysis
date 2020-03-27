@@ -1,6 +1,6 @@
 <template>
   <div style="width: 100%; height: 100%;">
-    <DepGraph @vertexSelected="cnmdVertex" @edgeSelected="cnmdEdge"></DepGraph>
+    <DepGraph @vertexSelected="cnmdVertex" @edgeSelected="cnmdEdge" @connectiveDomainSelected="cnmdConnectiveDomain"></DepGraph>
   </div>
 </template>
 <script>
@@ -18,6 +18,9 @@ export default {
     },
     cnmdEdge(id) {
       console.log("Select on edge", id);
+    },
+    cnmdConnectiveDomain(id) {
+      console.log("select on connective domain", id);
     }
   }
 };

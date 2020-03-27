@@ -7,10 +7,10 @@ import cytoscape from "cytoscape";
 
 export default {
   mounted() {
-    this.initGraph();
+    this.refreshGraph();
   },
   methods: {
-    initGraph() {
+    refreshGraph() {
       let e = this.elements;
       // TODO: 初始化点的位置可以把锅扔给后端，或者前端加一个重新布局的按钮
       let init = !e.nodes.some(node => {
@@ -98,11 +98,19 @@ export default {
           "vertexSelected",
           parseInt(evt.target._private.data.id.substring(1))
         );
+        this.$emit(
+          "connectiveDomainSelected",
+          evt.target._private.data.connectiveDomainId
+        );
       });
       cy.edges().on("select", evt => {
         this.$emit(
           "edgeSelected",
           parseInt(evt.target._private.data.id.substring(1))
+        );
+        this.$emit(
+          "connectiveDomainSelected",
+          evt.target._private.data.connectiveDomainId
         );
       });
       cy.nodes().on("dragfree", evt => {
@@ -154,14 +162,18 @@ export default {
         });
       });
 
-      // 着色
+      // 着色与指定联通域
       subgraph.connectiveDomainIds.forEach(id => {
         let domain = dMap.get(id);
         domain.vertexIds.forEach(id => {
-          nodeMap.get(id).data.color = domain.color;
+          let node = nodeMap.get(id);
+          node.data.color = domain.color;
+          node.data.connectiveDomainId = domain.id;
         });
         domain.edgeIds.forEach(id => {
-          edgeMap.get(id).data.color = domain.color;
+          let edge = edgeMap.get(id);
+          edge.data.color = domain.color;
+          edge.data.connectiveDomainId = domain.id;
         });
       });
 
@@ -169,33 +181,7 @@ export default {
         nodes: [...nodeMap.values()],
         edges: [...edgeMap.values()]
       };
-      // return this.$store.getters.vertices.map(v => {
-      //   return {
-      //     group: "nodes",
-      //     data: {
-      //       id: "n" + v.id,
-      //       name: v.functionName
-      //     },
-      //     position: {
-      //       x: v.x,
-      //       y: v.y
-      //     }
-      //   };
-      // });
     }
-    // edges() {
-    //   return this.$store.getters.edges.map(e => {
-    //     return {
-    //       group: "edges",
-    //       data: {
-    //         id: "e" + e.id,
-    //         source: "n" + e.fromId,
-    //         target: "n" + e.toId,
-    //         relationship: e.closeness
-    //       }
-    //     };
-    //   });
-    // }
   }
 };
 </script>
