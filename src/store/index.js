@@ -39,6 +39,7 @@ export default new Vuex.Store({
       v.y = p.y
     },
     changeConnectiveDomainColor(state, p) {
+      // TODO: 这种写法强行触发数据响应，不知道是否符合标准
       state.project.connectiveDomainMap.get(p.id).color = p.color
       Vue.set(state.project, "connectiveDomainMapColorChangeTracker", state.project.connectiveDomainMapColorChangeTracker + 1)
     }
