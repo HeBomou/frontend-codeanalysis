@@ -88,34 +88,57 @@ export default {
       this.cy.edges().remove();
       this.cy.add(e.nodes);
       this.cy.add(e.edges);
-      this.cy.nodes().on("select", evt => {
-        this.$emit(
-          "vertexSelected",
-          parseInt(evt.target._private.data.id.substring(1))
-        );
-        this.$emit(
-          "connectiveDomainSelected",
-          evt.target._private.data.connectiveDomainId
-        );
-      });
+      this.cy
+        .nodes()
+        .orphans()
+        .on("select", evt => {
+          if (evt.target._private.data.id.charAt(0) == "n")
+            this.$emit(
+              "connectiveDomainSelected",
+              parseInt(evt.target._private.data.parent.substring(1))
+            );
+          else
+            this.$emit(
+              "connectiveDomainSelected",
+              parseInt(evt.target._private.data.id.substring(1))
+            );
+        });
+      this.cy
+        .nodes()
+        .nonorphans()
+        .on("select", evt => {
+          this.$emit(
+            "vertexSelected",
+            parseInt(evt.target._private.data.id.substring(1))
+          );
+        });
       this.cy.edges().on("select", evt => {
         this.$emit(
           "edgeSelected",
           parseInt(evt.target._private.data.id.substring(1))
         );
-        if (evt.target._private.data.connectiveDomainId != undefined)
-          this.$emit(
-            "connectiveDomainSelected",
-            evt.target._private.data.connectiveDomainId
-          );
+        this.$emit(
+          "connectiveDomainSelected",
+          parseInt(evt.target._private.data.parent.substring(1))
+        );
       });
       this.cy.nodes().on("dragfree", evt => {
         let node = evt.target._private;
-        this.$store.commit("moveVertex", {
-          id: parseInt(node.data.id.substring(1)),
-          x: node.position.x,
-          y: node.position.y
-        });
+        if (node.children.length == 0)
+          this.$store.commit("moveVertex", {
+            id: parseInt(node.data.id.substring(1)),
+            x: node.position.x,
+            y: node.position.y
+          });
+        else {
+          node.children.forEach(chr => {
+            this.$store.commit("moveVertex", {
+              id: parseInt(chr._private.data.id.substring(1)),
+              x: chr._private.position.x,
+              y: chr._private.position.y
+            });
+          });
+        }
       });
     },
     getElements() {
@@ -131,7 +154,6 @@ export default {
           group: "nodes",
           data: {
             id: "n" + v.id,
-            parent: "",
             name: v.functionName,
             color: "#999999"
           },
@@ -155,7 +177,7 @@ export default {
         });
       });
 
-      // 着色与指定联通域
+      // 指定联通域与着色
       subgraph.connectiveDomainIds.forEach(id => {
         let domain = dMap.get(id);
         nodeMap.set("c" + id, {
@@ -168,13 +190,13 @@ export default {
         });
         domain.vertexIds.forEach(vid => {
           let node = nodeMap.get(vid);
-          (node.data.parent = "c" + id), (node.data.color = domain.color);
-          node.data.connectiveDomainId = domain.id;
+          node.data.parent = "c" + id;
+          node.data.color = domain.color;
         });
-        domain.edgeIds.forEach(id => {
-          let edge = edgeMap.get(id);
+        domain.edgeIds.forEach(eid => {
+          let edge = edgeMap.get(eid);
+          edge.data.parent = "c" + id;
           edge.data.color = domain.color;
-          edge.data.connectiveDomainId = domain.id;
         });
       });
 
