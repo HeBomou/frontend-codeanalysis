@@ -130,6 +130,7 @@ export default {
           group: "nodes",
           data: {
             id: "n" + v.id,
+            parent: "",
             name: v.functionName,
             color: "#999999"
           },
@@ -156,8 +157,17 @@ export default {
       // 着色与指定联通域
       subgraph.connectiveDomainIds.forEach(id => {
         let domain = dMap.get(id);
-        domain.vertexIds.forEach(id => {
-          let node = nodeMap.get(id);
+        nodeMap.set("c" + id, {
+          group: "nodes",
+          data: {
+            id: "c" + id,
+            name: "",
+            color: "#CCCCCC"
+          }
+        });
+        domain.vertexIds.forEach(vid => {
+          let node = nodeMap.get(vid);
+          node.data.parent = "c" + id,
           node.data.color = domain.color;
           node.data.connectiveDomainId = domain.id;
         });
