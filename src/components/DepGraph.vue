@@ -11,9 +11,14 @@ export default {
   },
   methods: {
     initGraph() {
-      var nodes = this.nodes;
-      var edges = this.edges;
-      var cy = cytoscape({
+      let nodes = this.nodes;
+      let edges = this.edges;
+      // TODO: 初始化点的位置可以把锅扔给后端，或者前端加一个重新布局的按钮
+      let init = !nodes.some(node => { return node.position.x != -1 && node.position.y != -1})
+      console.log(init)
+      let elements = init ? { nodes, edges } : { nodes: [], edges: [] } ;
+      console.log(elements);
+      let cy = cytoscape({
         container: document.getElementById("cy"),
         // layout: {
         //   name: "grid",
@@ -86,19 +91,25 @@ export default {
               opacity: 0
             }
           }
-        ]
-        // elements: {
-        //   nodes: nodes,
-        //   edges: edges
-        // }
+        ],
+        elements
       });
-      cy.add(nodes);
-      cy.add(edges);
+      if (!init) {
+        console.log("cnm");
+        cy.add(nodes);
+        cy.add(edges);
+      }
       cy.nodes().on("select", evt => {
-        this.$emit("vertexSelected", parseInt(evt.target._private.data.id.substring(1)))
+        this.$emit(
+          "vertexSelected",
+          parseInt(evt.target._private.data.id.substring(1))
+        );
       });
       cy.edges().on("select", evt => {
-        this.$emit("edgeSelected", parseInt(evt.target._private.data.id.substring(1)))
+        this.$emit(
+          "edgeSelected",
+          parseInt(evt.target._private.data.id.substring(1))
+        );
       });
       cy.nodes().on("dragfree", evt => {
         let node = evt.target._private;
