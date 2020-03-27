@@ -1,5 +1,5 @@
 <template>
-  <div id="cy" style="width: 100%;height: 100%"></div>
+  <div id="cy" style="width: 100%; height: 100%"></div>
 </template>
 
 <script>
@@ -14,10 +14,10 @@ export default {
       let nodes = this.nodes;
       let edges = this.edges;
       // TODO: 初始化点的位置可以把锅扔给后端，或者前端加一个重新布局的按钮
-      let init = !nodes.some(node => { return node.position.x != -1 && node.position.y != -1})
-      console.log(init)
-      let elements = init ? { nodes, edges } : { nodes: [], edges: [] } ;
-      console.log(elements);
+      let init = !nodes.some(node => {
+        return node.position.x != 0 && node.position.y != 0;
+      });
+      let elements = init ? { nodes, edges } : { nodes: [], edges: [] };
       let cy = cytoscape({
         container: document.getElementById("cy"),
         // layout: {
@@ -29,9 +29,7 @@ export default {
           {
             selector: "node",
             style: {
-              content: "data(name)",
-              "background-color": "magenta",
-              "background-image": "url(img/shixian.png)"
+              content: "data(name)"
             }
           },
           {
@@ -95,7 +93,6 @@ export default {
         elements
       });
       if (!init) {
-        console.log("cnm");
         cy.add(nodes);
         cy.add(edges);
       }

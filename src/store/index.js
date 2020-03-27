@@ -9,15 +9,22 @@ export default new Vuex.Store({
       id: 1,
       projectName: "projectName 1",
       vertexMap: new Map([
-        [1, { id: 1, functionName: "cnmd1", sourceCode: "nmbd yuanma 1", anotation: "anotation", x: -1, y: -1 }],
-        [2, { id: 2, functionName: "cnmd2", sourceCode: "nmbd yuanma 2", anotation: "anotation", x: -1, y: -1 }],
-        [3, { id: 3, functionName: "cnmd3", sourceCode: "nmbd yuanma 3", anotation: "anotation", x: -1, y: -1 }]
+        [1, { id: 1, functionName: "cnmd1", sourceCode: "nmbd yuanma 1", anotation: "anotation", x: 0, y: 0 }],
+        [2, { id: 2, functionName: "cnmd2", sourceCode: "nmbd yuanma 2", anotation: "anotation", x: 0, y: 0 }],
+        [3, { id: 3, functionName: "cnmd3", sourceCode: "nmbd yuanma 3", anotation: "anotation", x: 0, y: 0 }]
       ]),
       edgeMap: new Map([
         [1, { id: 1, fromId: 1, toId: 2, closeness: 0.1, anotation: "edge 1" }],
         [2, { id: 2, fromId: 2, toId: 3, closeness: 0.2, anotation: "edge 2" }]
       ]),
-      subgraphs: [] // TODO: 子图不应当为空
+      connectiveDomainMap: new Map([
+        [1, { id: 1, anotation: "Cnmd 1", vertexIds: [1, 2, 3], edgeIds: [1, 2] }],
+        [2, { id: 2, anotation: "Cn 2", vertexIds: [2, 3], edgeIds: [2] }]
+      ]),
+      subgraphMap: new Map([
+        [1, { id: 1, threshold: 0, name: "Default", connectiveDomainIds: [1] }],
+        [2, { id: 2, threshold: 0.15, name: "Subgraph 1", connectiveDomainIds: [2] }]
+      ])
     }
   },
   mutations: {
