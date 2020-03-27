@@ -1,5 +1,5 @@
 <template>
-  <div style="width: 100%; height: 80%;">
+  <div style="width: 100%; height: 70%;">
     <DepGraph
       v-bind:subgraph-id="subgraphId"
       @vertexSelected="cnmdVertex"

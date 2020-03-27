@@ -103,10 +103,11 @@ export default {
           "edgeSelected",
           parseInt(evt.target._private.data.id.substring(1))
         );
-        this.$emit(
-          "connectiveDomainSelected",
-          evt.target._private.data.connectiveDomainId
-        );
+        if (evt.target._private.data.connectiveDomainId != undefined)
+          this.$emit(
+            "connectiveDomainSelected",
+            evt.target._private.data.connectiveDomainId
+          );
       });
       this.cy.nodes().on("dragfree", evt => {
         let node = evt.target._private;
@@ -167,8 +168,7 @@ export default {
         });
         domain.vertexIds.forEach(vid => {
           let node = nodeMap.get(vid);
-          node.data.parent = "c" + id,
-          node.data.color = domain.color;
+          (node.data.parent = "c" + id), (node.data.color = domain.color);
           node.data.connectiveDomainId = domain.id;
         });
         domain.edgeIds.forEach(id => {
