@@ -9,10 +9,10 @@ export default new Vuex.Store({
       id: 1,
       projectName: "projectName 1",
       vertexMap: new Map([
-        [1, { id: 1, functionName: "cnmd1", sourceCode: "nmbd yuanma 1", anotation: "anotation", x: 0, y: 0 }],
-        [2, { id: 2, functionName: "cnmd2", sourceCode: "nmbd yuanma 2", anotation: "anotation", x: 0, y: 0 }],
-        [3, { id: 3, functionName: "cnmd3", sourceCode: "nmbd yuanma 3", anotation: "anotation", x: 0, y: 0 }],
-        [4, { id: 4, functionName: "cnmd4", sourceCode: "nmbd yuanma 4", anotation: "anotation", x: 0, y: 0 }]
+        [1, { id: 1, functionName: "cnmd1", sourceCode: "nmbd yuanma 1", anotation: "anotation", x: -100, y: -100 }],
+        [2, { id: 2, functionName: "cnmd2", sourceCode: "nmbd yuanma 2", anotation: "anotation", x: -100, y: 100 }],
+        [3, { id: 3, functionName: "cnmd3", sourceCode: "nmbd yuanma 3", anotation: "anotation", x: 100, y: -100 }],
+        [4, { id: 4, functionName: "cnmd4", sourceCode: "nmbd yuanma 4", anotation: "anotation", x: 100, y: 100 }]
       ]),
       edgeMap: new Map([
         [1, { id: 1, fromId: 1, toId: 2, closeness: 0.3, anotation: "edge 1" }],
@@ -62,12 +62,6 @@ export default new Vuex.Store({
         }),
         subgraphs: null // TODO: 处理子图
       }
-    },
-    vertices: state => {
-      return [...state.project.vertexMap.values()]
-    },
-    edges: state => {
-      return [...state.project.edgeMap.values()]
     }
   }
 })

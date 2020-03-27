@@ -7,120 +7,114 @@ import cytoscape from "cytoscape";
 
 export default {
   mounted() {
+    this.cy = cytoscape({
+      container: document.getElementById("cy"),
+      // layout: { name: "grid", rows: 2, cols: 2 },
+      style: [
+        {
+          selector: "node",
+          style: {
+            content: "data(name)",
+            "background-color": "data(color)"
+          }
+        },
+        {
+          selector: "edge",
+          style: {
+            content: "data(relationship)",
+            "curve-style": "bezier",
+            "line-color": "data(color)",
+            "target-arrow-color": "data(color)",
+            "target-arrow-shape": "triangle"
+          }
+        },
+        // some style for the extension
+        {
+          selector: ".eh-handle",
+          style: {
+            "background-color": "red",
+            width: 12,
+            height: 12,
+            shape: "ellipse",
+            "overlay-opacity": 0,
+            "border-width": 12, // makes the handle easier to hit
+            "border-opacity": 0
+          }
+        },
+        {
+          selector: ".eh-hover",
+          style: {
+            "background-color": "red"
+          }
+        },
+        {
+          selector: ".eh-source",
+          style: {
+            "border-width": 2,
+            "border-color": "red"
+          }
+        },
+        {
+          selector: ".eh-target",
+          style: {
+            "border-width": 2,
+            "border-color": "red"
+          }
+        },
+        {
+          selector: ".eh-preview, .eh-ghost-edge",
+          style: {
+            "background-color": "red",
+            "line-color": "red",
+            "target-arrow-color": "red",
+            "source-arrow-color": "red"
+          }
+        },
+        {
+          selector: ".eh-ghost-edge.eh-preview-active",
+          style: {
+            opacity: 0
+          }
+        }
+      ]
+    });
+    this.cy.nodes().on("select", evt => {
+      this.$emit(
+        "vertexSelected",
+        parseInt(evt.target._private.data.id.substring(1))
+      );
+      this.$emit(
+        "connectiveDomainSelected",
+        evt.target._private.data.connectiveDomainId
+      );
+    });
+    this.cy.edges().on("select", evt => {
+      this.$emit(
+        "edgeSelected",
+        parseInt(evt.target._private.data.id.substring(1))
+      );
+      this.$emit(
+        "connectiveDomainSelected",
+        evt.target._private.data.connectiveDomainId
+      );
+    });
+    this.cy.nodes().on("dragfree", evt => {
+      let node = evt.target._private;
+      this.$store.commit("moveVertex", {
+        id: parseInt(node.data.id.substring(1)),
+        x: node.position.x,
+        y: node.position.y
+      });
+    });
     this.refreshGraph();
   },
   methods: {
     refreshGraph() {
       let e = this.elements;
-      // TODO: 初始化点的位置可以把锅扔给后端，或者前端加一个重新布局的按钮
-      let init = !e.nodes.some(node => {
-        return node.position.x != 0 && node.position.y != 0;
-      });
-      let elements = init ? e : { nodes: [], edges: [] };
-      let cy = cytoscape({
-        container: document.getElementById("cy"),
-        // layout: { name: "grid", rows: 2, cols: 2 },
-        style: [
-          {
-            selector: "node",
-            style: {
-              content: "data(name)",
-              "background-color": "data(color)"
-            }
-          },
-          {
-            selector: "edge",
-            style: {
-              content: "data(relationship)",
-              "curve-style": "bezier",
-              "line-color": "data(color)",
-              "target-arrow-color": "data(color)",
-              "target-arrow-shape": "triangle"
-            }
-          },
-          // some style for the extension
-          {
-            selector: ".eh-handle",
-            style: {
-              "background-color": "red",
-              width: 12,
-              height: 12,
-              shape: "ellipse",
-              "overlay-opacity": 0,
-              "border-width": 12, // makes the handle easier to hit
-              "border-opacity": 0
-            }
-          },
-          {
-            selector: ".eh-hover",
-            style: {
-              "background-color": "red"
-            }
-          },
-          {
-            selector: ".eh-source",
-            style: {
-              "border-width": 2,
-              "border-color": "red"
-            }
-          },
-          {
-            selector: ".eh-target",
-            style: {
-              "border-width": 2,
-              "border-color": "red"
-            }
-          },
-          {
-            selector: ".eh-preview, .eh-ghost-edge",
-            style: {
-              "background-color": "red",
-              "line-color": "red",
-              "target-arrow-color": "red",
-              "source-arrow-color": "red"
-            }
-          },
-          {
-            selector: ".eh-ghost-edge.eh-preview-active",
-            style: {
-              opacity: 0
-            }
-          }
-        ],
-        elements
-      });
-      if (!init) {
-        cy.add(e.nodes);
-        cy.add(e.edges);
-      }
-      cy.nodes().on("select", evt => {
-        this.$emit(
-          "vertexSelected",
-          parseInt(evt.target._private.data.id.substring(1))
-        );
-        this.$emit(
-          "connectiveDomainSelected",
-          evt.target._private.data.connectiveDomainId
-        );
-      });
-      cy.edges().on("select", evt => {
-        this.$emit(
-          "edgeSelected",
-          parseInt(evt.target._private.data.id.substring(1))
-        );
-        this.$emit(
-          "connectiveDomainSelected",
-          evt.target._private.data.connectiveDomainId
-        );
-      });
-      cy.nodes().on("dragfree", evt => {
-        let node = evt.target._private;
-        this.$store.commit("moveVertex", {
-          id: parseInt(node.data.id.substring(1)),
-          x: node.position.x,
-          y: node.position.y
-        });
-      });
+      this.cy.nodes().remove();
+      this.cy.edges().remove();
+      this.cy.add(e.nodes);
+      this.cy.add(e.edges);
     }
   },
   props: {
