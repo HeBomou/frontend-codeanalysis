@@ -1,6 +1,8 @@
 <template>
-  <div style="width: 100%; height: 100%;">
-    <DepGraph @vertexSelected="cnmdVertex" @edgeSelected="cnmdEdge" @connectiveDomainSelected="cnmdConnectiveDomain"></DepGraph>
+  <div style="width: 100%; height: 80%;">
+    <DepGraph v-bind:subgraph-id="subgraphId" @vertexSelected="cnmdVertex" @edgeSelected="cnmdEdge" @connectiveDomainSelected="cnmdConnectiveDomain"></DepGraph>
+    <div @click="subgraphId = 1">按下此处显示原图联通域（默认子图）</div>
+    <div @click="subgraphId = 2">按下此处显示id为2的子图的联通域</div>
   </div>
 </template>
 <script>
@@ -10,7 +12,9 @@ export default {
     DepGraph
   },
   data() {
-    return {};
+    return {
+      subgraphId: 2
+    };
   },
   methods: {
     cnmdVertex(id) {

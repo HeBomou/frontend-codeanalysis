@@ -123,15 +123,24 @@ export default {
       });
     }
   },
+  props: {
+    subgraphId: Number
+  },
   data() {
     return {};
   },
+  watch: {
+    subgraphId() {
+      this.refreshGraph();
+    }
+  },
   computed: {
     elements() {
+      if (this.subgraphId == undefined) return { nodes: [], edges: [] };
+      let subgraph = this.$store.state.project.subgraphMap.get(this.subgraphId);
       let vMap = this.$store.state.project.vertexMap;
       let eMap = this.$store.state.project.edgeMap;
       let dMap = this.$store.state.project.connectiveDomainMap;
-      let subgraph = this.$store.state.project.subgraphMap.get(2);
 
       let nodeMap = new Map();
       vMap.forEach((v, k) => {

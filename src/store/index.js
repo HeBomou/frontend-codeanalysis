@@ -20,7 +20,7 @@ export default new Vuex.Store({
         [3, { id: 3, fromId: 3, toId: 4, closeness: 0.3, anotation: "edge 3" }]
       ]),
       connectiveDomainMap: new Map([
-        [1, { id: 1, anotation: "Cnmd 1", color: "#FF7F24", vertexIds: [1, 2, 3, 4], edgeIds: [1, 2, 3] }],
+        [1, { id: 1, anotation: "Cnmd 1", color: "#8DB6CD", vertexIds: [1, 2, 3, 4], edgeIds: [1, 2, 3] }],
         [2, { id: 2, anotation: "Cn 2", color: "#DB7093", vertexIds: [1, 2], edgeIds: [1] }],
         [3, { id: 3, anotation: "cnm 3", color: "#FF7F24", vertexIds: [3, 4], edgeIds: [3] }]
       ]),
