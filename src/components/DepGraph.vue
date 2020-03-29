@@ -200,6 +200,12 @@ export default {
         });
       });
 
+      // 高亮显示路径
+      if (this.pathToShow)
+        this.pathToShow.forEach(id => {
+          edgeMap.get(id).data.color = "#D15FEE";
+        });
+
       return {
         nodes: [...nodeMap.values()],
         edges: [...edgeMap.values()]
@@ -207,13 +213,17 @@ export default {
     }
   },
   props: {
-    subgraphId: Number
+    subgraphId: Number,
+    pathToShow: Array
   },
   data() {
     return {};
   },
   watch: {
     subgraphId() {
+      this.refreshGraph();
+    },
+    pathToShow() {
       this.refreshGraph();
     },
     connectiveDomainMapColorChangeTracker() {

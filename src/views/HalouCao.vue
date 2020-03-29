@@ -2,6 +2,7 @@
   <div style="width: 100%; height: 70%;">
     <DepGraph
       v-bind:subgraph-id="subgraphId"
+      v-bind:path-to-show="pathToShow"
       @vertexSelected="cnmdVertex"
       @edgeSelected="cnmdEdge"
       @connectiveDomainSelected="cnmdConnectiveDomain"
@@ -14,6 +15,8 @@
     <div
       @click="$store.commit('changeConnectiveDomainColor', {id: 1, color: '#8DB6CD'})"
     >按下此处给联通域1换蓝色</div>
+    <div @click="pathToShow = undefined">隐藏路径显示</div>
+    <div @click="pathToShow = [1, 2, 3]">显示cnmd1到cnmd4的路径</div>
   </div>
 </template>
 <script>
@@ -24,7 +27,8 @@ export default {
   },
   data() {
     return {
-      subgraphId: 2
+      subgraphId: 2,
+      pathToShow: [2, 3]
     };
   },
   methods: {
