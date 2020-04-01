@@ -18,6 +18,24 @@ const routes = [
       keepAlive: true
     }
   }, {
+    path: '/dependency',
+    name: 'MainPage',
+    component: () => import("@/views/MainPage.vue"),
+    meta: {
+      title: "登陆",
+      keepAlive: true
+    }
+
+  }, {
+    path: '/try',
+    name: 'Try',
+    component: () => import("@/views/try.vue"),
+    meta: {
+      title: "测试",
+      keepAlive: true
+    }
+
+  }, {
     path: '/404',
     name: 'faid',
     component: () => import('@/views/404.vue'),

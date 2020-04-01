@@ -68,7 +68,7 @@
                 class="mr-5 ml-5"
                 v-model="email"
                 :rules="emailRules"
-                label="email"
+                label="Email"
                 required
                 v-if="is_signup == 1"
                 flat
@@ -169,17 +169,17 @@
       password: "",
       email: "",
       passwordRules: [
-          v => !!v || "password is required",
-          v => (v.length >= 6 || this.is_signup == 0) || "密码最少六位"
+        v => !!v || "password is required",
+        v => (v.length >= 6 || this.is_signup == 0) || "密码最少六位"
       ],
       passwordConfirmRules: [
-          v => !!v || "please confirm your password",
-          v => v === this.password || "not equal, check your password"
+        v => !!v || "please confirm your password",
+        v => v === this.password || "not equal, check your password"
       ],
       emailRules: [
-                      v => !!v || "E-mail is required",
-                      v => (/.+@.+\..+/.test(v) || this.is_signup === 0) || "E-mail must be valid"
-                  ],
+        v => !!v || "E-mail is required",
+        v => (/.+@.+\..+/.test(v) || this.is_signup === 0) || "E-mail must be valid"
+      ],
       valid: false
     }),
     methods: {
