@@ -6,6 +6,7 @@
       color="amber"
     >
       <span class="title ml-3 mr-5">项目名:&nbsp;<span class="font-weight-light">{{projectName}}</span></span>
+      
 
       <v-spacer />
       <v-spacer />
@@ -17,7 +18,7 @@
     </v-app-bar>
     <v-content>
 
-    <v-container>
+    <v-container class="mt-0">
       <v-row>
         <v-col cols="3">
            <v-list
@@ -87,18 +88,66 @@
            <v-list
             dense
             class="grey lighten-4"
-
           >
-            <v-card>
+            <v-row>
+              <v-col cols="6">
+                <v-card>
+                  <v-card-title>
+                    基本信息
+                  </v-card-title>
+                  <v-card-text>
+                    <v-list-item-group>
+                      <v-list-item>
+                        顶点数：{{vertexNum}}
+                      </v-list-item>
+                      <v-list-item>
+                        边数：{{edgeNum}}
+                      </v-list-item>
+                      <v-list-item>
+                        连通域数：{{domainNum}}
+                      </v-list-item>
+                    </v-list-item-group>
+                  </v-card-text>
+                </v-card>  
+              </v-col>
+              <v-col cols="6">
+                <v-card>
+                  <v-card-title>
+                    紧密度域值
+                  </v-card-title>
+                  <v-card-text>
+                    <v-list-item-group>
+                      <v-list-item>
+                        顶点数：{{vertexNum}}
+                      </v-list-item>
+                      <v-list-item>
+                        边数：{{edgeNum}}
+                      </v-list-item>
+                      <v-list-item>
+                        连通域数：{{domainNum}}
+                      </v-list-item>
+                    </v-list-item-group>
+                  </v-card-text>
+                </v-card>
+              </v-col>
+            </v-row>
+            <v-card
+            style="height: 500px"
+            >
               <!-- <v-list-item-title>搜索顶点</v-list-item-title>
               <SearchComponent></SearchComponent> -->
-              <!-- <DepGraph
-                v-bind:subgraph-id="subgraphId"
-                v-bind:path-to-show="pathToShow"
-                @vertexSelected="cnmdVertex"
-                @edgeSelected="cnmdEdge"
-                @connectiveDomainSelected="cnmdConnectiveDomain"
-              ></DepGraph> -->
+              <v-card-title>
+                dependency
+              </v-card-title>
+              <v-card-text style="height: 100%">
+                <DepGraph
+                  v-bind:subgraph-id="subgraphId"
+                  v-bind:path-to-show="pathToShow"
+                  @vertexSelected="cnmdVertex"
+                  @edgeSelected="cnmdEdge"
+                  @connectiveDomainSelected="cnmdConnectiveDomain"
+                ></DepGraph>
+              </v-card-text>
             </v-card>
             <v-card>
               <v-card-text>
@@ -141,7 +190,7 @@
                   outlined=""
                 >
                 </v-textarea>
-                <v-btn>保存</v-btn>
+                <v-btn @click="saveTag">保存</v-btn>
               </v-card-text>
             </v-card>
             <!-- <v-row> -->
@@ -177,14 +226,15 @@
 </template>
 
 <script>
-// import DepGraph from "@/components/DepGraph";
+import DepGraph from "@/components/DepGraph";
+//import {} from "../request/api";
 //import SearchComponent from '../components/SearchAuto'
   export default {
     props: {
       source: String,
     },components: {
       
-      // DepGraph
+      DepGraph
     },
     data (){
       return{
@@ -316,10 +366,24 @@
         console.log(this.startVertex);
         console.log(this.endVertex);
         console.log(this.tree);
-      }
+      },
+      cnmdVertex(id) {
+        console.log("Select on vertex", id);
+        },cnmdEdge(id) {
+        console.log("Select on edge", id);
+      },
+      cnmdConnectiveDomain(id) {
+        console.log("select on connective domain", id);
+      },
+      saveTag(){
 
-  }
-  }
+      }
+    },
+    mounted(){
+      //初始化各个数据
+      console.log("mounted");
+    }
+}
 </script>
 
 <style>
