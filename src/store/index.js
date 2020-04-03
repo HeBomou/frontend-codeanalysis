@@ -29,7 +29,9 @@ export default new Vuex.Store({
         [1, { id: 1, threshold: 0, name: "Default", connectiveDomainIds: [1] }],
         [2, { id: 2, threshold: 0.2, name: "Subgraph 1", connectiveDomainIds: [2, 3] }]
       ])
-    }
+    },
+    userId: 0,
+    
   },
   mutations: {
     moveVertex(state, p) {

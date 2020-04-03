@@ -26,7 +26,7 @@ export function get(url, params){
   */
 export function post(url, params) {
     return new Promise((resolve, reject) => {
-        axios.post(url, QS.stringify(params))
+        axios.post(url, params)
         .then(res => {
             resolve(res.data);
         })
@@ -36,16 +36,43 @@ export function post(url, params) {
     });
 }
 
-export function del(url, params) {
+/**
+ * delete请求
+ * @param {String} url 
+ * @param {Object} params 
+ */
+export function del(url) {
     return new Promise((resolve, reject) => {
-        axios.delete('/delete', {	
+        axios.delete(url, {	
             params: {	// 请求参数拼接在url上
               id: 12
             }
           }).then(res => {
-            console.log(res)
-          })
+            resolve(res.data);
+        })
+        .catch(err => {
+            reject(err.data)
+        })
     }
 
     );
+}
+
+/**
+ * 
+ * @param {String} url 
+ * @param {Object} params 
+ */
+export function put(url, params) {
+    return new Promise((resolve, reject) => {
+        axios.put(url, {
+            params: params
+        })
+        .then(res => {
+            resolve(res.data);
+        })
+        .catch(err => {
+            reject(err.data)
+        })
+    });
 }

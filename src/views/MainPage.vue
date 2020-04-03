@@ -12,9 +12,12 @@
       <v-spacer />
       <v-spacer />
 
+      <v-btn class="mr-4">切换项目</v-btn>
+
       <v-btn>退出登录</v-btn>
 
-      <v-spacer />
+
+    
     </v-app-bar>
     <v-content>
 
@@ -55,7 +58,7 @@
                   v-model="endVertex"
                   :items="vertexs"
                 ></v-autocomplete>
-                <v-btn>搜索</v-btn>
+                <v-btn @click="searchPath">搜索</v-btn>
               </v-card-text>
             </v-card>
             <v-card>
@@ -201,16 +204,17 @@
                     justify="center"
                   >
                   <div>
-                    <v-btn>查看所在连通域</v-btn>
+                    <v-btn class="mt-5" style="width: 100%">查看所在连通域</v-btn>
                   </div>
                   <div>
-                    <v-btn @click="setAsStart">设置为起点</v-btn>
+                    <v-btn class="mt-5" style="width: 100%" @click="setAsStart">设置为起点</v-btn>
                   </div>
                   <div>
-                    <v-btn @click="setAsEnd">设置为终点</v-btn>
+                    <v-btn class="mt-5" style="width: 100%" @click="setAsEnd">设置为终点</v-btn>
                   </div>
-
-                  <v-btn @click="debug">haha</v-btn>
+                  <div>
+                    <v-btn class="mt-5" style="width: 100%" @click="debug">haha</v-btn>
+                  </div>
                   </v-form>
                 </v-card-text>
               </v-card>
@@ -227,6 +231,7 @@
 
 <script>
 import DepGraph from "@/components/DepGraph";
+import originalGraphShortestPath from "../request/api";
 //import {} from "../request/api";
 //import SearchComponent from '../components/SearchAuto'
   export default {
@@ -264,6 +269,8 @@ import DepGraph from "@/components/DepGraph";
         tag: "tagtagtag",
         //项目名
         projectName: "project1",
+        //项目id
+        projectId: 0,
         //搜索的顶点
         searchVertex: "",
         //起点
@@ -377,11 +384,17 @@ import DepGraph from "@/components/DepGraph";
       },
       saveTag(){
 
+      },
+      //搜索路径
+      searchPath(){
+        originalGraphShortestPath()
       }
+
     },
     mounted(){
       //初始化各个数据
       console.log("mounted");
+      
     }
 }
 </script>

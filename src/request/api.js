@@ -72,6 +72,8 @@ export const delProject = (id) => del("/project" + id);
  */
 export const addProject = (projectName, url, userId) => post("/project", {projectName, url, userId});
 
+
+
 /**
  * 移除登陆凭证
  * @param {string} id 
@@ -93,4 +95,10 @@ export const addSession = (username, pwdMd5) => post("/session", {username, pwdM
  */
 export const delUser = (id) => del("/user/" + id);
 
+/**
+ * 增加用户
+ * @param {*} id 
+ * @param {*} username 
+ * @param {*} pwdMd5 
+ */
 export const addUser = (id, username, pwdMd5) => post("/user", {id, username, pwdMd5});

@@ -55,7 +55,7 @@
             >
               <v-text-field
                 class="mr-5 ml-5"
-                v-model="userId"
+                v-model="userName"
                 label="User Id"
                 clearable
                 required
@@ -138,6 +138,7 @@
 </template>
 
 <script>
+  //import {addSession} from "@/request/api"
   export default {
     name: 'Login',
     computed: {
@@ -165,7 +166,7 @@
         }
       ],
       is_signup: 0,//是否是注册
-      userId: "",
+      userName: "",
       password: "",
       email: "",
       passwordRules: [
@@ -186,8 +187,9 @@
       clear() {
           this.$refs.form.reset();
       },
+      //登录
       async login() {
-          
+          //const res = await addSession(this.userName, this.password);
       },
       async register() {
       }
