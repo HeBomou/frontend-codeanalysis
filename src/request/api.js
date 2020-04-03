@@ -101,4 +101,4 @@ export const delUser = (id) => del("/user/" + id);
  * @param {*} username 
  * @param {*} pwdMd5 
  */
-export const addUser = (id, username, pwdMd5) => post("/user", {id, username, pwdMd5});
+export const addUser = (id, username, pwdMd5) => post("http://116.62.123.74:8080/user", {id, username, pwdMd5});

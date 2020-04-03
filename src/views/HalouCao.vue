@@ -21,6 +21,7 @@
 </template>
 <script>
 import DepGraph from "@/components/DepGraph";
+import { addUser } from "../request/api";
 export default {
   components: {
     DepGraph
@@ -41,6 +42,9 @@ export default {
     cnmdConnectiveDomain(id) {
       console.log("select on connective domain", id);
     }
+  },
+  mounted() {
+    addUser(null, "hbm", "fsdfds");
   }
 };
 </script>
