@@ -27,6 +27,15 @@ const routes = [
     }
 
   }, {
+    path: '/admin',
+    name: 'Admin',
+    component: () => import("@/views/Admin.vue"),
+    meta: {
+      title: "管理员",
+      keepAlive: true
+    }
+
+  }, {
     path: '/try',
     name: 'Try',
     component: () => import("@/views/try.vue"),

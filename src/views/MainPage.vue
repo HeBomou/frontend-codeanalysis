@@ -1,5 +1,5 @@
 <template>
-  <v-app id="keep">
+  <v-app id="dependency">
     <v-app-bar
       app
       clipped-left
@@ -29,12 +29,12 @@
                 顶点搜索
               </v-card-title>
               <v-card-text>
-                <SearchComponent 
+                <v-autocomplete
                   @update-items="updateItems"
-                  :item="searchVertex"
+                  v-model="searchVertex"
                   :items="vertexs"
-                  @on-item-change="changeItem"
-                ></SearchComponent>
+                  
+                ></v-autocomplete>
               </v-card-text>
             </v-card>
             <v-card>
@@ -43,17 +43,17 @@
               </v-card-title>
               <v-card-text>
                 <v-list-item-title justify="center">起点</v-list-item-title>
-                <SearchComponent
+                <v-autocomplete
                   @update-items="updateItems"
-                  :item="startVertex"
+                  v-model="startVertex"
                   :items="vertexs"
-                ></SearchComponent>
+                ></v-autocomplete>
                 <v-list-item-title>终点</v-list-item-title>
-                <SearchComponent
+                <v-autocomplete
                   @update-items="updateItems"
-                  :item="endVertex"
+                  v-model="endVertex"
                   :items="vertexs"
-                ></SearchComponent>
+                ></v-autocomplete>
                 <v-btn>搜索</v-btn>
               </v-card-text>
             </v-card>
@@ -92,13 +92,13 @@
             <v-card>
               <!-- <v-list-item-title>搜索顶点</v-list-item-title>
               <SearchComponent></SearchComponent> -->
-              <DepGraph
+              <!-- <DepGraph
                 v-bind:subgraph-id="subgraphId"
                 v-bind:path-to-show="pathToShow"
                 @vertexSelected="cnmdVertex"
                 @edgeSelected="cnmdEdge"
                 @connectiveDomainSelected="cnmdConnectiveDomain"
-              ></DepGraph>
+              ></DepGraph> -->
             </v-card>
             <v-card>
               <v-card-text>
@@ -158,7 +158,7 @@
                     <v-btn @click="setAsStart">设置为起点</v-btn>
                   </div>
                   <div>
-                    <v-btn>设置为终点</v-btn>
+                    <v-btn @click="setAsEnd">设置为终点</v-btn>
                   </div>
 
                   <v-btn @click="debug">haha</v-btn>
@@ -177,122 +177,125 @@
 </template>
 
 <script>
-import DepGraph from "@/components/DepGraph";
-import SearchComponent from '../components/SearchAuto'
+// import DepGraph from "@/components/DepGraph";
+//import SearchComponent from '../components/SearchAuto'
   export default {
     props: {
       source: String,
     },components: {
-      SearchComponent,
-      DepGraph
+      
+      // DepGraph
     },
-    data: () => ({
-      //路径
-      paths: [
-        {
-          name: 1,
-          length: 2
-        },{
-          name: 2,
-          length: 3
-        },{
-          name: 3,
-          length: 4
-        }
-      ],
-      path: 0,
-      //顶点
-      vertexNum: 5,
-      //边数
-      edgeNum: 3,
-      //连通域数
-      domainNum: 2,
-      //源代码
-      src: "int s = abc;\n\treturn s;",
-      //标注
-      tag: "tagtagtag",
-      //项目名
-      projectName: "project1",
-      //搜索的顶点
-      searchVertex: "1",
-      //起点
-      startVertex: "2",
-      //终点
-      endVertext: "3",
-      //所有的顶点
-      vertexs: [
-          "haha",
-          123,
-          234
-      ],
-    open: ['static', 'public'],
-      files: {
-        html: 'mdi-language-html5',
-        js: 'mdi-nodejs',
-        json: 'mdi-json',
-        md: 'mdi-markdown',
-        pdf: 'mdi-file-pdf',
-        png: 'mdi-file-image',
-        txt: 'mdi-file-document-outline',
-        xls: 'mdi-file-excel',
-      },
-      tree: [],
-      active: [],
-      items: [
-        {
-          name: '.git',
+    data (){
+      return{
+        //路径
+        paths: [
+          {
+            name: 1,
+            length: 2
+          },{
+            name: 2,
+            length: 3
+          },{
+            name: 3,
+            length: 4
+          }
+        ],
+        path: 0,
+        //顶点
+        vertexNum: 5,
+        //边数
+        edgeNum: 3,
+        //连通域数
+        domainNum: 2,
+        //源代码
+        src: "int s = abc;\n\treturn s;",
+        //标注
+        tag: "tagtagtag",
+        //项目名
+        projectName: "project1",
+        //搜索的顶点
+        searchVertex: "",
+        //起点
+        startVertex: "",
+        //终点
+        endVertex: "3",
+        //所有的顶点
+        vertexs: [
+            "haha",
+            123,
+            234
+        ],
+        open: ['static', 'public'],
+        files: {
+          html: 'mdi-language-html5',
+          js: 'mdi-nodejs',
+          json: 'mdi-json',
+          md: 'mdi-markdown',
+          pdf: 'mdi-file-pdf',
+          png: 'mdi-file-image',
+          txt: 'mdi-file-document-outline',
+          xls: 'mdi-file-excel',
         },
-        {
-          name: 'node_modules',
-        },
-        {
-          name: 'public',
-          children: [
-            {
-              name: 'static',
-              children: [{
-                name: 'logo.png',
+        tree: [],
+        active: [],
+        items: [
+          {
+            name: '.git',
+          },
+          {
+            name: 'node_modules',
+          },
+          {
+            name: 'public',
+            children: [
+              {
+                name: 'static',
+                children: [{
+                  name: 'logo.png',
+                  file: 'png',
+                }],
+              },
+              {
+                name: 'favicon.ico',
                 file: 'png',
-              }],
-            },
-            {
-              name: 'favicon.ico',
-              file: 'png',
-            },
-            {
-              name: 'index.html',
-              file: 'html',
-            },
-          ],
-        },
-        {
-          name: '.gitignore',
-          file: 'txt',
-        },
-        {
-          name: 'babel.config.js',
-          file: 'js',
-        },
-        {
-          name: 'package.json',
-          file: 'json',
-        },
-        {
-          name: 'README.md',
-          file: 'md',
-        },
-        {
-          name: 'vue.config.js',
-          file: 'js',
-        },
-        {
-          name: 'yarn.lock',
-          file: 'txt',
-        },
-      ],
-      subgraphId: 2,
-      pathToShow: [2, 3]
-    }), methods: {
+              },
+              {
+                name: 'index.html',
+                file: 'html',
+              },
+            ],
+          },
+          {
+            name: '.gitignore',
+            file: 'txt',
+          },
+          {
+            name: 'babel.config.js',
+            file: 'js',
+          },
+          {
+            name: 'package.json',
+            file: 'json',
+          },
+          {
+            name: 'README.md',
+            file: 'md',
+          },
+          {
+            name: 'vue.config.js',
+            file: 'js',
+          },
+          {
+            name: 'yarn.lock',
+            file: 'txt',
+          },
+        ],
+        subgraphId: 2,
+        pathToShow: [2, 3]
+      }
+      
+    }, methods: {
       updateItems (text) {
           text;
       //   yourGetItemsMethod(text).then( (response) => {
@@ -300,10 +303,10 @@ import SearchComponent from '../components/SearchAuto'
       //   })
       },
       setAsStart(){
-        console.log(this.searchVertex);
-        console.log(this.startVertex);
         this.startVertex = this.searchVertex;
-        
+      },
+      setAsEnd(){
+        this.endVertex = this.searchVertex;
       },
       changeItem(val){
         this.searchVertex = val;
@@ -311,7 +314,7 @@ import SearchComponent from '../components/SearchAuto'
       debug(){
         console.log(this.searchVertex);
         console.log(this.startVertex);
-        console.log(this.endVertext);
+        console.log(this.endVertex);
         console.log(this.tree);
       }
 
