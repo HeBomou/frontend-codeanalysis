@@ -23,7 +23,7 @@
 
     <v-container class="mt-0">
       <v-row>
-        <v-col cols="3">
+        <v-col cols="2">
            <v-list
             dense
             class="grey lighten-4"
@@ -87,7 +87,7 @@
           </v-list>
         </v-col>
 
-        <v-col cols="6">
+        <v-col cols="8">
            <v-list
             dense
             class="grey lighten-4"
@@ -169,7 +169,7 @@
           </v-list>
         </v-col>
 
-        <v-col cols="3">
+        <v-col cols="2">
            <v-list
             dense
             class="grey lighten-4"
