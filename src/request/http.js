@@ -43,7 +43,11 @@ export function post(url, params) {
  */
 export function del(url) {
     return new Promise((resolve, reject) => {
-        axios.delete(url).then(res => {
+        axios.delete(url, {	
+            params: {	// 请求参数拼接在url上
+              id: 12
+            }
+          }).then(res => {
             resolve(res.data);
         })
         .catch(err => {
@@ -61,7 +65,9 @@ export function del(url) {
  */
 export function put(url, params) {
     return new Promise((resolve, reject) => {
-        axios.put(url, params)
+        axios.put(url, {
+            params: params
+        })
         .then(res => {
             resolve(res.data);
         })
