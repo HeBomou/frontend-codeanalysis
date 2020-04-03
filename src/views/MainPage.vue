@@ -89,7 +89,7 @@
             class="grey lighten-4"
 
           >
-            <v-card>
+            <v-card style="height: 500px">
               <!-- <v-list-item-title>搜索顶点</v-list-item-title>
               <SearchComponent></SearchComponent> -->
               <DepGraph
