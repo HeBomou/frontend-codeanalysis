@@ -185,7 +185,7 @@ export default {
           data: {
             id: "c" + id,
             name: "",
-            color: "#CCCCCC"
+            color: "#FFEEEE"
           }
         });
         domain.vertexIds.forEach(vid => {
