@@ -44,7 +44,9 @@ export default {
     }
   },
   mounted() {
-    addUser(null, "hbm", "fsdfds");
+    addUser(null, "yzj", "123123")
+      .then(res => console.log(res))
+      .catch(err => console.log(err));
   }
 };
 </script>

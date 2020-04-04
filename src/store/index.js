@@ -44,6 +44,9 @@ export default new Vuex.Store({
       // TODO: 这种写法强行触发数据响应，不知道是否符合标准
       state.project.connectiveDomainMap.get(p.id).color = p.color
       Vue.set(state.project, "connectiveDomainMapColorChangeTracker", state.project.connectiveDomainMapColorChangeTracker + 1)
+    },
+    setUserId(state, id){
+      state.userId = id;
     }
   },
   actions: {
@@ -74,6 +77,9 @@ export default new Vuex.Store({
     },
     connectiveDomainMapColorChangeTracker(state) {
       return state.project.connectiveDomainMapColorChangeTracker
+    },
+    userId(state){
+      return state.userId;
     }
   }
 })

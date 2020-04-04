@@ -138,7 +138,7 @@
 </template>
 
 <script>
-  //import {addSession} from "@/request/api"
+  import {addUser, addSession} from "../request/api"
   export default {
     name: 'Login',
     computed: {
@@ -189,9 +189,15 @@
       },
       //登录
       async login() {
-          //const res = await addSession(this.userName, this.password);
+        console.log(this.$store.state.userId);
+        const res = await addSession(this.userName, this.password);
+        console.log(res);
+        this.$store.commit({res});
+        console.log(this.$store.state.userId);
       },
       async register() {
+        const res = await addUser(null, this.userName, this.password);
+        console.log(res);
       }
     }
   }

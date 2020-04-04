@@ -45,6 +45,14 @@ const routes = [
     }
 
   }, {
+    path: '/project',
+    name: 'Project',
+    component: () => import("@/views/Project.vue"),
+    meta: {
+      title: "测试",
+      keepAlive: true
+    }
+  },{
     path: '/404',
     name: 'faid',
     component: () => import('@/views/404.vue'),

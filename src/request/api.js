@@ -53,10 +53,10 @@ export const delSubgraph = (projectId, id) => del("/project/" + projectId + "/su
 export const addSubgraph = (projectId, threshold) => post("/project/" + projectId + "/subgraph", threshold);
 
 /**
- * 查寻项目
+ * 获取所有项目的名称等动态信息，如果传了用户id，就是返回该用户的所有项目，否则返回所有项目
  * @param {long} userId 
  */
-export const searchProject = (userId) => get("/project", userId);
+export const getProject = (userId) => get("/project", userId);
 
 /**
  * 移除项目
@@ -101,4 +101,4 @@ export const delUser = (id) => del("/user/" + id);
  * @param {*} username 
  * @param {*} pwdMd5 
  */
-export const addUser = (id, username, pwdMd5) => post("http://116.62.123.74:8080/user", {id, username, pwdMd5});
+export const addUser = (id, username, pwdMd5) => post("/user", {id, username, pwdMd5});

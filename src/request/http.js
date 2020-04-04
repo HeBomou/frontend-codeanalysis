@@ -1,5 +1,7 @@
 import axios from 'axios'
 
+axios.defaults.baseURL = "http://116.62.123.74:8080";
+
 /**
   * get方法，对应get请求
   * @param {String} url [请求的url地址]
