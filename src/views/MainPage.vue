@@ -28,7 +28,7 @@
             dense
             class="grey lighten-4"
           >
-            <v-card>
+            <v-card class="mt-5">
               <v-card-title>
                 顶点搜索
               </v-card-title>
@@ -41,7 +41,7 @@
                 ></v-autocomplete>
               </v-card-text>
             </v-card>
-            <v-card>
+            <v-card class="mt-5">
               <v-card-title>
                 路径搜索
               </v-card-title>
@@ -152,7 +152,7 @@
                 ></DepGraph>
               </v-card-text>
             </v-card>
-            <v-card>
+            <v-card class="mt-5">
               <v-card-text>
                 <v-list-item-group v-model="path">
                   <v-list-item
@@ -174,7 +174,7 @@
             dense
             class="grey lighten-4"
           >
-            <v-card>
+            <v-card class="mt-5">
               <v-card-title>
                 源代码
               </v-card-title>
@@ -182,7 +182,7 @@
                 {{src}}
               </v-card-text>
             </v-card>
-            <v-card>
+            <v-card class="mt-5">
               <v-card-title>
                 标注
               </v-card-title>
@@ -396,10 +396,19 @@ import {originalGraphShortestPath, getProject} from "../request/api";
         console.log(data);
         this.projectName = data.dynamicVo.projectName;
         this.$store.commit('initProject', data);
-        this.subgraphId = 15;
+
+        //初始的子图为默认子图，域值为0
+        this.$store.state.project.subgraphMap.forEach(subgraph => {
+          //console.log(subgraph);
+          if(subgraph.threshold == 0){
+            //console.log(subgraph.id);
+            this.subgraphId = subgraph.id;
+            
+          }
+        })
         this.vertexNum = this.$store.state.project.vertexMap.size;
         this.edgeNum = this.$store.state.project.edgeMap.size;
-        //this.domainNum = this.$store.state.project.subgraphMap;
+        this.domainNum = this.$store.state.project.subgraphMap.get(this.subgraphId).connectiveDomainIds.length;
       }
 
     },
@@ -426,4 +435,5 @@ import {originalGraphShortestPath, getProject} from "../request/api";
 #keep .v-navigation-drawer__border {
   display: none
 }
+
 </style>

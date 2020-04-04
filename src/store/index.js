@@ -84,6 +84,7 @@ export default new Vuex.Store({
       });
       // console.log("sb:");
 
+      //subgraph
       data.subgraphs.forEach(subgraph => {
         // console.log(subgraph);
         let domainId = [];
@@ -95,7 +96,7 @@ export default new Vuex.Store({
         })
         state.project.subgraphMap.set(subgraph.id, {
           id: subgraph.id,
-          threshold: subgraph.dynamicVo.name,
+          threshold: subgraph.threshold,
           connectiveDomainIds: domainId
 
         });
