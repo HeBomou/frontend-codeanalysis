@@ -62,20 +62,43 @@ export default new Vuex.Store({
       // console.log("vertex:");
 
       data.vertices.forEach(vertex => {
-        state.project.vertexMap.set(vertex.id, vertex);
+        
+        state.project.vertexMap.set(vertex.id, {
+          id: vertex.id, functionName: vertex.functionName, sourceCode: vertex.sourceCode, anotation: vertex.dynamicVo.anotation, x: vertex.dynamicVo.x, y: vertex.dynamicVo.y
+        });
         // console.log(vertex);
       })
 
       // console.log("edge:");
       data.edges.forEach(edge => {
-        state.project.edgeMap.set(edge.id, edge);
+        if(edge.dynamicVo == null){
+          state.project.edgeMap.set(edge.id, {
+            id: edge.id, fromId: edge.fromId, toId: edge.toId, closeness: edge.closeness, anotation: ""
+          });
+        }else{
+          state.project.edgeMap.set(edge.id, {
+            id: edge.id, fromId: edge.fromId, toId: edge.toId, closeness: edge.closeness, anotation: edge.dynamicVo.anotation
+          });
+        }
         // console.log(edge);
       });
       // console.log("sb:");
 
       data.subgraphs.forEach(subgraph => {
         // console.log(subgraph);
-        state.project.subgraphMap.set(subgraph.id, subgraph);
+        let domainId = [];
+        subgraph.connectiveDomains.forEach(domain => {
+          domainId.push(domain.id);
+          state.project.connectiveDomainMap.set(domain.id, {
+            id: domain.id, anotation: domain.domainDynamicVo.anotation, color: domain.domainDynamicVo.color, vertexIds: domain.vertexIds, edgeIds: domain.edgeIds
+          })
+        })
+        state.project.subgraphMap.set(subgraph.id, {
+          id: subgraph.id,
+          threshold: subgraph.dynamicVo.name,
+          connectiveDomainIds: domainId
+
+        });
       });
       
       // console.log("data");
