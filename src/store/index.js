@@ -31,7 +31,9 @@ export default new Vuex.Store({
       ])
     },
     userId: 0,
-    
+    projectId: 0,
+
+
   },
   mutations: {
     moveVertex(state, p) {
@@ -47,6 +49,42 @@ export default new Vuex.Store({
     },
     setUserId(state, id){
       state.userId = id;
+    },
+    setProjectId(state, pid){
+      state.projectId = pid;
+    },
+    initProject(state, data){
+      state.projectId = data.dynamicVo.projectName;
+      state.project.vertexMap.clear();
+      state.project.edgeMap.clear();
+      state.project.connectiveDomainMap.clear();
+      state.project.subgraphMap.clear();
+      // console.log("vertex:");
+
+      data.vertices.forEach(vertex => {
+        state.project.vertexMap.set(vertex.id, vertex);
+        // console.log(vertex);
+      })
+
+      // console.log("edge:");
+      data.edges.forEach(edge => {
+        state.project.edgeMap.set(edge.id, edge);
+        // console.log(edge);
+      });
+      // console.log("sb:");
+
+      data.subgraphs.forEach(subgraph => {
+        // console.log(subgraph);
+        state.project.subgraphMap.set(subgraph.id, subgraph);
+      });
+      
+      // console.log("data");
+      // console.log(data);
+      // console.log("state.project.subgraphMap.size");
+      console.log(state.project.subgraphMap);
+      console.log(state.project.vertexMap);
+      console.log(state.project.edgeMap);
+      Vue.set(state.project, "connectiveDomainMapColorChangeTracker", state.project.connectiveDomainMapColorChangeTracker + 1);
     }
   },
   actions: {

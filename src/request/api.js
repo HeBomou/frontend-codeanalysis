@@ -56,7 +56,13 @@ export const addSubgraph = (projectId, threshold) => post("/project/" + projectI
  * 获取所有项目的名称等动态信息，如果传了用户id，就是返回该用户的所有项目，否则返回所有项目
  * @param {long} userId 
  */
-export const getProject = (userId) => get("/project", userId);
+export const getProjects = (userId) => get("/project", userId);
+
+/**
+ * 根据项目id查寻项目
+ * @param {long} projectId 
+ */
+export const getProject = (projectId) => get("/project/" + projectId);
 
 /**
  * 移除项目

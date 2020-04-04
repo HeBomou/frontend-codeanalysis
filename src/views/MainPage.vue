@@ -231,7 +231,7 @@
 
 <script>
 import DepGraph from "@/components/DepGraph";
-import originalGraphShortestPath from "../request/api";
+import {originalGraphShortestPath, getProject} from "../request/api";
 //import {} from "../request/api";
 //import SearchComponent from '../components/SearchAuto'
   export default {
@@ -348,8 +348,8 @@ import originalGraphShortestPath from "../request/api";
             file: 'txt',
           },
         ],
-        subgraphId: 2,
-        pathToShow: [2, 3]
+        subgraphId: null,
+        pathToShow: null
       }
       
     }, methods: {
@@ -388,12 +388,35 @@ import originalGraphShortestPath from "../request/api";
       //搜索路径
       searchPath(){
         originalGraphShortestPath()
+      },
+      /**
+       * 初始化项目
+       */
+      initProject(data){
+        console.log(data);
+        this.projectName = data.dynamicVo.projectName;
+        this.$store.commit('initProject', data);
+        this.subgraphId = 15;
+        this.vertexNum = this.$store.state.project.vertexMap.size;
+        this.edgeNum = this.$store.state.project.edgeMap.size;
+        //this.domainNum = this.$store.state.project.subgraphMap;
       }
 
     },
     mounted(){
       //初始化各个数据
       console.log("mounted");
+      //TODO:debug
+      this.projectId = this.$store.state.projectId
+      this.projectId = 9;
+      console.log("project id:" + this.projectId);
+      getProject(this.projectId).then(res => {
+          console.log("res.data:");
+          console.log(res.data);
+          this.initProject(res.data);
+        }).catch(err => console.log(err));
+
+
       
     }
 }

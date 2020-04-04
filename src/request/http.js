@@ -1,6 +1,7 @@
 import axios from 'axios'
 
-axios.defaults.baseURL = "http://116.62.123.74:8080";
+//axios.defaults.baseURL = "http://116.62.123.74:8080";
+axios.defaults.baseURL = "http://localhost:8080";
 
 /**
   * get方法，对应get请求
@@ -13,10 +14,11 @@ export function get(url, params){
             params: params
         })
         .then(res => {
-            resolve(res.data);
+            resolve(res);
+            console.log(res);
         })
         .catch(err => {
-            reject(err.data)
+            reject(err)
         })
     });
 }
@@ -30,10 +32,12 @@ export function post(url, params) {
     return new Promise((resolve, reject) => {
         axios.post(url, params)
         .then(res => {
-            resolve(res.data);
+            resolve(res);
         })
         .catch(err => {
-            reject(err.data)
+            console.log(err);
+
+            reject(err)
         })
     });
 }
@@ -50,10 +54,10 @@ export function del(url) {
               id: 12
             }
           }).then(res => {
-            resolve(res.data);
+            resolve(res);
         })
         .catch(err => {
-            reject(err.data)
+            reject(err)
         })
     }
 
@@ -71,10 +75,11 @@ export function put(url, params) {
             params: params
         })
         .then(res => {
-            resolve(res.data);
+            resolve(res);
         })
         .catch(err => {
-            reject(err.data)
+            console.log(err);
+            reject(err)
         })
     });
 }

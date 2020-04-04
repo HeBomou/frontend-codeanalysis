@@ -192,8 +192,11 @@
         console.log(this.$store.state.userId);
         const res = await addSession(this.userName, this.password);
         console.log(res);
-        this.$store.commit({res});
+        this.$store.commit('setUserId', res);
+        //TODO:debug
+        //this.$store.commit('setUserId', 233);
         console.log(this.$store.state.userId);
+        this.$router.push('/project');
       },
       async register() {
         const res = await addUser(null, this.userName, this.password);
