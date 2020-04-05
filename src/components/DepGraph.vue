@@ -150,11 +150,15 @@ export default {
 
       let nodeMap = new Map();
       vMap.forEach((v, k) => {
+        let func = v.functionName.split("(", 2)[0];
+        let funcSplit = func.split(":", 2);
+        let funcClass = funcSplit[0].split(".")[funcSplit[0].split(".").length - 1];
+        let funcName = funcSplit[1];
         nodeMap.set(k, {
           group: "nodes",
           data: {
             id: "n" + v.id,
-            name: v.functionName,
+            name: funcClass + ":" + funcName,
             color: "#999999"
           },
           position: {
@@ -171,7 +175,7 @@ export default {
             id: "e" + e.id,
             source: "n" + e.fromId,
             target: "n" + e.toId,
-            relationship: e.closeness,
+            relationship: e.closeness.toFixed(3),
             color: "#999999"
           }
         });
