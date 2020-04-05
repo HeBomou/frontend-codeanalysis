@@ -1,5 +1,15 @@
 <template>
     <v-app id="dependency">
+        <v-dialog
+        v-model="dialogErr"
+        width="500">
+            <v-card>
+                <v-card-title>{{errMsg}}</v-card-title>
+                <v-card-text>
+                  <v-btn color="error" @click="dialogErr=false">确定</v-btn>
+                </v-card-text>
+            </v-card>
+        </v-dialog>
         <v-app-bar
         app
         clipped-left
@@ -81,6 +91,8 @@ import {getProjects, addProject} from "../request/api";
 export default {
     name: 'Project',
     data: () => ({
+        errMsg: "",
+        dialogErr: false,
         projects: ["123", "234"],
         dialog: false,
         projectName: "",
@@ -89,10 +101,15 @@ export default {
     }),methods:{
         setProjects(){
             console.log("onMount, UserId: " + this.$store.state.userId);
-            getProjects(this.$store.state.userId).then(res => {
+            //TODO:debug
+            getProjects(null).then(res => {
                 console.log(res.data);
                 this.projects = res.data;
-                }).catch(err => console.log(err));
+                }).catch(err => this.Alert(err.response.data.errMsg));
+            // getProjects(this.$store.state.userId).then(res => {
+            //     console.log(res.data);
+            //     this.projects = res.data;
+            // }).catch(err => console.log(err));
         },
         addProject(){
             console.log("projectName : " + this.projectName);
@@ -108,7 +125,10 @@ export default {
             console.log(this.projects[i].id);
             this.$store.commit("setProjectId",this.projects[i].id);
             this.$router.push("/dependency");
-        }
+        },Alert(msg){
+        this.errMsg = msg;
+        this.dialogErr = true;
+      }
         
 
     },mounted(){

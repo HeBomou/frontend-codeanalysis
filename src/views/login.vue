@@ -1,6 +1,16 @@
 <template>
   <div>
         <!--    <v-parallax src="https://cdn.vuetifyjs.com/images/parallax/material.jpg" height="100%">-->
+    <v-dialog
+      v-model="dialog"
+      width="500">
+      <v-card>
+        <v-card-title>{{errMsg}}</v-card-title>
+        <v-card-text>
+           <v-btn color="error" @click="dialog=false">确定</v-btn>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
     <v-carousel
       cycle
       :height="screenHeight"
@@ -148,6 +158,8 @@
     },
 
     data: () => ({
+      errMsg: "",
+      dialog: false,
       imageUrls: [
         {
             src: require("@/assets/images/login/1.jpg"),
@@ -190,17 +202,32 @@
       //登录
       async login() {
         console.log(this.$store.state.userId);
-        const res = await addSession(this.userName, this.password);
-        console.log(res);
-        this.$store.commit('setUserId', res);
-        //TODO:debug
-        //this.$store.commit('setUserId', 233);
-        console.log(this.$store.state.userId);
-        this.$router.push('/project');
+        await addSession(this.userName, this.password).then(res => {
+          this.$store.commit('setUserId', res);
+            //TODO:debug
+            this.$store.commit('setUserId', 233);
+            console.log(this.$store.state.userId);
+            this.$router.push('/project');
+        }).catch(err => {
+          this.Alert(err.response.data.errMsg);
+        });
+
       },
       async register() {
-        const res = await addUser(null, this.userName, this.password);
-        console.log(res);
+        //const res = await addUser(null, this.userName, this.password);
+        //console.log(res);
+        addUser(null, this.userName, this.password).then(res => {
+          console.log(res);
+          this.Alert("注册成功");
+        })
+          .catch(err => {
+            console.log(err.response.data.errMsg);
+            this.Alert(err.response.data.errMsg);
+          })
+      },
+      Alert(msg){
+        this.errMsg = msg;
+        this.dialog = true;
       }
     }
   }

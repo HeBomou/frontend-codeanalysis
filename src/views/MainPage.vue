@@ -1,5 +1,17 @@
 <template>
   <v-app id="dependency">
+    <v-dialog
+        v-model="dialogErr"
+        width="500">
+            <v-card
+            justify="center"
+            >
+                <v-card-title>{{errMsg}}</v-card-title>
+                <v-card-text>
+                  <v-btn color="error" @click="dialogErr=false">确定</v-btn>
+                </v-card-text>
+            </v-card>
+        </v-dialog>
     <v-app-bar
       app
       clipped-left
@@ -232,7 +244,7 @@
 
 <script>
 import DepGraph from "@/components/DepGraph";
-import {getProject} from "../request/api";
+import {getProject, putVertex} from "../request/api";
 //import {} from "../request/api";
 //import SearchComponent from '../components/SearchAuto'
   export default {
@@ -257,6 +269,8 @@ import {getProject} from "../request/api";
             length: 4
           }
         ],
+        errMsg: "",
+        dialogErr: false,
         path: 0,
         //顶点
         vertexNum: 5,
@@ -387,9 +401,42 @@ import {getProject} from "../request/api";
       },
       saveTag(){
         this.vertexSelected.anotation = this.tag;
-        this.$store.commit("updateVertex", this.vertexSelected);
-        let now = this.$store.state.project.vertexMap.get(this.vertexSelected.id);
-        console.log(now);
+        this.updateVertex(this.vertexSelected);
+        putVertex(this.projectId, this.vertexSelected.id, {
+          id: this.vertexSelected.id,
+          anotation: this.vertexSelected.anotation,
+          x: this.vertexSelected.x,
+          y: this.vertexSelected.y
+        }).catch(err => {
+          this.Alert(err.response.data.errMsg);
+          console.log({
+          id: this.vertexSelected.id,
+          anotation: this.vertexSelected.anotation,
+          x: this.vertexSelected.x,
+          y: this.vertexSelected.y
+        });
+        })
+        
+      },
+      //对store和后端进行更新
+      updateVertex(vertex){
+        this.$store.commit("updateVertex", vertex);
+        console.log({
+          id: vertex.id,
+          anotation: vertex.anotation,
+          x: vertex.x,
+          y: vertex.y
+        });
+        putVertex(this.projectId, vertex.id, {
+          id: vertex.id,
+          anotation: vertex.anotation,
+          x: vertex.x,
+          y: vertex.y
+        }).then(res => {
+          console.log(res);
+        }).catch(err => {
+          console.log(err);
+        });
       },
       //搜索路径
       searchPath(){
@@ -406,6 +453,9 @@ import {getProject} from "../request/api";
         console.log(this.vertexs);
         console.log(this.vertexs[0][1]);
         console.log((this.vertexs[0][1]).functionName);
+      },Alert(msg){
+        this.errMsg = msg;
+        this.dialogErr = true;
       },
       /**
        * 初始化项目
@@ -481,13 +531,13 @@ import {getProject} from "../request/api";
       console.log("mounted");
       //TODO:debug
       this.projectId = this.$store.state.projectId
-      this.projectId = 9;
+      //this.projectId = 4;
       //console.log("project id:" + this.projectId);
       getProject(this.projectId).then(res => {
           console.log("res.data:");
           console.log(res.data);
           this.initProject(res.data);
-        }).catch(err => console.log(err));
+        }).catch(err => this.Alert(err.response.data.errMsg));
 
 
       

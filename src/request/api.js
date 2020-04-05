@@ -1,4 +1,4 @@
-import { get, post, del } from './http'
+import { get, post, del, put } from './http'
 /**
  * 
  * @param {long} id 
@@ -108,3 +108,11 @@ export const delUser = (id) => del("/user/" + id);
  * @param {*} pwdMd5 
  */
 export const addUser = (id, username, pwdMd5) => post("/user", {id, username, pwdMd5});
+
+/**
+ * 更新点的相关信息
+ * @param {*} projectId 
+ * @param {*} vertexId 
+ * @param {*} vertexVo 
+ */
+export const putVertex = (projectId, vertexId, vertexVo) => put("/project/" + projectId + "/vertex/" + vertexId + "/dynamic", vertexVo);
