@@ -152,7 +152,9 @@ export default {
       vMap.forEach((v, k) => {
         let func = v.functionName.split("(", 2)[0];
         let funcSplit = func.split(":", 2);
-        let funcClass = funcSplit[0].split(".")[funcSplit[0].split(".").length - 1];
+        let funcClass = funcSplit[0].split(".")[
+          funcSplit[0].split(".").length - 1
+        ];
         let funcName = funcSplit[1];
         nodeMap.set(k, {
           group: "nodes",
@@ -175,7 +177,7 @@ export default {
             id: "e" + e.id,
             source: "n" + e.fromId,
             target: "n" + e.toId,
-            relationship: e.closeness.toFixed(3),
+            relationship: "", // 可以显示紧密度 e.closeness.toFixed(3),
             color: "#999999"
           }
         });
