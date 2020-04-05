@@ -37,7 +37,7 @@
                   @update-items="updateItems"
                   v-model="searchVertex"
                   :items="vertexs"
-                  
+                  @change="searchVertexSelected"
                 ></v-autocomplete>
               </v-card-text>
             </v-card>
@@ -57,6 +57,7 @@
                   @update-items="updateItems"
                   v-model="endVertex"
                   :items="vertexs"
+
                 ></v-autocomplete>
                 <v-btn @click="searchPath">搜索</v-btn>
               </v-card-text>
@@ -231,7 +232,7 @@
 
 <script>
 import DepGraph from "@/components/DepGraph";
-import {originalGraphShortestPath, getProject} from "../request/api";
+import {getProject} from "../request/api";
 //import {} from "../request/api";
 //import SearchComponent from '../components/SearchAuto'
   export default {
@@ -277,6 +278,7 @@ import {originalGraphShortestPath, getProject} from "../request/api";
         startVertex: "",
         //终点
         endVertex: "3",
+        vertexSelected: null,
         //所有的顶点
         vertexs: [
             "haha",
@@ -286,7 +288,7 @@ import {originalGraphShortestPath, getProject} from "../request/api";
         open: ['static', 'public'],
         files: {
           html: 'mdi-language-html5',
-          js: 'mdi-nodejs',
+          js: 'mdi-language-java',
           json: 'mdi-json',
           md: 'mdi-markdown',
           pdf: 'mdi-file-pdf',
@@ -375,19 +377,35 @@ import {originalGraphShortestPath, getProject} from "../request/api";
         console.log(this.tree);
       },
       cnmdVertex(id) {
+        this.selectVertex(id);
         console.log("Select on vertex", id);
-        },cnmdEdge(id) {
+      },cnmdEdge(id) {
         console.log("Select on edge", id);
       },
       cnmdConnectiveDomain(id) {
         console.log("select on connective domain", id);
       },
       saveTag(){
-
+        this.vertexSelected.anotation = this.tag;
+        this.$store.commit("updateVertex", this.vertexSelected);
+        let now = this.$store.state.project.vertexMap.get(this.vertexSelected.id);
+        console.log(now);
       },
       //搜索路径
       searchPath(){
-        originalGraphShortestPath()
+
+      },
+      setVertexs(){
+        let Vs = this.$store.state.project.vertexMap;
+        this.vertexs = [];
+        Vs.forEach(v => {
+          console.log(v);
+          this.vertexs.push(v.functionName);
+        })
+        console.log("vertexs:");
+        console.log(this.vertexs);
+        console.log(this.vertexs[0][1]);
+        console.log((this.vertexs[0][1]).functionName);
       },
       /**
        * 初始化项目
@@ -403,12 +421,58 @@ import {originalGraphShortestPath, getProject} from "../request/api";
           if(subgraph.threshold == 0){
             //console.log(subgraph.id);
             this.subgraphId = subgraph.id;
-            
           }
         })
+        //设置基本信息
         this.vertexNum = this.$store.state.project.vertexMap.size;
         this.edgeNum = this.$store.state.project.edgeMap.size;
         this.domainNum = this.$store.state.project.subgraphMap.get(this.subgraphId).connectiveDomainIds.length;
+
+        //设置点集合
+        this.setVertexs();
+
+        //设置包结构
+        console.log("package");
+        console.log(this.items);
+        this.items = data.packageRoot;
+      },//搜索这个顶点
+      searchVertexSelected(){
+        console.log(this.searchVertex);
+        let v = this.getVertexByName(this.searchVertex);
+        console.log("searchVertex");
+        console.log(v);
+        this.selectVertex(v.id);
+
+      },
+      getVertexIdByName(name){
+        let vMap = this.$store.state.project.vertexMap;
+        let result = null;
+        vMap.forEach(v => {
+          if(v.functionName == name){
+            result = v.id;
+          }
+        })
+        return result;
+      },
+      getVertexByName(name){
+        let vMap = this.$store.state.project.vertexMap;
+        let result = null;
+        vMap.forEach(v => {
+          if(v.functionName == name){
+            result = v;
+          }
+        })
+        return result;
+
+      },getVertexById(id){
+        let vMap = this.$store.state.project.vertexMap;
+        return vMap.get(id);
+      }, //选中某个顶点
+      selectVertex(id){
+        this.vertexSelected = this.getVertexById(id);
+        this.src = this.vertexSelected.sourceCode;
+        this.tag = this.vertexSelected.anotation;
+        this.searchVertex = this.vertexSelected.functionName;
       }
 
     },
@@ -418,7 +482,7 @@ import {originalGraphShortestPath, getProject} from "../request/api";
       //TODO:debug
       this.projectId = this.$store.state.projectId
       this.projectId = 9;
-      console.log("project id:" + this.projectId);
+      //console.log("project id:" + this.projectId);
       getProject(this.projectId).then(res => {
           console.log("res.data:");
           console.log(res.data);
