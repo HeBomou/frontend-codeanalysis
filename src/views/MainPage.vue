@@ -77,19 +77,23 @@
             <v-card>
               <v-card-text>
                 <v-treeview
+                dense
                   v-model="tree"
                   :open="open"
                   :items="items"
                   activatable
-                  item-key="name"
+                  item-key="str"
+                  item-text="str"
                   open-on-click
                   :active="active"
                   return-object
                 >
                   <template v-slot:prepend="{ item, open }">
+                    <!-- 如果是文件夹，则根据打开状况显示图标 -->
                     <v-icon v-if="!item.file">
                       {{ open ? 'mdi-folder-open' : 'mdi-folder' }}
                     </v-icon>
+                    <!-- 否则根据文件类型显示图标 -->
                     <v-icon v-else>
                       {{ files[item.file] }}
                     </v-icon>
@@ -309,6 +313,7 @@ import {getProject, putVertex} from "../request/api";
           png: 'mdi-file-image',
           txt: 'mdi-file-document-outline',
           xls: 'mdi-file-excel',
+          javaFunc: 'mdi-language-java'
         },
         tree: [],
         active: [],
@@ -317,50 +322,50 @@ import {getProject, putVertex} from "../request/api";
             name: '.git',
           },
           {
-            name: 'node_modules',
+            str: 'node_modules',
           },
           {
-            name: 'public',
+            str: 'public',
             children: [
               {
-                name: 'static',
+                str: 'static',
                 children: [{
-                  name: 'logo.png',
+                  str: 'logo.png',
                   file: 'png',
                 }],
               },
               {
-                name: 'favicon.ico',
+                str: 'favicon.ico',
                 file: 'png',
               },
               {
-                name: 'index.html',
+                str: 'index.html',
                 file: 'html',
               },
             ],
           },
           {
-            name: '.gitignore',
+            str: '.gitignore',
             file: 'txt',
           },
           {
-            name: 'babel.config.js',
+            str: 'babel.config.js',
             file: 'js',
           },
           {
-            name: 'package.json',
+            str: 'package.json',
             file: 'json',
           },
           {
-            name: 'README.md',
+            str: 'README.md',
             file: 'md',
           },
           {
-            name: 'vue.config.js',
+            str: 'vue.config.js',
             file: 'js',
           },
           {
-            name: 'yarn.lock',
+            str: 'yarn.lock',
             file: 'txt',
           },
         ],
@@ -446,13 +451,12 @@ import {getProject, putVertex} from "../request/api";
         let Vs = this.$store.state.project.vertexMap;
         this.vertexs = [];
         Vs.forEach(v => {
-          console.log(v);
           this.vertexs.push(v.functionName);
         })
-        console.log("vertexs:");
-        console.log(this.vertexs);
-        console.log(this.vertexs[0][1]);
-        console.log((this.vertexs[0][1]).functionName);
+        // console.log("vertexs:");
+        // console.log(this.vertexs);
+        // console.log(this.vertexs[0][1]);
+        // console.log((this.vertexs[0][1]).functionName);
       },Alert(msg){
         this.errMsg = msg;
         this.dialogErr = true;
@@ -461,6 +465,7 @@ import {getProject, putVertex} from "../request/api";
        * 初始化项目
        */
       initProject(data){
+        console.log("initProject, data:");
         console.log(data);
         this.projectName = data.dynamicVo.projectName;
         this.$store.commit('initProject', data);
@@ -482,10 +487,53 @@ import {getProject, putVertex} from "../request/api";
         this.setVertexs();
 
         //设置包结构
-        console.log("package");
+        console.log("exp");
         console.log(this.items);
-        this.items = data.packageRoot;
-      },//搜索这个顶点
+
+        //TODO:debug
+        this.preproPackage([data.packageRoot]);
+        this.items = [data.packageRoot];
+        console.log("get");
+        console.log(this.items);
+
+      },
+      //对包结构进行预处理工作，设置文件类型（文件夹/类/方法），根据函数节点id获得函数名，放入children中
+      preproPackage(root){
+        root.forEach(node => {
+          if(node.children.length == 0 && node.functions == 0){
+            return;
+          }
+          if(node.functions.length == 0){
+            //文件夹，对所有子节点进行递归
+            // console.log("folder");
+            node.children = this.preproPackage(node.children);
+          }else{
+            //类
+            // console.log("not folder");
+            node.functions.forEach(func => {
+              // console.log(func);
+              // console.log("childer");
+              // console.log(node.children);
+              let vertex = this.getVertexById(func);
+              node.children.push({
+                str: this.getShortFuncName(vertex.functionName),
+                file: "javaFunc"
+              });
+
+            }, node.children);
+              // console.log(node.children);
+
+          }
+        });
+        // console.log("res")
+        // console.log(root);
+        return root;
+      },
+      // //将一个
+      // childrenToArray(children){
+      //   children.forEach(child)
+      // }
+      // ,//搜索这个顶点
       searchVertexSelected(){
         console.log(this.searchVertex);
         let v = this.getVertexByName(this.searchVertex);
@@ -493,6 +541,11 @@ import {getProject, putVertex} from "../request/api";
         console.log(v);
         this.selectVertex(v.id);
 
+      },
+      //为了方便显示，把函数名全名中的包名类名去除
+      getShortFuncName(str){
+        let arr = str.split(":");
+        return arr[1];
       },
       getVertexIdByName(name){
         let vMap = this.$store.state.project.vertexMap;
@@ -531,7 +584,7 @@ import {getProject, putVertex} from "../request/api";
       console.log("mounted");
       //TODO:debug
       this.projectId = this.$store.state.projectId
-      //this.projectId = 4;
+      this.projectId = 5;
       //console.log("project id:" + this.projectId);
       getProject(this.projectId).then(res => {
           console.log("res.data:");
