@@ -3,6 +3,8 @@
     <DepGraph
       v-bind:subgraph-id="subgraphId"
       v-bind:path-to-show="pathToShow"
+      v-bind:selected-item="selectedItem"
+      v-bind:selected-connective-domain-id="selectedConnectiveDomainId"
       @vertexSelected="cnmdVertex"
       @edgeSelected="cnmdEdge"
       @connectiveDomainSelected="cnmdConnectiveDomain"
@@ -28,18 +30,23 @@ export default {
   },
   data() {
     return {
+      selectedConnectiveDomainId: undefined,
+      selectedItem: undefined,
       subgraphId: 2,
       pathToShow: [2, 3]
     };
   },
   methods: {
     cnmdVertex(id) {
+      this.selectedItem = { type: "n", id };
       console.log("Select on vertex", id);
     },
     cnmdEdge(id) {
+      this.selectedItem = { type: "e", id };
       console.log("Select on edge", id);
     },
     cnmdConnectiveDomain(id) {
+      this.selectedConnectiveDomainId = id;
       console.log("select on connective domain", id);
     }
   },

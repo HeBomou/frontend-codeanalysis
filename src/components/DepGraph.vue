@@ -10,7 +10,6 @@ export default {
   mounted() {
     this.cy = cytoscape({
       container: document.getElementById("cy"),
-      // layout: { name: "grid", rows: 2, cols: 2 },
       style: [
         {
           selector: "node",
@@ -92,16 +91,27 @@ export default {
         .nodes()
         .orphans()
         .on("select", evt => {
-          if (evt.target._private.data.id.charAt(0) == "n")
+          if (evt.target.data("id").charAt(0) == "n") {
+            let prt = evt.target.data("parent");
+            if (prt)
+              this.$emit(
+                "connectiveDomainSelected",
+                parseInt(prt.substring(1))
+              );
+            else {
+              this.$emit(
+                "vertexSelected",
+                parseInt(evt.target.data("id").substring(1))
+              );
+              this.$emit("connectiveDomainSelected", parseInt(undefined));
+            }
+          } else {
             this.$emit(
               "connectiveDomainSelected",
-              parseInt(evt.target._private.data.parent.substring(1))
+              parseInt(evt.target.data("id").substring(1))
             );
-          else
-            this.$emit(
-              "connectiveDomainSelected",
-              parseInt(evt.target._private.data.id.substring(1))
-            );
+            this.$emit("vertexSelected", parseInt(undefined));
+          }
         });
       this.cy
         .nodes()
@@ -115,12 +125,12 @@ export default {
       this.cy.edges().on("select", evt => {
         this.$emit(
           "edgeSelected",
-          parseInt(evt.target._private.data.id.substring(1))
+          parseInt(evt.target.data("id").substring(1))
         );
-        this.$emit(
-          "connectiveDomainSelected",
-          parseInt(evt.target._private.data.parent.substring(1))
-        );
+        let prt = evt.target.data("parent");
+        if (prt)
+          this.$emit("connectiveDomainSelected", parseInt(prt.substring(1)));
+        else this.$emit("connectiveDomainSelected", undefined);
       });
       this.cy.nodes().on("dragfree", evt => {
         let node = evt.target._private;
@@ -131,13 +141,16 @@ export default {
             y: node.position.y
           });
         else {
-          node.children.forEach(chr => {
-            this.$store.commit("moveVertex", {
-              id: parseInt(chr._private.data.id.substring(1)),
-              x: chr._private.position.x,
-              y: chr._private.position.y
-            });
-          });
+          console.log(node);
+          console.log(evt);
+          // TODO: resolve cd
+          // node.children.forEach(chr => {
+          //   this.$store.commit("moveVertex", {
+          //     id: parseInt(chr._private.data.id.substring(1)),
+          //     x: chr._private.position.x,
+          //     y: chr._private.position.y
+          //   });
+          // });
         }
       });
     },
@@ -161,7 +174,8 @@ export default {
           data: {
             id: "n" + v.id,
             name: funcClass + ":" + funcName,
-            color: "#999999"
+            color: "#999999",
+            oriColor: "#999999"
           },
           position: {
             x: v.x,
@@ -178,7 +192,8 @@ export default {
             source: "n" + e.fromId,
             target: "n" + e.toId,
             relationship: "", // 可以显示紧密度 e.closeness.toFixed(3),
-            color: "#999999"
+            color: "#999999",
+            oriColor: "#999999"
           }
         });
       });
@@ -198,19 +213,15 @@ export default {
           let node = nodeMap.get(vid);
           node.data.parent = "c" + id;
           node.data.color = domain.color;
+          node.data.oriColor = domain.color;
         });
         domain.edgeIds.forEach(eid => {
           let edge = edgeMap.get(eid);
           edge.data.parent = "c" + id;
           edge.data.color = domain.color;
+          edge.data.oriColor = domain.color;
         });
       });
-
-      // 高亮显示路径
-      if (this.pathToShow)
-        this.pathToShow.forEach(id => {
-          edgeMap.get(id).data.color = "#D15FEE";
-        });
 
       return {
         nodes: [...nodeMap.values()],
@@ -219,6 +230,9 @@ export default {
     }
   },
   props: {
+    selectedItem: Object,
+    selectedConnectiveDomainId: Number,
+    selectedEdgeId: Number,
     subgraphId: Number,
     pathToShow: Array
   },
@@ -226,13 +240,47 @@ export default {
     return {};
   },
   watch: {
+    selectedItem(newItem, oldItem) {
+      if (oldItem) {
+        let item = this.cy.getElementById(oldItem.type + oldItem.id);
+        if (item) item.data("color", item.data("oriColor"));
+      }
+      if (newItem) {
+        let item = this.cy.getElementById(newItem.type + newItem.id);
+        if (item) item.data("color", "#B03060");
+      }
+    },
+    selectedConnectiveDomainId(newId, oldId) {
+      if (oldId) {
+        let cd = this.cy.getElementById("c" + oldId);
+        if (cd) cd.data("color", "#FFEEEE");
+      }
+      if (newId) {
+        let cd = this.cy.getElementById("c" + newId);
+        if (cd) cd.data("color", "#E6E6FA");
+      }
+    },
     subgraphId() {
       this.refreshGraph();
     },
-    pathToShow() {
-      this.refreshGraph();
+    pathToShow(newPath, oldPath) {
+      // 取消之前的高亮
+      if (oldPath) {
+        oldPath.forEach(eId => {
+          let e = this.cy.getElementById("e" + eId);
+          if (e) e.data("color", e.data("oriColor"));
+        });
+      }
+      // 显示新的高亮
+      if (newPath) {
+        newPath.forEach(eId => {
+          let e = this.cy.getElementById("e" + eId);
+          if (e) e.data("color", "#A2CD5A");
+        });
+      }
     },
     connectiveDomainMapColorChangeTracker() {
+      // TODO: 很麻烦不想改
       this.refreshGraph();
     }
   },
