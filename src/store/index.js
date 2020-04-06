@@ -112,6 +112,8 @@ export default new Vuex.Store({
       Vue.set(state.project, "connectiveDomainMapColorChangeTracker", state.project.connectiveDomainMapColorChangeTracker + 1);
     }, updateVertex(state, vertex){
       state.project.vertexMap.set(vertex.id, vertex);
+    }, updateEdge(state, edge){
+      state.project.edgeMap.set(edge.id, edge);
     }
   },
   actions: {

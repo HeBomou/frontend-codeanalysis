@@ -76,7 +76,7 @@ export const delProject = (id) => del("/project" + id);
  * @param {string} url 	git仓库的url
  * @param {string} userId 
  */
-export const addProject = (projectName, url, userId) => post("/project", {projectName, url, userId});
+export const addProject = (projectName, url, userId) => post("/project?projectName=" + projectName + "&url=" + url + "&userId=" + userId,null);
 
 
 
@@ -116,3 +116,5 @@ export const addUser = (id, username, pwdMd5) => post("/user", {id, username, pw
  * @param {*} vertexVo 
  */
 export const putVertex = (projectId, vertexId, vertexVo) => put("/project/" + projectId + "/vertex/" + vertexId + "/dynamic", vertexVo);
+
+export const putEdge = (projectId, edgeId, edgeVo) => put("/project/" + projectId + "/edge/" + edgeId + "/dynamic", edgeVo);

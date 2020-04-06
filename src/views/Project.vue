@@ -115,8 +115,12 @@ export default {
             console.log("projectName : " + this.projectName);
             console.log("projectUrl : " + this.projectUrl);
             console.log("UserId : " + this.$store.state.userId);
-            const res = addProject(this.projectName, this.projectUrl, this.$store.state.userId);
-            console.log(res);
+            addProject(this.projectName, this.projectUrl, this.$store.state.userId).then(res => {
+                console.log(res);
+            }).catch(err => {
+                this.Alert(err.response.data.errMsg);
+            })
+            
         },
         /**
          * 进入这个项目
