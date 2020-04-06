@@ -168,18 +168,22 @@
                   @vertexSelected="cnmdVertex"
                   @edgeSelected="cnmdEdge"
                   @connectiveDomainSelected="cnmdConnectiveDomain"
+                  @vertexMoved="cnmdVertexMoved"
                 ></DepGraph>
               </v-card-text>
             </v-card>
             <v-card class="mt-5">
               <v-card-text>
+                <v-card-title>
+                  路径总数：{{pathNum}}
+                </v-card-title>
                 <v-list-item-group v-model="path">
                   <v-list-item
                     v-for="(path, i) in paths"
                     :key="i"
                   >
                   <v-list-item-content>
-                    <v-list-item-title @click="debug">路径：{{path.name}} 长度：{{path.length}}</v-list-item-title>
+                    <v-list-item-title @click="selectPath(path)">路径：{{i + 1}} 长度：{{path.length}}</v-list-item-title>
                   </v-list-item-content>
                   </v-list-item>
                 </v-list-item-group>
@@ -250,7 +254,7 @@
 
 <script>
 import DepGraph from "@/components/DepGraph";
-import {getProject, putVertex, putEdge} from "../request/api";
+import {getProject, putVertex, putEdge, getOriginalGraphPath} from "../request/api";
 //import {} from "../request/api";
 //import SearchComponent from '../components/SearchAuto'
   export default {
@@ -284,6 +288,8 @@ import {getProject, putVertex, putEdge} from "../request/api";
         edgeNum: 3,
         //连通域数
         domainNum: 2,
+        //搜索的路径总数
+        pathNum: 0,
         //源代码
         src: "int s = abc;\n\treturn s;",
         //标注
@@ -379,9 +385,9 @@ import {getProject, putVertex, putEdge} from "../request/api";
         //当前路径
         pathToShow: null,    
         //图中选中的点边
-        graphSelectedItem: 1,
+        graphSelectedItem: null,
         //图中选中的连通域
-        graphSelectedConnectiveDomainId: 1,
+        graphSelectedConnectiveDomainId: null,
         //当前选中的是顶点,1:顶点，2：边，3：连通域
         selectType: 1,
       }
@@ -411,15 +417,19 @@ import {getProject, putVertex, putEdge} from "../request/api";
       },
       //DevGraph的回调
       cnmdVertex(id) {
-        this.selectVertex(id);
         console.log("Select on vertex", id);
+        this.selectVertex(id);
       },cnmdEdge(id) {
-        this.selectEdge(id)
         console.log("Select on edge", id);
+        this.selectEdge(id)
       },
       cnmdConnectiveDomain(id) {
-        this.selectDomain(id);
         console.log("select on connective domain", id);
+        this.selectDomain(id);
+      },
+      cnmdVertexMoved(vertex){
+        console.log("vertex Moved, id:", vertex);
+        this.vertexMoved(vertex);
       },
       saveTag(){
         if(this.selectType == 1){
@@ -468,7 +478,16 @@ import {getProject, putVertex, putEdge} from "../request/api";
       },
       //搜索路径
       searchPath(){
-
+        console.log("searchPath");
+        getOriginalGraphPath(this.projectId, this.getVertexIdByName(this.startVertex), this.getVertexIdByName(this.endVertex))
+          .then(res => {
+            console.log("search Path success, res:");
+            console.log(res.data);
+            this.pathNum = res.data.num;
+            this.paths = res.data.paths;
+          }).catch(err => {
+            this.Alert(err.response.data.errMsg);
+          });
       },
       setVertexs(){
         let Vs = this.$store.state.project.vertexMap;
@@ -607,7 +626,7 @@ import {getProject, putVertex, putEdge} from "../request/api";
       selectDomain(id){
         console.log("selectDomain");
         console.log(id);
-        //this.selectType = 3;
+        this.selectType = 3;
       },
       selectEdge(id){
         console.log("selectEdge id:");
@@ -616,7 +635,21 @@ import {getProject, putVertex, putEdge} from "../request/api";
         this.edgeSelected = this.$store.state.project.edgeMap.get(id);
         this.tag = this.edgeSelected.anotation;
         this.graphSelectedItem = {type: "e", id: this.edgeSelected.id};
+        console.log(this.edgeSelected);
         
+      },
+      //图中的点被移动
+      vertexMoved(vertex){
+        console.log("vertex moved");
+        this.updateVertex(this.$store.state.project.vertexMap.get(vertex.id));
+      },
+      selectPath(path){
+        console.log(path);
+        if(this.pathToShow == path){
+          this.pathToShow = null;
+        }else{
+          this.pathToShow = path;
+        }
       }
 
     },
