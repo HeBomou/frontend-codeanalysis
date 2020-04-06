@@ -99,8 +99,9 @@ export default {
                 parseInt(evt.target.data("id").substring(1))
               );
             }
-          } else
-            // 单独选中联通域
+          }
+          // 单独选中联通域
+          else
             this.$emit(
               "connectiveDomainSelected",
               parseInt(evt.target.data("id").substring(1))
@@ -124,34 +125,70 @@ export default {
         if (prt)
           this.$emit("connectiveDomainSelected", parseInt(prt.substring(1)));
       });
-      // this.cy.nodes().on("")
-      this.cy.nodes().on("dragfree", evt => {
-        let node = evt.target._private;
-        if (node.children.length == 0) {
-          let id = parseInt(node.data.id.substring(1));
+      this.cy
+        .nodes()
+        .nonorphans()
+        .on("dragfree", evt => {
+          // 联通域中的点
+          let node = evt.target;
+          let id = parseInt(node.data("id").substring(1));
+          let x = node.position("x");
+          let y = node.position("y");
           this.$store.commit("moveVertex", {
             id,
-            x: node.position.x,
-            y: node.position.y
+            x,
+            y
           });
           this.$emit("vertexMoved", {
             id,
-            x: node.position.x,
-            y: node.position.y
+            x,
+            y
           });
-        } else {
-          console.log(node);
-          console.log(evt);
-          // TODO: resolve cd
-          // node.children.forEach(chr => {
-          //   this.$store.commit("moveVertex", {
-          //     id: parseInt(chr._private.data.id.substring(1)),
-          //     x: chr._private.position.x,
-          //     y: chr._private.position.y
-          //   });
-          // });
-        }
-      });
+        });
+      this.cy
+        .nodes()
+        .orphans()
+        .on("dragfree", evt => {
+          let node = evt.target;
+          let id = parseInt(node.data("id").substring(1));
+          let x = node.position("x");
+          let y = node.position("y");
+          let chr = node.children();
+          let prt = node.parent();
+          if (chr.length == 0 && prt.length == 0) {
+            // 联通域外的点
+            this.$store.commit("moveVertex", {
+              id,
+              x,
+              y
+            });
+            this.$emit("vertexMoved", {
+              id,
+              x,
+              y
+            });
+          } else if (chr.length != 0) {
+            // 联通域
+            let dx = node.position("x") - node.data("x");
+            let dy = node.position("y") - node.data("y");
+            this.$emit("connectiveDomainMove", {
+              id,
+              dx,
+              dy
+            });
+            console.log(id, dx, dy);
+          }
+        });
+      this.cy
+        .nodes()
+        .orphans()
+        .on("grab", evt => {
+          let node = evt.target;
+          if (node.children().length != 0) {
+            node.data("x", node.position("x"));
+            node.data("y", node.position("y"));
+          }
+        });
     },
     getElements() {
       if (this.subgraphId == undefined) return { nodes: [], edges: [] };
