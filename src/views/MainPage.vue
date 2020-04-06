@@ -193,7 +193,7 @@
             dense
             class="grey lighten-4"
           >
-            <v-card class="mt-5">
+            <v-card class="mt-5" v-if="selectType==1">
               <v-card-title>
                 源代码
               </v-card-title>
@@ -226,10 +226,10 @@
                     <v-btn class="mt-5" style="width: 100%">查看所在连通域</v-btn>
                   </div>
                   <div>
-                    <v-btn class="mt-5" style="width: 100%" @click="setAsStart">设置为起点</v-btn>
+                    <v-btn class="mt-5" style="width: 100%" @click="setAsStart" v-if="selectType==1">设置为起点</v-btn>
                   </div>
                   <div>
-                    <v-btn class="mt-5" style="width: 100%" @click="setAsEnd">设置为终点</v-btn>
+                    <v-btn class="mt-5" style="width: 100%" @click="setAsEnd" v-if="selectType==1">设置为终点</v-btn>
                   </div>
                   <div>
                     <v-btn class="mt-5" style="width: 100%" @click="debug">haha</v-btn>
@@ -250,7 +250,7 @@
 
 <script>
 import DepGraph from "@/components/DepGraph";
-import {getProject, putVertex} from "../request/api";
+import {getProject, putVertex, putEdge} from "../request/api";
 //import {} from "../request/api";
 //import SearchComponent from '../components/SearchAuto'
   export default {
@@ -298,7 +298,10 @@ import {getProject, putVertex} from "../request/api";
         startVertex: "",
         //终点
         endVertex: "3",
+        //当前选中的顶点/边/连通域
         vertexSelected: null,
+        edgeSelected: null,
+        domainSelected: null,
         //所有的顶点
         vertexs: [
             "haha",
@@ -379,6 +382,8 @@ import {getProject, putVertex} from "../request/api";
         graphSelectedItem: 1,
         //图中选中的连通域
         graphSelectedConnectiveDomainId: 1,
+        //当前选中的是顶点,1:顶点，2：边，3：连通域
+        selectType: 1,
       }
       
     }, methods: {
@@ -398,11 +403,13 @@ import {getProject, putVertex} from "../request/api";
         this.searchVertex = val;
       },
       debug(){
-        console.log(this.searchVertex);
-        console.log(this.startVertex);
-        console.log(this.endVertex);
-        console.log(this.tree);
+        // console.log(this.searchVertex);
+        // console.log(this.startVertex);
+        // console.log(this.endVertex);
+        // console.log(this.tree);
+        console.log(this.selectType);
       },
+      //DevGraph的回调
       cnmdVertex(id) {
         this.selectVertex(id);
         console.log("Select on vertex", id);
@@ -415,27 +422,33 @@ import {getProject, putVertex} from "../request/api";
         console.log("select on connective domain", id);
       },
       saveTag(){
-        this.vertexSelected.anotation = this.tag;
-        this.updateVertex(this.vertexSelected);
-        putVertex(this.projectId, this.vertexSelected.id, {
-          id: this.vertexSelected.id,
-          anotation: this.vertexSelected.anotation,
-          x: this.vertexSelected.x,
-          y: this.vertexSelected.y
-        }).catch(err => {
-          this.Alert(err.response.data.errMsg);
-          console.log({
-          id: this.vertexSelected.id,
-          anotation: this.vertexSelected.anotation,
-          x: this.vertexSelected.x,
-          y: this.vertexSelected.y
-        });
-        })
+        if(this.selectType == 1){
+          this.vertexSelected.anotation = this.tag;
+          this.updateVertex(this.vertexSelected);
+        }else if(this.selectType == 2){
+          this.edgeSelected.anotation = this.tag;
+          this.updateEdge(this.edgeSelected);
+        }
         
       },
-      //对store和后端进行更新
+      //更新边，对store和后端进行更新
+      updateEdge(edge){
+        console.log(edge);
+        this.$store.commit("updateEdge", edge);
+        console.log("updateEdge");
+        putEdge(this.projectId, edge.id, {
+          id: edge.id,
+          anotation: edge.anotation
+        }).then(res => {
+          console.log(res);
+        }).catch(err  => {
+          this.Alert(err.response.data.errMsg);
+        });
+      },
+      //更新顶点，对store和后端进行更新
       updateVertex(vertex){
         this.$store.commit("updateVertex", vertex);
+        console.log("update vertex");
         console.log({
           id: vertex.id,
           anotation: vertex.anotation,
@@ -450,7 +463,7 @@ import {getProject, putVertex} from "../request/api";
         }).then(res => {
           console.log(res);
         }).catch(err => {
-          console.log(err);
+          this.Alert(err.response.data.errMsg);
         });
       },
       //搜索路径
@@ -582,6 +595,7 @@ import {getProject, putVertex} from "../request/api";
         return vMap.get(id);
       }, //选中某个顶点
       selectVertex(id){
+        this.selectType = 1;
         this.vertexSelected = this.getVertexById(id);
         this.src = this.vertexSelected.sourceCode;
         this.tag = this.vertexSelected.anotation;
@@ -593,6 +607,16 @@ import {getProject, putVertex} from "../request/api";
       selectDomain(id){
         console.log("selectDomain");
         console.log(id);
+        //this.selectType = 3;
+      },
+      selectEdge(id){
+        console.log("selectEdge id:");
+        console.log(id);
+        this.selectType = 2;
+        this.edgeSelected = this.$store.state.project.edgeMap.get(id);
+        this.tag = this.edgeSelected.anotation;
+        this.graphSelectedItem = {type: "e", id: this.edgeSelected.id};
+        
       }
 
     },

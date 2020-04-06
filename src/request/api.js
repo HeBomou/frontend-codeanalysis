@@ -116,3 +116,5 @@ export const addUser = (id, username, pwdMd5) => post("/user", {id, username, pw
  * @param {*} vertexVo 
  */
 export const putVertex = (projectId, vertexId, vertexVo) => put("/project/" + projectId + "/vertex/" + vertexId + "/dynamic", vertexVo);
+
+export const putEdge = (projectId, edgeId, edgeVo) => put("/project/" + projectId + "/edge/" + edgeId + "/dynamic", edgeVo);
