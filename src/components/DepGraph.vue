@@ -98,16 +98,13 @@ export default {
                 "vertexSelected",
                 parseInt(evt.target.data("id").substring(1))
               );
-              this.$emit("connectiveDomainSelected", parseInt(undefined));
             }
-          } else {
+          } else
             // 单独选中联通域
             this.$emit(
               "connectiveDomainSelected",
               parseInt(evt.target.data("id").substring(1))
             );
-            this.$emit("vertexSelected", parseInt(undefined));
-          }
         });
       this.cy
         .nodes()
@@ -126,8 +123,8 @@ export default {
         let prt = evt.target.data("parent");
         if (prt)
           this.$emit("connectiveDomainSelected", parseInt(prt.substring(1)));
-        else this.$emit("connectiveDomainSelected", undefined);
       });
+      // this.cy.nodes().on("")
       this.cy.nodes().on("dragfree", evt => {
         let node = evt.target._private;
         if (node.children.length == 0) {
