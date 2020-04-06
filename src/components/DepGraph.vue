@@ -232,7 +232,6 @@ export default {
   props: {
     selectedItem: Object,
     selectedConnectiveDomainId: Number,
-    selectedEdgeId: Number,
     subgraphId: Number,
     pathToShow: Array
   },
