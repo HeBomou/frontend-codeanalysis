@@ -183,7 +183,7 @@
                     :key="i"
                   >
                   <v-list-item-content>
-                    <v-list-item-title @click="debug">路径：{{path.name}} 长度：{{path.length}}</v-list-item-title>
+                    <v-list-item-title @click="selectPath(path)">路径：{{i + 1}} 长度：{{path.length}}</v-list-item-title>
                   </v-list-item-content>
                   </v-list-item>
                 </v-list-item-group>
@@ -385,9 +385,9 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath} from "../request/a
         //当前路径
         pathToShow: null,    
         //图中选中的点边
-        graphSelectedItem: 1,
+        graphSelectedItem: null,
         //图中选中的连通域
-        graphSelectedConnectiveDomainId: 1,
+        graphSelectedConnectiveDomainId: null,
         //当前选中的是顶点,1:顶点，2：边，3：连通域
         selectType: 1,
       }
@@ -484,6 +484,7 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath} from "../request/a
             console.log("search Path success, res:");
             console.log(res.data);
             this.pathNum = res.data.num;
+            this.paths = res.data.paths;
           }).catch(err => {
             this.Alert(err.response.data.errMsg);
           });
@@ -641,6 +642,14 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath} from "../request/a
       vertexMoved(vertex){
         console.log("vertex moved");
         this.updateVertex(this.$store.state.project.vertexMap.get(vertex.id));
+      },
+      selectPath(path){
+        console.log(path);
+        if(this.pathToShow == path){
+          this.pathToShow = null;
+        }else{
+          this.pathToShow = path;
+        }
       }
 
     },
