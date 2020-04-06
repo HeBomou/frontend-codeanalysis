@@ -134,13 +134,19 @@ export default {
       });
       this.cy.nodes().on("dragfree", evt => {
         let node = evt.target._private;
-        if (node.children.length == 0)
+        if (node.children.length == 0) {
+          let id = parseInt(node.data.id.substring(1));
           this.$store.commit("moveVertex", {
-            id: parseInt(node.data.id.substring(1)),
+            id,
             x: node.position.x,
             y: node.position.y
           });
-        else {
+          this.$emit("vertexMoved", {
+            id,
+            x: node.position.x,
+            y: node.position.y
+          });
+        } else {
           console.log(node);
           console.log(evt);
           // TODO: resolve cd
