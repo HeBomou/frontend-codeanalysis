@@ -92,13 +92,8 @@ export default {
         .orphans()
         .on("select", evt => {
           if (evt.target.data("id").charAt(0) == "n") {
-            let prt = evt.target.data("parent");
-            if (prt)
-              this.$emit(
-                "connectiveDomainSelected",
-                parseInt(prt.substring(1))
-              );
-            else {
+            if (evt.target.data("parent") == undefined) {
+              // 选中无所属联通域的点
               this.$emit(
                 "vertexSelected",
                 parseInt(evt.target.data("id").substring(1))
@@ -106,6 +101,7 @@ export default {
               this.$emit("connectiveDomainSelected", parseInt(undefined));
             }
           } else {
+            // 单独选中联通域
             this.$emit(
               "connectiveDomainSelected",
               parseInt(evt.target.data("id").substring(1))
