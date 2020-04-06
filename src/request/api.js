@@ -132,3 +132,5 @@ export const putEdge = (projectId, edgeId, edgeVo) => put("/project/" + projectI
  * @param {*} endVertexId 
  */
 export const getOriginalGraphPath = (projectId, startVertexId, endVertexId) => get("/project/" + projectId + "/originalGraphPath?startVertexId=" + startVertexId + "&endVertexId=" + endVertexId, null);
+
+export const putConnectiveDomain = (projectId, subgraphId, domainId, domainVo) => put("/project/" + projectId + "/sugraph/" + subgraphId + "/connectiveDomain/" + domainId +"/dynamic", domainVo);

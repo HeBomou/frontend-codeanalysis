@@ -300,7 +300,7 @@
 
 <script>
 import DepGraph from "@/components/DepGraph";
-import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph} from "../request/api";
+import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph, putConnectiveDomain} from "../request/api";
 //import {} from "../request/api";
 //import SearchComponent from '../components/SearchAuto'
   export default {
@@ -505,6 +505,9 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph} from 
         }else if(this.selectType == 2){
           this.edgeSelected.anotation = this.tag;
           this.updateEdge(this.edgeSelected);
+        }else if(this.selectType == 3){
+          this.domainSelected.anotation = this.tag;
+          this.updateDomain(this.domainSelected);
         }
         
       },
@@ -542,6 +545,20 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph} from 
         }).catch(err => {
           this.Alert(err.response.data.errMsg);
         });
+      },
+      updateDomain(domain){
+        this.$store.commit("updateDomain", domain);
+        console.log("update domain");
+        putConnectiveDomain(this.projectId, this.subgraphId, domain.id, {
+          id: domain.id,
+          anotation: domain.anotation,
+          color: domain.color
+        }).then(res => {
+          console.log("update Domain success ", res);
+        }).catch(err => {
+          this.Alert(err.response.data.errMsg);
+        })
+
       },
       //搜索路径
       searchPath(){
@@ -689,13 +706,21 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph} from 
         this.tag = this.vertexSelected.anotation;
         this.searchVertex = this.vertexSelected.functionName;
         this.graphSelectedItem = {type: "n", id: this.vertexSelected.id};
+
         console.log("this.graphSelectedItem");
         console.log(this.graphSelectedItem);
       },
       selectDomain(id){
+        //选中某个连通域
         console.log("selectDomain");
         console.log(id);
         this.selectType = 3;
+        this.graphSelectedItem = null;
+        this.graphSelectedConnectiveDomainId = id;
+        let domain = this.$store.state.project.connectiveDomainMap.get(id);
+        this.domainSelected = domain;
+        console.log(domain);
+        this.tag = domain.anotation;
       },
       selectEdge(id){
         console.log("selectEdge id:");

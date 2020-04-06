@@ -127,6 +127,8 @@ export default new Vuex.Store({
       state.project.vertexMap.set(vertex.id, vertex);
     }, updateEdge(state, edge){
       state.project.edgeMap.set(edge.id, edge);
+    }, updateDomain(state, domain){
+      state.project.connectiveDomainMap.set(domain.id, domain);
     }
   },
   actions: {
