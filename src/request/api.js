@@ -50,7 +50,7 @@ export const delSubgraph = (projectId, id) => del("/project/" + projectId + "/su
  * @param {long} projectId 
  * @param {double} threshold 
  */
-export const addSubgraph = (projectId, threshold) => post("/project/" + projectId + "/subgraph", threshold);
+export const addSubgraph = (projectId, threshold, name) => post("/project/" + projectId + "/subgraph?threshold=" + threshold + "&name=" + name, null);
 
 /**
  * 获取所有项目的名称等动态信息，如果传了用户id，就是返回该用户的所有项目，否则返回所有项目

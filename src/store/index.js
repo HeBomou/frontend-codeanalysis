@@ -53,6 +53,20 @@ export default new Vuex.Store({
     },
     setProjectId(state, pid){
       state.projectId = pid;
+    },addSubGraph(state, subgraph){
+      let domainId = [];
+      subgraph.connectiveDomains.forEach(domain => {
+        domainId.push(domain.id);
+        state.project.connectiveDomainMap.set(domain.id, {
+          id: domain.id, anotation: domain.domainDynamicVo.anotation, color: domain.domainDynamicVo.color, vertexIds: domain.vertexIds, edgeIds: domain.edgeIds
+        })
+      })
+      state.project.subgraphMap.set(subgraph.id, {
+        id: subgraph.id,
+        threshold: subgraph.threshold,
+        connectiveDomainIds: domainId
+
+      });
     },
     initProject(state, data){
       state.projectId = data.dynamicVo.projectName;
@@ -87,7 +101,6 @@ export default new Vuex.Store({
 
       //subgraph
       data.subgraphs.forEach(subgraph => {
-        // console.log(subgraph);
         let domainId = [];
         subgraph.connectiveDomains.forEach(domain => {
           domainId.push(domain.id);
