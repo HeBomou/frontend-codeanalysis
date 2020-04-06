@@ -117,4 +117,18 @@ export const addUser = (id, username, pwdMd5) => post("/user", {id, username, pw
  */
 export const putVertex = (projectId, vertexId, vertexVo) => put("/project/" + projectId + "/vertex/" + vertexId + "/dynamic", vertexVo);
 
+/**
+ * 更新边的相关信息
+ * @param {*} projectId 
+ * @param {*} edgeId 
+ * @param {*} edgeVo 
+ */
 export const putEdge = (projectId, edgeId, edgeVo) => put("/project/" + projectId + "/edge/" + edgeId + "/dynamic", edgeVo);
+
+/**
+ * 从原图中搜索路径
+ * @param {} projectId 
+ * @param {*} startVertexId 
+ * @param {*} endVertexId 
+ */
+export const getOriginalGraphPath = (projectId, startVertexId, endVertexId) => get("/project/" + projectId + "/originalGraphPath?startVertexId=" + startVertexId + "&endVertexId=" + endVertexId, null);

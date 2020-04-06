@@ -173,6 +173,9 @@
             </v-card>
             <v-card class="mt-5">
               <v-card-text>
+                <v-card-title>
+                  路径总数：{{pathNum}}
+                </v-card-title>
                 <v-list-item-group v-model="path">
                   <v-list-item
                     v-for="(path, i) in paths"
@@ -250,7 +253,7 @@
 
 <script>
 import DepGraph from "@/components/DepGraph";
-import {getProject, putVertex, putEdge} from "../request/api";
+import {getProject, putVertex, putEdge, getOriginalGraphPath} from "../request/api";
 //import {} from "../request/api";
 //import SearchComponent from '../components/SearchAuto'
   export default {
@@ -284,6 +287,8 @@ import {getProject, putVertex, putEdge} from "../request/api";
         edgeNum: 3,
         //连通域数
         domainNum: 2,
+        //搜索的路径总数
+        pathNum: 0,
         //源代码
         src: "int s = abc;\n\treturn s;",
         //标注
@@ -411,15 +416,15 @@ import {getProject, putVertex, putEdge} from "../request/api";
       },
       //DevGraph的回调
       cnmdVertex(id) {
-        this.selectVertex(id);
         console.log("Select on vertex", id);
+        this.selectVertex(id);
       },cnmdEdge(id) {
-        this.selectEdge(id)
         console.log("Select on edge", id);
+        this.selectEdge(id)
       },
       cnmdConnectiveDomain(id) {
-        this.selectDomain(id);
         console.log("select on connective domain", id);
+        this.selectDomain(id);
       },
       saveTag(){
         if(this.selectType == 1){
@@ -468,7 +473,15 @@ import {getProject, putVertex, putEdge} from "../request/api";
       },
       //搜索路径
       searchPath(){
-
+        console.log("searchPath");
+        getOriginalGraphPath(this.projectId, this.getVertexIdByName(this.startVertex), this.getVertexIdByName(this.endVertex))
+          .then(res => {
+            console.log("search Path success, res:");
+            console.log(res.data);
+            this.pathNum = res.data.num;
+          }).catch(err => {
+            this.Alert(err.response.data.errMsg);
+          });
       },
       setVertexs(){
         let Vs = this.$store.state.project.vertexMap;
@@ -616,6 +629,7 @@ import {getProject, putVertex, putEdge} from "../request/api";
         this.edgeSelected = this.$store.state.project.edgeMap.get(id);
         this.tag = this.edgeSelected.anotation;
         this.graphSelectedItem = {type: "e", id: this.edgeSelected.id};
+        console.log(this.edgeSelected);
         
       }
 
