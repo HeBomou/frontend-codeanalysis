@@ -64,7 +64,7 @@
       <v-spacer />
       <v-spacer />
 
-      <v-btn class="mr-4">切换项目</v-btn>
+      <v-btn class="mr-4" @click="toProject()">切换项目</v-btn>
 
       <v-btn>退出登录</v-btn>
 
@@ -756,6 +756,9 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph} from 
         sMap.forEach(subgraph => {
           this.thresholds.push(subgraph.threshold);
         })
+      },
+      toProject(){
+        this.$router.push('/project');
       }
 
     },
@@ -764,7 +767,7 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph} from 
       console.log("mounted");
       //TODO:debug
       this.projectId = this.$store.state.projectId
-      this.projectId = 1;
+      //this.projectId = 1;
       //console.log("project id:" + this.projectId);
       getProject(this.projectId).then(res => {
           console.log("res.data:");

@@ -157,44 +157,47 @@
       }
     },
 
-    data: () => ({
-      errMsg: "",
-      dialog: false,
-      imageUrls: [
-        {
-            src: require("@/assets/images/login/1.jpg"),
-        },
-        {
-            src: require("@/assets/images/login/2.jpg"),
-        },
-        {
-            src: require("@/assets/images/login/3.jpg"),
-        },
-        {
-            src: require("@/assets/images/login/4.jpg"),
-        },
-        {
-            src: require("@/assets/images/login/5.jpg"),
-        }
-      ],
-      is_signup: 0,//是否是注册
-      userName: "",
-      password: "",
-      email: "",
-      passwordRules: [
-        v => !!v || "password is required",
-        v => (v.length >= 6 || this.is_signup == 0) || "密码最少六位"
-      ],
-      passwordConfirmRules: [
-        v => !!v || "please confirm your password",
-        v => v === this.password || "not equal, check your password"
-      ],
-      emailRules: [
-        v => !!v || "E-mail is required",
-        v => (/.+@.+\..+/.test(v) || this.is_signup === 0) || "E-mail must be valid"
-      ],
-      valid: false
-    }),
+    data (){
+      return {
+        errMsg: "",
+        dialog: false,
+        imageUrls: [
+          {
+              src: require("@/assets/images/login/1.jpg"),
+          },
+          {
+              src: require("@/assets/images/login/2.jpg"),
+          },
+          {
+              src: require("@/assets/images/login/3.jpg"),
+          },
+          {
+              src: require("@/assets/images/login/4.jpg"),
+          },
+          {
+              src: require("@/assets/images/login/5.jpg"),
+          }
+        ],
+        is_signup: 0,//是否是注册
+        userName: "",
+        password: "",
+        confirmPassword: "",
+        email: "",
+        passwordRules: [
+          v => !!v || "password is required",
+          v => (v.length >= 6 || this.is_signup == 0) || "密码最少六位"
+        ],
+        passwordConfirmRules: [
+          v => !!v || "please confirm your password",
+          v => v === this.password || "not equal, check your password"
+        ],
+        emailRules: [
+          v => !!v || "E-mail is required",
+          v => (/.+@.+\..+/.test(v) || this.is_signup == 0) || "E-mail must be valid"
+        ],
+        valid: false
+      }
+    },
     methods: {
       clear() {
           this.$refs.form.reset();
@@ -203,7 +206,7 @@
       async login() {
         console.log(this.$store.state.userId);
         await addSession(this.userName, this.password).then(res => {
-          this.$store.commit('setUserId', res);
+            this.$store.commit('setUserId', res);
             //TODO:debug
             this.$store.commit('setUserId', 233);
             console.log(this.$store.state.userId);
