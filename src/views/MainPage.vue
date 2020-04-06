@@ -168,6 +168,7 @@
                   @vertexSelected="cnmdVertex"
                   @edgeSelected="cnmdEdge"
                   @connectiveDomainSelected="cnmdConnectiveDomain"
+                  @vertexMoved="cnmdVertexMoved"
                 ></DepGraph>
               </v-card-text>
             </v-card>
@@ -426,6 +427,10 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath} from "../request/a
         console.log("select on connective domain", id);
         this.selectDomain(id);
       },
+      cnmdVertexMoved(vertex){
+        console.log("vertex Moved, id:", vertex);
+        this.vertexMoved(vertex);
+      },
       saveTag(){
         if(this.selectType == 1){
           this.vertexSelected.anotation = this.tag;
@@ -620,7 +625,7 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath} from "../request/a
       selectDomain(id){
         console.log("selectDomain");
         console.log(id);
-        //this.selectType = 3;
+        this.selectType = 3;
       },
       selectEdge(id){
         console.log("selectEdge id:");
@@ -631,6 +636,11 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath} from "../request/a
         this.graphSelectedItem = {type: "e", id: this.edgeSelected.id};
         console.log(this.edgeSelected);
         
+      },
+      //图中的点被移动
+      vertexMoved(vertex){
+        console.log("vertex moved");
+        this.updateVertex(this.$store.state.project.vertexMap.get(vertex.id));
       }
 
     },
