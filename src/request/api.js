@@ -133,4 +133,28 @@ export const putEdge = (projectId, edgeId, edgeVo) => put("/project/" + projectI
  */
 export const getOriginalGraphPath = (projectId, startVertexId, endVertexId) => get("/project/" + projectId + "/originalGraphPath?startVertexId=" + startVertexId + "&endVertexId=" + endVertexId, null);
 
+/**
+ * 设置连通域
+ * @param {*} projectId 
+ * @param {*} subgraphId 
+ * @param {*} domainId 
+ * @param {*} domainVo 
+ */
 export const putConnectiveDomain = (projectId, subgraphId, domainId, domainVo) => put("/project/" + projectId + "/sugraph/" + subgraphId + "/connectiveDomain/" + domainId +"/dynamic", domainVo);
+
+/**
+ * 获取所有项目的名称等动态信息，如果传了用户id，就是返回该用户的所有项目，否则返回所有项目
+ * @param {*} userId 
+ */
+export const getProjectBasicAttributeSingle = (userId) => get("/project?userId=" + userId);
+
+/**
+* 获取所有项目的名称等动态信息，如果传了用户id，就是返回该用户的所有项目，否则返回所有项目
+* @param {*} userId 
+*/
+export const getProjectBasicAttributeAll = () => get("/project");
+
+/**
+ * 获取全部用户
+ */
+export const getAllUsers = () => get("/user");

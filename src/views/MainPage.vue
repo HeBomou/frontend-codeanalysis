@@ -66,7 +66,7 @@
 
       <v-btn class="mr-4" @click="toProject()">切换项目</v-btn>
 
-      <v-btn>退出登录</v-btn>
+      <v-btn @click="logout()">退出登录</v-btn>
 
 
     
@@ -266,7 +266,9 @@
               </v-card-text>
             </v-card>
             <!-- <v-row> -->
-              <v-card>
+              <v-card
+                v-if="selectType!=3"
+              >
                 <v-card-text>
                   <v-form
                     align="center"
@@ -704,6 +706,9 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph, putCo
         this.vertexSelected = this.getVertexById(id);
         this.src = this.vertexSelected.sourceCode;
         this.tag = this.vertexSelected.anotation;
+        this.pathToShow = null;
+        this.graphSelectedConnectiveDomainId = null;
+
         this.searchVertex = this.vertexSelected.functionName;
         this.graphSelectedItem = {type: "n", id: this.vertexSelected.id};
 
@@ -716,6 +721,7 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph, putCo
         console.log(id);
         this.selectType = 3;
         this.graphSelectedItem = null;
+        this.pathToShow = null;
         this.graphSelectedConnectiveDomainId = id;
         let domain = this.$store.state.project.connectiveDomainMap.get(id);
         this.domainSelected = domain;
@@ -728,6 +734,8 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph, putCo
         this.selectType = 2;
         this.edgeSelected = this.$store.state.project.edgeMap.get(id);
         this.tag = this.edgeSelected.anotation;
+        this.pathToShow = null;
+        this.graphSelectedConnectiveDomainId = null;
         this.graphSelectedItem = {type: "e", id: this.edgeSelected.id};
         console.log(this.edgeSelected);
         
@@ -739,11 +747,10 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph, putCo
       },
       selectPath(path){
         console.log(path);
-        if(this.pathToShow == path){
-          this.pathToShow = null;
-        }else{
+        this.graphSelectedItem = null;
+        this.graphSelectedConnectiveDomainId = null;
+
           this.pathToShow = path;
-        }
       },
       //添加一个紧密度域值
       addThreshold(){
@@ -784,10 +791,19 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph, putCo
       },
       toProject(){
         this.$router.push('/project');
+      },
+      logout(){
+        this.$store.commit("setUserId", 0);
+        this.$router.push("/login");
       }
 
     },
     mounted(){
+      let userId = this.$store.state.userId;
+      if(userId == 0){
+        //代表没有登录
+        this.$router.push("/login");
+      }
       //初始化各个数据
       console.log("mounted");
       //TODO:debug
