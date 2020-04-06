@@ -92,13 +92,8 @@ export default {
         .orphans()
         .on("select", evt => {
           if (evt.target.data("id").charAt(0) == "n") {
-            let prt = evt.target.data("parent");
-            if (prt)
-              this.$emit(
-                "connectiveDomainSelected",
-                parseInt(prt.substring(1))
-              );
-            else {
+            if (evt.target.data("parent") == undefined) {
+              // 选中无所属联通域的点
               this.$emit(
                 "vertexSelected",
                 parseInt(evt.target.data("id").substring(1))
@@ -106,6 +101,7 @@ export default {
               this.$emit("connectiveDomainSelected", parseInt(undefined));
             }
           } else {
+            // 单独选中联通域
             this.$emit(
               "connectiveDomainSelected",
               parseInt(evt.target.data("id").substring(1))
@@ -134,13 +130,19 @@ export default {
       });
       this.cy.nodes().on("dragfree", evt => {
         let node = evt.target._private;
-        if (node.children.length == 0)
+        if (node.children.length == 0) {
+          let id = parseInt(node.data.id.substring(1));
           this.$store.commit("moveVertex", {
-            id: parseInt(node.data.id.substring(1)),
+            id,
             x: node.position.x,
             y: node.position.y
           });
-        else {
+          this.$emit("vertexMoved", {
+            id,
+            x: node.position.x,
+            y: node.position.y
+          });
+        } else {
           console.log(node);
           console.log(evt);
           // TODO: resolve cd
