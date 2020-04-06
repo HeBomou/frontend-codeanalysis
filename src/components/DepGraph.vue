@@ -91,12 +91,15 @@ export default {
         .nodes()
         .orphans()
         .on("select", evt => {
-          if (evt.target.data("id").charAt(0) == "n") {
-            if (evt.target.data("parent") == undefined) {
+          let node = evt.target;
+          if (this._snode) this._snode.unselect();
+          this._snode = node;
+          if (node.data("id").charAt(0) == "n") {
+            if (node.data("parent") == undefined) {
               // 选中无所属联通域的点
               this.$emit(
                 "vertexSelected",
-                parseInt(evt.target.data("id").substring(1))
+                parseInt(node.data("id").substring(1))
               );
             }
           }
@@ -104,17 +107,17 @@ export default {
           else
             this.$emit(
               "connectiveDomainSelected",
-              parseInt(evt.target.data("id").substring(1))
+              parseInt(node.data("id").substring(1))
             );
         });
       this.cy
         .nodes()
         .nonorphans()
         .on("select", evt => {
-          this.$emit(
-            "vertexSelected",
-            parseInt(evt.target._private.data.id.substring(1))
-          );
+          let node = evt.target;
+          if (this._snode) this._snode.unselect();
+          this._snode = node;
+          this.$emit("vertexSelected", parseInt(node.data("id").substring(1)));
         });
       this.cy.edges().on("select", evt => {
         this.$emit(
@@ -176,7 +179,6 @@ export default {
               dx,
               dy
             });
-            console.log(id, dx, dy);
           }
         });
       this.cy
