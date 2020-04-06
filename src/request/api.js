@@ -76,7 +76,7 @@ export const delProject = (id) => del("/project" + id);
  * @param {string} url 	git仓库的url
  * @param {string} userId 
  */
-export const addProject = (projectName, url, userId) => post("/project", {projectName, url, userId});
+export const addProject = (projectName, url, userId) => post("/project?projectName=" + projectName + "&url=" + url + "&userId=" + userId,null);
 
 
 

@@ -161,8 +161,10 @@
               </v-card-title>
               <v-card-text style="height: 100%">
                 <DepGraph
-                  v-bind:subgraph-id="subgraphId"
-                  v-bind:path-to-show="pathToShow"
+                  v-bind:subgraphId="subgraphId"
+                  v-bind:pathToShow="pathToShow"
+                  v-bind:selectedItem="graphSelectedItem"
+                  v-bind:selectedConnectiveDomainId="graphSelectedConnectiveDomainId"
                   @vertexSelected="cnmdVertex"
                   @edgeSelected="cnmdEdge"
                   @connectiveDomainSelected="cnmdConnectiveDomain"
@@ -369,8 +371,14 @@ import {getProject, putVertex} from "../request/api";
             file: 'txt',
           },
         ],
+        //当前子图id
         subgraphId: null,
-        pathToShow: null
+        //当前路径
+        pathToShow: null,    
+        //图中选中的点边
+        graphSelectedItem: 1,
+        //图中选中的连通域
+        graphSelectedConnectiveDomainId: 1,
       }
       
     }, methods: {
@@ -399,9 +407,11 @@ import {getProject, putVertex} from "../request/api";
         this.selectVertex(id);
         console.log("Select on vertex", id);
       },cnmdEdge(id) {
+        this.selectEdge(id)
         console.log("Select on edge", id);
       },
       cnmdConnectiveDomain(id) {
+        this.selectDomain(id);
         console.log("select on connective domain", id);
       },
       saveTag(){
@@ -576,6 +586,13 @@ import {getProject, putVertex} from "../request/api";
         this.src = this.vertexSelected.sourceCode;
         this.tag = this.vertexSelected.anotation;
         this.searchVertex = this.vertexSelected.functionName;
+        this.graphSelectedItem = {type: "n", id: this.vertexSelected.id};
+        console.log("this.graphSelectedItem");
+        console.log(this.graphSelectedItem);
+      },
+      selectDomain(id){
+        console.log("selectDomain");
+        console.log(id);
       }
 
     },
@@ -584,7 +601,7 @@ import {getProject, putVertex} from "../request/api";
       console.log("mounted");
       //TODO:debug
       this.projectId = this.$store.state.projectId
-      this.projectId = 5;
+      this.projectId = 1;
       //console.log("project id:" + this.projectId);
       getProject(this.projectId).then(res => {
           console.log("res.data:");
