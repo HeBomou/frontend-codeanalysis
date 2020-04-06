@@ -171,7 +171,7 @@ export default {
             // 联通域
             let dx = node.position("x") - node.data("x");
             let dy = node.position("y") - node.data("y");
-            this.$emit("connectiveDomainMove", {
+            this.$emit("connectiveDomainMoved", {
               id,
               dx,
               dy
