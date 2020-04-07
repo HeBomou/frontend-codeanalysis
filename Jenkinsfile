@@ -17,16 +17,16 @@ pipeline {
                         echo "Warning: no such container frontend_ca"
                     }
                     try {
-                        sh 'docker rm codeanalysis'
+                        sh 'docker rm frontend_ca'
                     }
                     catch (err) {
-                        echo "Warning: no such container codeanalysis"
+                        echo "Warning: no such container frontend_ca"
                     }
                     try {
-                        sh 'docker rmi codeanalysis'
+                        sh 'docker rmi frontend_ca'
                     }
                     catch (err) {
-                        echo "Warning: no such image codeanalysis"
+                        echo "Warning: no such image frontend_ca"
                     }
                 }
                 sh 'docker build -t frontend_ca .'
