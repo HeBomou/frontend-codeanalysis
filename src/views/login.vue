@@ -136,7 +136,7 @@
               </v-btn>
             </v-form>
             <v-row class=" mt-3 mr-5 ml-5 mb-5" align="center" justify="center">
-                <v-btn text color="blue" :hidden="is_signup==1">
+                <v-btn text color="blue" v-if="is_signup==0">
                     forget password?
                 </v-btn>
             </v-row>

@@ -101,8 +101,7 @@ export default {
     }),methods:{
         setProjects(){
             console.log("onMount, UserId: " + this.$store.state.userId);
-            //TODO:debug
-            getProjects(null).then(res => {
+            getProjects(this.$store.state.userId).then(res => {
                 console.log(res.data);
                 this.projects = res.data;
                 }).catch(err => this.Alert(err.response.data.errMsg));
