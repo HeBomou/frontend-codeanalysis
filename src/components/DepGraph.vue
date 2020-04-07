@@ -124,9 +124,6 @@ export default {
           "edgeSelected",
           parseInt(evt.target.data("id").substring(1))
         );
-        // let prt = evt.target.data("parent");
-        // if (prt)
-          //this.$emit("connectiveDomainSelected", parseInt(prt.substring(1)));
       });
       this.cy
         .nodes()
