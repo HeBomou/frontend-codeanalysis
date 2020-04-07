@@ -206,9 +206,9 @@
       async login() {
         console.log(this.$store.state.userId);
         await addSession(this.userName, this.password).then(res => {
-            this.$store.commit('setUserId', res);
+            this.$store.commit('setUserId', res.data);
             //TODO:debug
-            this.$store.commit('setUserId', 233);
+            //this.$store.commit('setUserId', 233);
             console.log(this.$store.state.userId);
             this.$router.push('/project');
         }).catch(err => {

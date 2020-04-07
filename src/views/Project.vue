@@ -22,7 +22,7 @@
             <v-spacer />
             <v-spacer />
 
-            <v-btn>退出登录</v-btn>
+            <v-btn @click="logout">退出登录</v-btn>
 
 
         
@@ -87,7 +87,7 @@
     </v-app>
 </template>
 <script>
-import {getProjects, addProject} from "../request/api";
+import {getProjectsSingle, addProject} from "../request/api";
 export default {
     name: 'Project',
     data: () => ({
@@ -101,7 +101,8 @@ export default {
     }),methods:{
         setProjects(){
             console.log("onMount, UserId: " + this.$store.state.userId);
-            getProjects(this.$store.state.userId).then(res => {
+            getProjectsSingle(this.$store.state.userId).then(res => {
+                console.log("getProjects");
                 console.log(res.data);
                 this.projects = res.data;
                 }).catch(err => this.Alert(err.response.data.errMsg));
@@ -133,14 +134,20 @@ export default {
         },Alert(msg){
         this.errMsg = msg;
         this.dialogErr = true;
-      }
+        },
+        logout(){
+            this.$store.commit("setUserId", 0);
+            this.$router.push('/login');
+        }
         
 
     },mounted(){
         this.userId = this.$store.state.userId;
+        console.log("userId ", this.userId);
+        console.log(this.userId);
     
         //TODO:debug
-        this.userId = 233;
+        //this.userId = 233;
         this.setProjects();
         
     }
