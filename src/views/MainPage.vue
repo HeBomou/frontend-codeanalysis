@@ -721,11 +721,13 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph, putCo
         let funcKey = this.vertexSelected.functionName;
         this.active = [{key: funcKey}];
         let openName = this.getFathersKeyByFuncKey(funcKey);
+        let newOpen = [];
         openName.forEach(name => {
           // if(this.open.indexOf({key: name}) == -1){
-            this.open.push({key: name});
+            newOpen.push({key: name});
           // }
-        })
+        });
+        this.open = newOpen;
         
         console.log("active");
         console.log(this.active);
