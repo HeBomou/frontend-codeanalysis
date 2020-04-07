@@ -1,17 +1,57 @@
 <template>
   <v-app id="dependency">
     <v-dialog
-        v-model="dialogErr"
+      v-model="dialogErr"
+      width="500">
+      <v-card
+      justify="center"
+      >
+          <v-card-title>{{errMsg}}</v-card-title>
+          <v-card-text>
+            <v-btn color="error" @click="dialogErr=false">确定</v-btn>
+          </v-card-text>
+      </v-card>
+    </v-dialog>
+      <v-dialog
+        v-model="dialogThreshold"
         width="500">
-            <v-card
-            justify="center"
+      <v-card
+      justify="center"
+      >
+          <v-card-title>添加紧密度域值</v-card-title>
+          <v-card-text>
+            <v-form
+              v-model="newThresholdValid"
             >
-                <v-card-title>{{errMsg}}</v-card-title>
-                <v-card-text>
-                  <v-btn color="error" @click="dialogErr=false">确定</v-btn>
-                </v-card-text>
-            </v-card>
-        </v-dialog>
+              <v-text-field
+                  class="mr-5 ml-5"
+                  v-model="newThreshold"
+                  :rules="isThreholdRules"
+                  label="紧密度域值"
+                  required
+                  flat
+                  outlined
+                  rounded
+                ></v-text-field>
+                <v-text-field
+                  class="mr-5 ml-5"
+                  v-model="newThresholdName"
+                  :rules="isThreholdNameRules"
+                  label="新子图名称"
+                  required
+                  flat
+                  outlined
+                  rounded
+                ></v-text-field>
+              <v-btn 
+                color="success" 
+                @click="addThreshold()"
+                :disabled="!newThresholdValid"
+                >确定</v-btn>
+            </v-form>
+          </v-card-text>
+      </v-card>
+    </v-dialog>
     <v-app-bar
       app
       clipped-left
@@ -24,9 +64,9 @@
       <v-spacer />
       <v-spacer />
 
-      <v-btn class="mr-4">切换项目</v-btn>
+      <v-btn class="mr-4" @click="toProject()">切换项目</v-btn>
 
-      <v-btn>退出登录</v-btn>
+      <v-btn @click="logout()">退出登录</v-btn>
 
 
     
@@ -111,7 +151,7 @@
           >
             <v-row>
               <v-col cols="6">
-                <v-card>
+                <v-card style="height: 200px">
                   <v-card-title>
                     基本信息
                   </v-card-title>
@@ -131,22 +171,20 @@
                 </v-card>  
               </v-col>
               <v-col cols="6">
-                <v-card>
+                <v-card style="height: 200px">
                   <v-card-title>
                     紧密度域值
                   </v-card-title>
                   <v-card-text>
-                    <v-list-item-group>
-                      <v-list-item>
-                        顶点数：{{vertexNum}}
-                      </v-list-item>
-                      <v-list-item>
-                        边数：{{edgeNum}}
-                      </v-list-item>
-                      <v-list-item>
-                        连通域数：{{domainNum}}
-                      </v-list-item>
-                    </v-list-item-group>
+                    <v-autocomplete
+                      @update:search-input="selectThreshold()"
+                      v-model="thresholdSelected"
+                      :items="thresholds"
+                      append-outer-icon="mdi-plus"
+                      @click:append-outer="dialogThreshold=true"
+                     
+                    >
+                    </v-autocomplete>
                   </v-card-text>
                 </v-card>
               </v-col>
@@ -205,6 +243,14 @@
                 {{src}}
               </v-card-text>
             </v-card>
+            <v-card class="mt-5" v-if="selectType==2">
+              <v-card-title>
+                紧密度
+              </v-card-title>
+              <v-card-text>
+                {{edgeSelected.closeness}}
+              </v-card-text>
+            </v-card>
             <v-card class="mt-5">
               <v-card-title>
                 标注
@@ -220,7 +266,9 @@
               </v-card-text>
             </v-card>
             <!-- <v-row> -->
-              <v-card>
+              <v-card
+                v-if="selectType!=3"
+              >
                 <v-card-text>
                   <v-form
                     align="center"
@@ -254,7 +302,7 @@
 
 <script>
 import DepGraph from "@/components/DepGraph";
-import {getProject, putVertex, putEdge, getOriginalGraphPath} from "../request/api";
+import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph, putConnectiveDomain} from "../request/api";
 //import {} from "../request/api";
 //import SearchComponent from '../components/SearchAuto'
   export default {
@@ -330,7 +378,7 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath} from "../request/a
         active: [],
         items: [
           {
-            name: '.git',
+            str: '.git',
           },
           {
             str: 'node_modules',
@@ -380,6 +428,7 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath} from "../request/a
             file: 'txt',
           },
         ],
+        //DepGraph的slot
         //当前子图id
         subgraphId: null,
         //当前路径
@@ -388,8 +437,28 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath} from "../request/a
         graphSelectedItem: null,
         //图中选中的连通域
         graphSelectedConnectiveDomainId: null,
+
         //当前选中的是顶点,1:顶点，2：边，3：连通域
         selectType: 1,
+        //所有的threshold
+        thresholds: [0, 1],
+        thresholdSelected: 0,
+        //是否弹出新的紧密度的dialog
+        dialogThreshold: false,
+        //
+        isThreholdRules: [
+          v => !!v || "请输入紧密度域值",
+          v => (!isNaN(v)) || "紧密度域值应为数值",
+          v => (v <= 1 && v >= 0) || "紧密度域值应为大于0小于1的数值",
+          v => (this.thresholds.indexOf(parseFloat(v)) == -1) || "该紧密度域值已经设置过，不可重复添加" 
+        ],
+        newThresholdValid: false,
+        newThresholdName: "new Subgraph",
+        newThreshold: 0,
+        isThreholdNameRules: [
+          v => !!v || "请输入名称",
+        ]
+
       }
       
     }, methods: {
@@ -413,7 +482,7 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath} from "../request/a
         // console.log(this.startVertex);
         // console.log(this.endVertex);
         // console.log(this.tree);
-        console.log(this.selectType);
+        console.log(this.thresholdSelected);
       },
       //DevGraph的回调
       cnmdVertex(id) {
@@ -438,6 +507,9 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath} from "../request/a
         }else if(this.selectType == 2){
           this.edgeSelected.anotation = this.tag;
           this.updateEdge(this.edgeSelected);
+        }else if(this.selectType == 3){
+          this.domainSelected.anotation = this.tag;
+          this.updateDomain(this.domainSelected);
         }
         
       },
@@ -475,6 +547,20 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath} from "../request/a
         }).catch(err => {
           this.Alert(err.response.data.errMsg);
         });
+      },
+      updateDomain(domain){
+        this.$store.commit("updateDomain", domain);
+        console.log("update domain");
+        putConnectiveDomain(this.projectId, this.subgraphId, domain.id, {
+          id: domain.id,
+          anotation: domain.anotation,
+          color: domain.color
+        }).then(res => {
+          console.log("update Domain success ", res);
+        }).catch(err => {
+          this.Alert(err.response.data.errMsg);
+        })
+
       },
       //搜索路径
       searchPath(){
@@ -531,12 +617,14 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath} from "../request/a
         //设置包结构
         console.log("exp");
         console.log(this.items);
-
         //TODO:debug
         this.preproPackage([data.packageRoot]);
         this.items = [data.packageRoot];
         console.log("get");
         console.log(this.items);
+
+        //设置子图
+        this.reloadThresholds();
 
       },
       //对包结构进行预处理工作，设置文件类型（文件夹/类/方法），根据函数节点id获得函数名，放入children中
@@ -618,15 +706,27 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath} from "../request/a
         this.vertexSelected = this.getVertexById(id);
         this.src = this.vertexSelected.sourceCode;
         this.tag = this.vertexSelected.anotation;
+        this.pathToShow = null;
+        this.graphSelectedConnectiveDomainId = null;
+
         this.searchVertex = this.vertexSelected.functionName;
         this.graphSelectedItem = {type: "n", id: this.vertexSelected.id};
+
         console.log("this.graphSelectedItem");
         console.log(this.graphSelectedItem);
       },
       selectDomain(id){
+        //选中某个连通域
         console.log("selectDomain");
         console.log(id);
         this.selectType = 3;
+        this.graphSelectedItem = null;
+        this.pathToShow = null;
+        this.graphSelectedConnectiveDomainId = id;
+        let domain = this.$store.state.project.connectiveDomainMap.get(id);
+        this.domainSelected = domain;
+        console.log(domain);
+        this.tag = domain.anotation;
       },
       selectEdge(id){
         console.log("selectEdge id:");
@@ -634,6 +734,8 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath} from "../request/a
         this.selectType = 2;
         this.edgeSelected = this.$store.state.project.edgeMap.get(id);
         this.tag = this.edgeSelected.anotation;
+        this.pathToShow = null;
+        this.graphSelectedConnectiveDomainId = null;
         this.graphSelectedItem = {type: "e", id: this.edgeSelected.id};
         console.log(this.edgeSelected);
         
@@ -645,26 +747,76 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath} from "../request/a
       },
       selectPath(path){
         console.log(path);
-        if(this.pathToShow == path){
-          this.pathToShow = null;
-        }else{
+        this.graphSelectedItem = null;
+        this.graphSelectedConnectiveDomainId = null;
+
           this.pathToShow = path;
-        }
+      },
+      //添加一个紧密度域值
+      addThreshold(){
+        console.log("addThreshold");
+        addSubgraph(this.projectId, this.newThreshold, this.newThresholdName)
+        .then(res => {
+          console.log("addThreshold success");
+          console.log(res);
+          this.dialogThreshold = false;
+          this.$store.commit("addSubGraph", res.data);
+          this.reloadThresholds();
+          this.thresholdSelected = this.newThreshold;
+          this.selectThreshold();
+        }).catch(err => {
+          this.dialogThreshold = false;
+          this.Alert(err.response.data.errMsg);
+        });
+      },
+      //选择一个已有的紧密度域值
+      selectThreshold(){
+        console.log("selectThreshold", this.thresholdSelected);
+        let sg = null;
+        //找到对应子图
+        this.$store.state.project.subgraphMap.forEach(subgraph => {
+          if(subgraph.threshold == this.thresholdSelected){
+            sg = subgraph;
+          }
+        });
+        this.subgraphId = sg.id;
+      },
+      //更新Thresholds
+      reloadThresholds(){
+        let sMap = this.$store.state.project.subgraphMap;
+        this.thresholds = [];
+        sMap.forEach(subgraph => {
+          this.thresholds.push(subgraph.threshold);
+        })
+      },
+      toProject(){
+        this.$router.push('/project');
+      },
+      logout(){
+        this.$store.commit("setUserId", 0);
+        this.$router.push("/login");
       }
 
     },
     mounted(){
+      let userId = this.$store.state.userId;
+      if(userId == 0){
+        //代表没有登录
+        this.$router.push("/login");
+      }
       //初始化各个数据
       console.log("mounted");
       //TODO:debug
       this.projectId = this.$store.state.projectId
-      this.projectId = 1;
+      //this.projectId = 1;
       //console.log("project id:" + this.projectId);
       getProject(this.projectId).then(res => {
           console.log("res.data:");
           console.log(res.data);
           this.initProject(res.data);
-        }).catch(err => this.Alert(err.response.data.errMsg));
+        }).catch(err => {
+          this.Alert(err.response.data.errMsg);
+        });
 
 
       

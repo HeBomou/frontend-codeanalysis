@@ -1,7 +1,8 @@
 import axios from 'axios'
 
 //axios.defaults.baseURL = "http://116.62.123.74:8080";
-axios.defaults.baseURL = "http://101.201.150.49:8080";
+//axios.defaults.baseURL = "http://101.201.150.49:8080";
+axios.defaults.baseURL = "http://localhost:8080";
 
 /**
   * get方法，对应get请求
@@ -15,7 +16,7 @@ export function get(url, params){
         })
         .then(res => {
             resolve(res);
-            console.log(res);
+            //console.log(res);
         })
         .catch(err => {
             reject(err)
@@ -74,7 +75,7 @@ export function put(url, params) {
             resolve(res);
         })
         .catch(err => {
-            console.log(err);
+            //console.log(err);
             reject(err)
         })
     });

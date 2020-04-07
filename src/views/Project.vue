@@ -117,6 +117,8 @@ export default {
             console.log("UserId : " + this.$store.state.userId);
             addProject(this.projectName, this.projectUrl, this.$store.state.userId).then(res => {
                 console.log(res);
+                this.dialog = false;
+                this.setProjects();
             }).catch(err => {
                 this.Alert(err.response.data.errMsg);
             })
