@@ -158,3 +158,9 @@ export const getProjectBasicAttributeAll = () => get("/project");
  * 获取全部用户
  */
 export const getAllUsers = () => get("/user");
+
+/**
+ * 获取某个项目的统计信息
+ * @param {*} projectId 
+ */
+export const getProjectProfile = (projectId) => get("project/" + projectId + "/profile");

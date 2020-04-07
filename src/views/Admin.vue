@@ -20,8 +20,19 @@
             >
                 <v-card-title>项目详细信息</v-card-title>
                 <v-card-text>
-                    //TODO:
-                    详细信息
+                    <v-list-item-group
+                        v-for="(item, i) in projectDetail"
+                        :key="i"
+                        >
+                        <v-list-item v-if="i!='id'">
+                            <v-col cols="6">
+                            {{projectDetailHeader[i]}}
+                            </v-col>
+                            <v-col cols="6">
+                            {{projectDetail[i]}}
+                            </v-col>
+                        </v-list-item>
+                    </v-list-item-group>
                 </v-card-text>
             </v-card>
         </v-dialog>
@@ -114,7 +125,7 @@
 
 </template>
 <script>
-import {getProjectBasicAttributeAll, getAllUsers, } from "../request/api";
+import {getProjectBasicAttributeAll, getAllUsers, getProjectProfile} from "../request/api";
 export default {
     data(){
         return {
@@ -137,6 +148,19 @@ export default {
             userHeaders: [
                 {text: "用户名", value: "username"}
             ],
+            projectDetail: [
+
+            ],
+            projectDetailHeader: {
+                projectName: "项目名",
+                vertexNum: "顶点数",
+                edgeNum: "边数",
+                connectiveDomainNum: "连通域数",
+                subgraphNum: "子图数",
+                vertexAnotationNum: "顶点标注数",
+                edgeAnotationNum: "边标注数",
+                connectiveDomainAnotationNum: "连通域标注数",
+            },
             searchProject: null,
             searchUser: null
         }
@@ -168,6 +192,13 @@ export default {
 
             // })
             this.dialogProject = true;
+            getProjectProfile(id).then(res => {
+                console.log(res);
+                this.projectDetail = res.data;
+
+            }).catch(err => {
+                this.Alert(err.response.data.errMsg);
+            })
 
         }
     }

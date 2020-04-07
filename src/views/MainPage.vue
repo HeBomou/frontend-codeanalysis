@@ -378,7 +378,7 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph, putCo
         active: [],
         items: [
           {
-            name: '.git',
+            str: '.git',
           },
           {
             str: 'node_modules',
