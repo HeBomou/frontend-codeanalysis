@@ -119,13 +119,14 @@
                 <v-treeview
                 dense
                   v-model="tree"
-                  :open="open"
+                  :open.sync="open"
                   :items="items"
                   activatable
-                  item-key="str"
+                  item-key="key"
                   item-text="str"
                   open-on-click
-                  :active="active"
+                  @update:active="treeActive"
+                  :active.sync="active"
                   return-object
                 >
                   <template v-slot:prepend="{ item, open }">
@@ -316,16 +317,6 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph, putCo
       return{
         //路径
         paths: [
-          {
-            name: 1,
-            length: 2
-          },{
-            name: 2,
-            length: 3
-          },{
-            name: 3,
-            length: 4
-          }
         ],
         errMsg: "",
         dialogErr: false,
@@ -362,7 +353,7 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph, putCo
             123,
             234
         ],
-        open: ['static', 'public'],
+        open: [{key: '/src'}],
         files: {
           html: 'mdi-language-html5',
           js: 'mdi-language-java',
@@ -482,7 +473,9 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph, putCo
         // console.log(this.startVertex);
         // console.log(this.endVertex);
         // console.log(this.tree);
-        console.log(this.thresholdSelected);
+        //console.log(this.thresholdSelected);
+        console.log("active");
+        console.log(this.active);
       },
       //DevGraph的回调
       cnmdVertex(id) {
@@ -618,7 +611,7 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph, putCo
         console.log("exp");
         console.log(this.items);
         //TODO:debug
-        this.preproPackage([data.packageRoot]);
+        this.preproPackage([data.packageRoot], "");
         this.items = [data.packageRoot];
         console.log("get");
         console.log(this.items);
@@ -628,15 +621,17 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph, putCo
 
       },
       //对包结构进行预处理工作，设置文件类型（文件夹/类/方法），根据函数节点id获得函数名，放入children中
-      preproPackage(root){
+      //fatherKey是父亲的key，加上自己的str为自己的key
+      preproPackage(root, fatherKey){
         root.forEach(node => {
+          node.key = fatherKey + "/" + node.str;
           if(node.children.length == 0 && node.functions == 0){
             return;
           }
           if(node.functions.length == 0){
             //文件夹，对所有子节点进行递归
             // console.log("folder");
-            node.children = this.preproPackage(node.children);
+            node.children = this.preproPackage(node.children, node.key);
           }else{
             //类
             // console.log("not folder");
@@ -647,7 +642,10 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph, putCo
               let vertex = this.getVertexById(func);
               node.children.push({
                 str: this.getShortFuncName(vertex.functionName),
-                file: "javaFunc"
+                file: "javaFunc",
+                key: vertex.functionName,
+                functionId: func,
+                children: []
               });
 
             }, node.children);
@@ -658,6 +656,13 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph, putCo
         // console.log("res")
         // console.log(root);
         return root;
+      },
+      //对active事件的回调函数
+      //val:所有的active节点的数组
+      treeActive(val){
+        console.log(val);
+        this.selectVertex(val[0].functionId);
+        this.active = val;
       },
       // //将一个
       // childrenToArray(children){
@@ -712,9 +717,69 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph, putCo
         this.searchVertex = this.vertexSelected.functionName;
         this.graphSelectedItem = {type: "n", id: this.vertexSelected.id};
 
+        //处理包结构:active函数，打开父节点
+        let funcKey = this.vertexSelected.functionName;
+        this.active = [{key: funcKey}];
+        let openName = this.getFathersKeyByFuncKey(funcKey);
+        openName.forEach(name => {
+          if(this.open.indexOf({key: name}) == -1){
+            this.open.push({key: name});
+          }
+        })
+        
+        console.log("active");
+        console.log(this.active);
+
         console.log("this.graphSelectedItem");
         console.log(this.graphSelectedItem);
+      },getFathersKeyByFuncKey(funcKey){
+        //根据函数名得到所有父节点的key的数组
+        let result = [];
+        let fathers = funcKey.split(":")[0].split(".");
+
+        let nowUrl = "/src";
+        result.push(nowUrl);
+        fathers.forEach(name => {
+          nowUrl += "/" + name;
+          result.push(nowUrl);
+        })
+        console.log("resultF");
+        console.log(result);
+
+        return result;
       },
+      //node是当前节点，fatherkeys是他所有父亲的key的数组，funckey是目标, 如果没有则返回空
+      //TODO:不知道为什么，这样搜索的结果是所有文件夹打开，怀疑跟js的作用域特性有关
+      // searchFatherKeysByFuncKey(fatherKeys, node, funcKey){
+      //   console.log("node");
+      //   console.log(node);
+      //   console.log("fatherKeys");
+      //   console.log(fatherKeys);
+      //   if(node.children.length == 0){
+      //     //叶节点
+      //     if(node.key != funcKey){
+      //       console.log("lmiss");
+      //       return null;
+      //     }else{
+      //       console.log("lhit");
+      //       return fatherKeys;
+      //     }
+      //   }else{
+      //     //非叶节点
+      //     let result = null;
+      //     let newKeys = fatherKeys;
+      //     newKeys.push({key: node.key});
+          
+      //     node.children.forEach(child => {
+      //       let res = this.searchFatherKeysByFuncKey(newKeys, child, funcKey);
+      //       if(res != null){
+      //         result = res;
+      //       }
+      //     })
+      //     return result;
+      //   }
+
+      // },
       selectDomain(id){
         //选中某个连通域
         console.log("selectDomain");
