@@ -3,7 +3,9 @@ pipeline {
     stages {
         stage('Build') { 
             steps {
-                sh 'npm run build' 
+                nodejs(nodeJSInstallationName: 'nodejs') {
+                    sh 'npm run build'
+                }
             }
         }
         stage('Deliver') {
