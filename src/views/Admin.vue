@@ -20,11 +20,12 @@
             >
                 <v-card-title>项目详细信息</v-card-title>
                 <v-card-text>
-                    <v-list-item-group
+                    <v-list-item
                         v-for="(item, i) in projectDetail"
                         :key="i"
+                        mandatory="true"
                         >
-                        <v-list-item v-if="i!='id'">
+                        <v-list-item>
                             <v-col cols="6">
                             {{projectDetailHeader[i]}}
                             </v-col>
@@ -32,7 +33,7 @@
                             {{projectDetail[i]}}
                             </v-col>
                         </v-list-item>
-                    </v-list-item-group>
+                    </v-list-item>
                 </v-card-text>
             </v-card>
         </v-dialog>
@@ -195,6 +196,8 @@ export default {
             getProjectProfile(id).then(res => {
                 console.log(res);
                 this.projectDetail = res.data;
+                delete this.projectDetail.id;
+                
 
             }).catch(err => {
                 this.Alert(err.response.data.errMsg);
