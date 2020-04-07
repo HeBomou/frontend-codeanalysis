@@ -722,9 +722,9 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph, putCo
         this.active = [{key: funcKey}];
         let openName = this.getFathersKeyByFuncKey(funcKey);
         openName.forEach(name => {
-          if(this.open.indexOf({key: name}) == -1){
+          // if(this.open.indexOf({key: name}) == -1){
             this.open.push({key: name});
-          }
+          // }
         })
         
         console.log("active");
@@ -881,6 +881,7 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph, putCo
           this.initProject(res.data);
         }).catch(err => {
           this.Alert(err.response.data.errMsg);
+          this.$router.push('/project')
         });
 
 
