@@ -1,5 +1,8 @@
 <template>
   <v-app id="dependency">
+    <v-overlay :value="overlay">
+      <v-progress-circular indeterminate></v-progress-circular>
+    </v-overlay>
     <v-dialog v-model="SourceCodedialog">
       <v-card>
         <v-card-title>haha</v-card-title>
@@ -321,6 +324,7 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph, putCo
         errMsg: "",
         dialogErr: false,
         SourceCodedialog: false,
+        overlay: true,
         path: 0,
         //顶点
         vertexNum: 5,
@@ -623,6 +627,9 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph, putCo
         //设置子图
         this.reloadThresholds();
 
+        //停止转菊花
+        this.overlay = false;
+
       },
       //根据children 的情况判断是文件夹/文件/类/文件
       changeFileType(root){
@@ -905,6 +912,7 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph, putCo
           console.log(res.data);
           this.initProject(res.data);
         }).catch(err => {
+          this.overlay = false;
           this.Alert(err.response.data.errMsg);
           this.$router.push('/project')
         });
