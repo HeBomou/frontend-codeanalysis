@@ -53,6 +53,14 @@ const routes = [
       keepAlive: true
     }
   },{
+    path: '/adminLogin',
+    name: 'AdminLogin',
+    component: () => import("@/views/AdminLogin.vue"),
+    meta: {
+      title: "管理员登录",
+      keepAlive: true
+    }
+  },{
     path: '/404',
     name: 'faid',
     component: () => import('@/views/404.vue'),

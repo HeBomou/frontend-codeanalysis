@@ -170,3 +170,18 @@ export const getAllUsers = () => get("/user");
  * @param {*} projectId 
  */
 export const getProjectProfile = (projectId) => get("project/" + projectId + "/profile");
+
+/**
+ * 管理员登录
+ * @param {*} usrName 
+ * @param {*} pwd 
+ */
+export const postAdmin = (usrName, pwd) => post("/adminSession", {username: usrName, pwdMd5: pwd});
+
+/**
+ * 管理员注册
+ * @param {*} username 
+ * @param {*} pwd 
+ * @param {*} inviteCode 
+ */
+export const addAdmin = (username, pwd, inviteCode) => post("/admin", {id: null, username: username, pwdMd5: pwd, inviteCode: inviteCode});

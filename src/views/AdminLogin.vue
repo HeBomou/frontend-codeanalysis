@@ -39,6 +39,9 @@
           <div class="font-italic font-weight-black white--text"
             style="margin-bottom: 20px;font-size: 45px"> Happy6+
           </div>
+          <div class="font-italic font-weight-black white--text"
+            style="margin-top: -40px;font-size: 25px">admin
+          </div>
         </v-row>
         <v-row align="center" justify="center">
           <v-card
@@ -66,7 +69,7 @@
               <v-text-field
                 class="mr-5 ml-5"
                 v-model="userName"
-                label="User Id"
+                label="Admin Id"
                 clearable
                 required
                 flat
@@ -76,9 +79,9 @@
               ></v-text-field>
               <v-text-field
                 class="mr-5 ml-5"
-                v-model="email"
-                :rules="emailRules"
-                label="Email"
+                v-model="inviteCode"
+                :rules="inviteRules"
+                label="Invite code"
                 required
                 v-if="is_signup == 1"
                 flat
@@ -136,13 +139,13 @@
               </v-btn>
             </v-form>
             <v-row class=" mt-3 mr-5 ml-5" align="center" justify="center">
-                <v-btn text color="blue" v-if="is_signup==0" @click="Alert('你怎么能忘记呢？')">
+                <v-btn text color="blue" v-if="is_signup==0">
                     forgot password?
                 </v-btn>
             </v-row>
             <v-row class="mr-5 ml-5 mb-5" align="center" justify="center">
-                <v-btn text color="blue" v-if="is_signup==0" @click="isAdmin">
-                    is admin?
+                <v-btn text color="blue" v-if="is_signup==0" @click="isUser">
+                    is user?
                 </v-btn>
             </v-row>
           </v-card>
@@ -153,7 +156,7 @@
 </template>
 
 <script>
-  import {addUser, addSession} from "../request/api"
+  import {postAdmin, addAdmin} from "../request/api"
   export default {
     name: 'Login',
     computed: {
@@ -186,8 +189,8 @@
         is_signup: 0,//是否是注册
         userName: "",
         password: "",
+        inviteCode: "",
         confirmPassword: "",
-        email: "",
         passwordRules: [
           v => !!v || "password is required",
           v => (v.length >= 6 || this.is_signup == 0) || "密码最少六位"
@@ -196,9 +199,8 @@
           v => !!v || "please confirm your password",
           v => v === this.password || "not equal, check your password"
         ],
-        emailRules: [
-          v => !!v || "E-mail is required",
-          v => (/.+@.+\..+/.test(v) || this.is_signup == 0) || "E-mail must be valid"
+        inviteCodeRules: [
+          v => !!v || "invite code is required",
         ],
         valid: false
       }
@@ -210,12 +212,9 @@
       //登录
       async login() {
         console.log(this.$store.state.userId);
-        await addSession(this.userName, this.password).then(res => {
-            this.$store.commit('setUserId', res.data);
-            //TODO:debug
-            //this.$store.commit('setUserId', 233);
-            console.log(this.$store.state.userId);
-            this.$router.push('/project');
+        await postAdmin(this.userName, this.password).then(res => {
+            this.$store.commit('setAdminId', res.data);
+            this.$router.push('/admin');
         }).catch(err => {
           this.Alert(err.response.data.errMsg);
         });
@@ -224,7 +223,7 @@
       async register() {
         //const res = await addUser(null, this.userName, this.password);
         //console.log(res);
-        addUser(null, this.userName, this.password).then(res => {
+        addAdmin(this.userName, this.password, this.inviteCode).then(res => {
           console.log(res);
           this.Alert("注册成功");
         })
@@ -237,8 +236,8 @@
         this.errMsg = msg;
         this.dialog = true;
       },
-      isAdmin(){
-        this.$router.push("/adminLogin");
+      isUser(){
+        this.$router.push('/login');
       }
     }
   }
