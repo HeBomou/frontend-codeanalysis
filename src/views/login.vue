@@ -118,7 +118,14 @@
                 v-if="is_signup == 0"
                 :disabled="!valid"
                 @click="login"
-              >login
+              >
+              
+              <v-progress-circular
+                v-if="loginPressed"
+                indeterminate
+              >
+              </v-progress-circular>
+              <div v-else>login</div>
               </v-btn>
               <v-btn
                 class="mr-5 ml-5"
@@ -183,6 +190,7 @@
               src: require("@/assets/images/login/5.jpg"),
           }
         ],
+        loginPressed: false,//用于更改login按钮为转菊花
         is_signup: 0,//是否是注册
         userName: "",
         password: "",
@@ -210,6 +218,7 @@
       //登录
       async login() {
         console.log(this.$store.state.userId);
+        this.loginPressed = true;
         await addSession(this.userName, this.password).then(res => {
             this.$store.commit('setUserId', res.data);
             //TODO:debug
@@ -217,6 +226,7 @@
             console.log(this.$store.state.userId);
             this.$router.push('/project');
         }).catch(err => {
+          this.loginPressed =false;
           this.Alert(err.response.data.errMsg);
         });
 
