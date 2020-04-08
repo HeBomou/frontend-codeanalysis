@@ -33,6 +33,7 @@ export default new Vuex.Store({
     },
     userId: 0,
     projectId: 0,
+    adminId:0
 
 
   },
@@ -50,6 +51,8 @@ export default new Vuex.Store({
     },
     setUserId(state, id){
       state.userId = id;
+    },setAdminId(state, id){
+      state.adminId = id;
     },
     setProjectId(state, pid){
       state.projectId = pid;

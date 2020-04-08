@@ -166,6 +166,9 @@ export default {
             searchUser: null
         }
     }, mounted(){
+        if(this.$store.state.adminId == 0){
+            this.$router.push("/adminLogin");
+        }
         getProjectBasicAttributeAll().then(res => {
             console.log(res);
             this.projects = res.data;

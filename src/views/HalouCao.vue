@@ -20,6 +20,7 @@
     <div @click="pathToShow = undefined">隐藏路径显示</div>
     <div @click="pathToShow = [1, 2, 3]">显示cnmd1到cnmd4的路径</div>
     <router-link to="login">Login</router-link>
+    <v-btn @click="toAdminLogin">haha</v-btn>
   </div>
 </template>
 <script>
@@ -49,6 +50,9 @@ export default {
     cnmdConnectiveDomain(id) {
       this.selectedConnectiveDomainId = id;
       console.log("select on connective domain", id);
+    },
+    toAdminLogin(){
+      this.$router.push("adminLogin");
     }
   },
   mounted() {
