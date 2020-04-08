@@ -13,8 +13,28 @@
         </v-card-text>
       </v-card>
     </v-dialog>
-    <v-dialog v-model="dialogDeleteSubgraph">
-
+    <v-dialog v-model="dialogDeleteSubgraph" width="500px">
+      <v-card>
+        <v-card-title>删除子图</v-card-title>
+        <v-card-text color="red">
+            子图被删除后无法恢复，且所有标注都会被删除！
+        </v-card-text>
+        <v-card-actions>
+            <v-spacer />
+                <v-btn
+                    color="success" 
+                    @click="deleteSubgraphConfirmed()"
+                >确定
+                </v-btn>
+                
+                <v-btn
+                    color="error"   
+                    @click="dialogDeleteSubgraph=false;"
+                    
+                >取消
+                </v-btn>
+        </v-card-actions>
+      </v-card>
     </v-dialog>
     <v-dialog
       v-model="dialogErr"
@@ -123,7 +143,6 @@
                         紧密度域值
                       </v-card-title>
                       <v-card-text>
-                        <!-- <v-col> -->
                           <v-autocomplete
                             @update:search-input="selectThreshold()"
                             v-model="thresholdSelected"
@@ -136,9 +155,12 @@
                               <v-icon @click="debug">mdi-wronge</v-icon>
                             </template>
                           </v-autocomplete>
-                          <v-icon>mdi-delete</v-icon>
-                        <!-- </v-col> -->
                       </v-card-text>
+                      <v-card-actions>
+                        <v-row justify="center">
+                          <v-btn @click="dialogDeleteSubgraph=true">删除子图</v-btn>
+                        </v-row>
+                      </v-card-actions>
                     </v-card>
                   </v-col>
                   <v-col cols="6">
@@ -316,7 +338,7 @@
 
 <script>
 import DepGraph from "@/components/DepGraph";
-import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph, putConnectiveDomain, putConnectiveDomainPosition} from "../request/api";
+import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph, putConnectiveDomain, putConnectiveDomainPosition, delSubgraph} from "../request/api";
 //import {} from "../request/api";
 //import SearchComponent from '../components/SearchAuto'
   export default {
@@ -912,6 +934,21 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph, putCo
       logout(){
         this.$store.commit("setUserId", 0);
         this.$router.push("/login");
+      },
+      deleteSubgraphConfirmed(){
+        if(this.thresholdSelected == 0){
+          this.dialogDeleteSubgraph = false;
+          this.Alert("不能删除紧密度域值为0的子图");
+        }
+        delSubgraph(this.projectId, this.subgraphId).then(res => {
+          this.thresholdSelected = 0;
+          this.selectThreshold();
+          this.dialogDeleteSubgraph = false;
+          console.log(res);
+        }).catch(err => {
+          this.dialogDeleteSubgraph = false;
+          this.Alert(err.response.data.errMsg);
+        })
       }
 
     },
