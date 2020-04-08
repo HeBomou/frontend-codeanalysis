@@ -259,8 +259,8 @@ export default {
       });
 
       return {
-        nodes: [...nodeMap.values()],
-        edges: [...edgeMap.values()]
+        nodes: [...nodeMap.values()].filter(n => n.data.oriColor != "#999999"),
+        edges: [...edgeMap.values()].filter(e => e.data.oriColor != "#999999")
       };
     }
   },
