@@ -74,7 +74,7 @@ export const getProject = (projectId) => get("/project/" + projectId);
  * 移除项目
  * @param {long} id 
  */
-export const delProject = (id) => del("/project" + id);
+export const delProject = (id) => del("/project/" + id);
 
 /**
  * 添加项目

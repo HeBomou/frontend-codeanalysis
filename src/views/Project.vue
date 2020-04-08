@@ -10,6 +10,81 @@
                 </v-card-text>
             </v-card>
         </v-dialog>
+        <v-dialog
+            v-model="dialog"
+            width="500">
+            <v-card>
+                <v-card-title>增加项目</v-card-title>
+                <v-card-text>
+                    <v-form>
+                        <v-text-field
+                            class="mr-5 ml-5"
+                            v-model="projectName"
+                            label="项目名"
+                            clearable
+                            required
+                            flat
+                            outlined
+                            rounded
+                            :rules="nameRules"
+                            >
+                        </v-text-field>
+                        <v-text-field
+                            class="mr-5 ml-5"
+                            v-model="projectUrl"
+                            label="git地址"
+                            clearable
+                            required
+                            flat
+                            outlined
+                            rounded
+                            :rules="gitRules"
+                            >
+                        </v-text-field>
+                    </v-form>
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer />
+                        <v-btn
+                            color="success"                                        
+                            @click="addProject"
+                        >确定
+                        </v-btn>
+                        
+                        <v-btn
+                            color="error"                                        
+                            @click="dialog=false"
+                            
+                        >取消
+                        </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+        <v-dialog
+            v-model="dialogDelete"
+            width="500">
+            <v-card>
+                <v-card-title>删除项目: {{projectToBeDelete.projectName}}</v-card-title>
+                <v-card-text color="red">
+                    项目被删除后无法恢复，且所有标注都会被删除！
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer />
+                        <v-btn
+                            color="success" 
+                            @click="deleteProjectConfirmed()"
+                        >确定
+                        </v-btn>
+                        
+                        <v-btn
+                            color="error"   
+                            @click="dialogDelete=false;"
+                            
+                        >取消
+                        </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
         <v-app-bar
         app
         clipped-left
@@ -29,57 +104,50 @@
         </v-app-bar>
     <v-content>
         <v-container class="mt-0">
-            <v-card>
+            <!-- <v-card>
                 <v-card-text>
                     <v-list-item-group
                     v-for="(project, i) in projects"
                     :key="i"
                     >
-                        <v-list-item-content>
-                            <v-list-item-title @click="toProject(i)">{{project.projectName}}</v-list-item-title>
-                            
-                        </v-list-item-content>
+                        <v-list-item @click="toProject(i)" >
+                          {{project.projectName}}
+                          <v-icon>mdi-plus</v-icon>
+                        </v-list-item>
                     </v-list-item-group>
-                    <v-dialog
-                        v-model="dialog"
-                        width="500">
-                        <v-card>
-                            <v-card-title>增加项目</v-card-title>
-                            <v-card-text>
-                                <v-form>
-                                    <v-text-field
-                                        class="mr-5 ml-5"
-                                        v-model="projectName"
-                                        label="项目名"
-                                        clearable
-                                        required
-                                        flat
-                                        outlined
-                                        rounded
-                                        >
-                                    </v-text-field>
-                                    <v-text-field
-                                        class="mr-5 ml-5"
-                                        v-model="projectUrl"
-                                        label="git地址"
-                                        clearable
-                                        required
-                                        flat
-                                        outlined
-                                        rounded
-                                        >
-                                    </v-text-field>
-                                    <v-btn
-                                        class="mr-5 ml-5"
-                                        color="success"                                        
-                                        @click="addProject"
-                                    >确定
-                                    </v-btn>
-                                </v-form>
-                            </v-card-text>
-                        </v-card>
-                    </v-dialog>
-                    <v-list-item-title @click="dialog=true" >增加</v-list-item-title>
+                    <v-list-item @click="dialog=true" ><v-icon>mdi-plus</v-icon></v-list-item>
+                </v-card-text>
+            </v-card> -->
+            <v-card>
+                <v-card-title>
+                    项目列表
+                    <v-spacer />
+                    <v-text-field
+                        v-model="searchProject"
+                        append-icon="mdi-magnify"
+                        label="Search"
+                        single-line
+                        hide-details
+                    ></v-text-field>
+                    <v-btn @click="dialog=true" color="success">添加</v-btn>
+                </v-card-title>
+                <v-card-text>
+                    <v-data-table
+                        :loading="isLoading"
+                        loading-text="Loading... Please wait"
+                        :headers="projectHeaders"
+                        :items="projects"
+                        :search="searchProject"
+                        
+                    >
+                        <template v-slot:item.id="props">
+                            
+                            <v-icon @click="toProject(props.item.id)">mdi-plus</v-icon>
+                        </template>
+                        <template v-slot:item.pid="props">
+                            <v-btn @click="deleteProject(props.item.id)">删除</v-btn>
+                        </template>
+                    </v-data-table>
                 </v-card-text>
             </v-card>
         </v-container>
@@ -87,17 +155,40 @@
     </v-app>
 </template>
 <script>
-import {getProjectsSingle, addProject} from "../request/api";
+import {getProjectsSingle, addProject, delProject} from "../request/api";
 export default {
     name: 'Project',
     data: () => ({
         errMsg: "",
         dialogErr: false,
-        projects: ["123", "234"],
+        projects: [],
         dialog: false,
+        dialogDelete: false,
         projectName: "",
         projectUrl: "",
-        userId: 0
+        searchProject: null,
+        isLoading: true,
+        userId: 0,
+        projectToBeDelete: {projectName: "haha"},
+        nameRules: [
+            v => !!v || "project name is required"
+        ],
+        gitRules: [
+            v => !!v || "git url is required",
+            v => {
+                //TODO:git地址的正则表达式
+                v;
+                return true || "should be git url";
+            }
+        ],
+        projectHeaders:[
+            {text: "项目名", value: "projectName"},
+            {text: "顶点数", value: "vertexNum"}, 
+            {text: "边数", value: "edgeNum"}, 
+            {text: "连通域数", value: "connectiveDomainNum"},
+            {text: "选择", value: "id"},
+            {text: "删除", value: "pid"}
+        ]
     }),methods:{
         setProjects(){
             console.log("onMount, UserId: " + this.$store.state.userId);
@@ -105,6 +196,10 @@ export default {
                 console.log("getProjects");
                 console.log(res.data);
                 this.projects = res.data;
+                this.projects.forEach(p => {
+                    p.pid = p.id;
+                });
+                this.isLoading = false;
                 }).catch(err => this.Alert(err.response.data.errMsg));
             // getProjects(this.$store.state.userId).then(res => {
             //     console.log(res.data);
@@ -128,8 +223,8 @@ export default {
          * 进入这个项目
          */
         toProject(i){
-            console.log(this.projects[i].id);
-            this.$store.commit("setProjectId",this.projects[i].id);
+            console.log(i);
+            this.$store.commit("setProjectId",i);
             this.$router.push("/dependency");
         },Alert(msg){
         this.errMsg = msg;
@@ -138,13 +233,42 @@ export default {
         logout(){
             this.$store.commit("setUserId", 0);
             this.$router.push('/login');
+        },
+        deleteProject(i){
+            console.log(i);
+            this.projects.forEach(p => {
+                if(p.id == i){
+                    this.projectToBeDelete = p;
+                }
+            });
+            this.dialogDelete = true;
+        },
+        deleteProjectConfirmed(){
+            console.log("delete project");
+            console.log(this.projectToBeDelete);
+            delProject(this.projectToBeDelete.id).then(res => {
+                console.log(res);
+                this.dialogDelete = false;
+                this.Alert("删除成功");
+                var index = this.projects.indexOf(this.projectToBeDelete);
+                if(index > -1){
+                    this.projects.splice(index, 1);
+                }
+            }).catch(err => {
+                this.Alert(err.response.data.errMsg);
+            })
+
         }
+
         
 
     },mounted(){
         this.userId = this.$store.state.userId;
         console.log("userId ", this.userId);
         console.log(this.userId);
+        if(this.userId == 0){
+            this.$router.push('/login');
+        }
     
         //TODO:debug
         //this.userId = 233;
