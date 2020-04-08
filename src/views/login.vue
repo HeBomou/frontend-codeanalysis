@@ -123,6 +123,7 @@
                 <v-progress-circular
                   v-if="loginPressed"
                   indeterminate
+                  color="white"
                 >
                 </v-progress-circular>
                 <div v-else>login</div>
@@ -135,7 +136,7 @@
                 @click="register"
               >
                 <div v-if="signUpPressed">
-                  <v-progress-circular indeterminate></v-progress-circular>
+                  <v-progress-circular indeterminate color="white"></v-progress-circular>
                 </div>
                 <div v-else>sign up</div>
               </v-btn>

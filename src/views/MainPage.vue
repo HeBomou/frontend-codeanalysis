@@ -13,6 +13,9 @@
         </v-card-text>
       </v-card>
     </v-dialog>
+    <v-dialog v-model="dialogDeleteSubgraph">
+
+    </v-dialog>
     <v-dialog
       v-model="dialogErr"
       width="500">
@@ -104,202 +107,208 @@
     
     </v-app-bar>
     <v-content>
+      <v-container fluid>
+        <v-row>
 
-    <v-container class="mt-0">
-      <v-row>
-
-        <v-col cols="10">
-           <!-- <v-list
-            dense
-            class="grey lighten-4"
-          > -->
-            <v-row>
-              <!-- <v-col cols="12"> -->
-                <v-col cols="6">
-                  <v-card >
-                    <v-card-title>
-                      紧密度域值
-                    </v-card-title>
-                    <v-card-text>
-                      <v-autocomplete
-                        @update:search-input="selectThreshold()"
-                        v-model="thresholdSelected"
-                        :items="thresholds"
-                        append-outer-icon="mdi-plus"
-                        @click:append-outer="dialogThreshold=true"
-                      >
-                      </v-autocomplete>
-                    </v-card-text>
-                  </v-card>
-                </v-col>
-                <v-col cols="6">
-                  <v-card>
-                    <v-card-title>
-                      顶点搜索
-                    </v-card-title>
-                    <v-card-text>
-                      <v-autocomplete
-                        @update-items="updateItems"
-                        v-model="searchVertex"
-                        :items="vertexs"
-                        @change="searchVertexSelected"
-                      ></v-autocomplete>
-                    </v-card-text>
-                  </v-card>
-                </v-col>
-               
-              <!-- </v-col> -->
-            </v-row>
-            
-            <v-card
-            style="height: 500px"
-            >
-              <!-- <v-list-item-title>搜索顶点</v-list-item-title>
-              <SearchComponent></SearchComponent> -->
-              <v-card-title>
-                dependency
-              </v-card-title>
-              <v-card-text style="height: 100%">
-                <DepGraph
-                  v-bind:subgraphId="subgraphId"
-                  v-bind:pathToShow="pathToShow"
-                  v-bind:selectedItem="graphSelectedItem"
-                  v-bind:selectedConnectiveDomainId="graphSelectedConnectiveDomainId"
-                  @vertexSelected="cnmdVertex"
-                  @edgeSelected="cnmdEdge"
-                  @connectiveDomainSelected="cnmdConnectiveDomain"
-                  @vertexMoved="cnmdVertexMoved"
-                  @connectiveDomainMoved="cnmdDomainMoved"
-                ></DepGraph>
-              </v-card-text>
-            </v-card>
-            <v-card
-                v-if="selectType!=3"
+          <v-col cols="10">
+            <!-- <v-list
+              dense
+              class="grey lighten-4"
+            > -->
+              <v-row>
+                <!-- <v-col cols="12"> -->
+                  <v-col cols="6">
+                    <v-card >
+                      <v-card-title>
+                        紧密度域值
+                      </v-card-title>
+                      <v-card-text>
+                        <!-- <v-col> -->
+                          <v-autocomplete
+                            @update:search-input="selectThreshold()"
+                            v-model="thresholdSelected"
+                            :items="thresholds"
+                            append-outer-icon="mdi-plus"
+                            @click:append-outer="dialogThreshold=true"
+                          >
+                            <template v-slot:item="data">
+                              {{data.item}}
+                              <v-icon @click="debug">mdi-wronge</v-icon>
+                            </template>
+                          </v-autocomplete>
+                          <v-icon>mdi-delete</v-icon>
+                        <!-- </v-col> -->
+                      </v-card-text>
+                    </v-card>
+                  </v-col>
+                  <v-col cols="6">
+                    <v-card>
+                      <v-card-title>
+                        顶点搜索
+                      </v-card-title>
+                      <v-card-text>
+                        <v-autocomplete
+                          @update-items="updateItems"
+                          v-model="searchVertex"
+                          :items="vertexs"
+                          @change="searchVertexSelected"
+                        ></v-autocomplete>
+                      </v-card-text>
+                    </v-card>
+                  </v-col>
+                
+                <!-- </v-col> -->
+              </v-row>
+              
+              <v-card
+              style="height: 500px"
               >
-                <v-card-text align="center">
-                  <!-- <v-form
-                    align="center"
-                    justify="center"
-                  > -->
-                    
-                    <v-btn class="mr-5" >查看所在连通域</v-btn>
-                    <v-btn class="mr-5"  v-if="selectType==1" @click="SourceCodedialog=true">查看源代码</v-btn>
-                    <v-btn class="mr-5"  @click="setAsStart" v-if="selectType==1">设置为起点</v-btn>
-                    <v-btn class="mr-5"  @click="setAsEnd" v-if="selectType==1">设置为终点</v-btn>
-                    <v-btn class="mr-5"  @click="debug">haha</v-btn>
-                 
-                  <!-- </v-form> -->
+                <!-- <v-list-item-title>搜索顶点</v-list-item-title>
+                <SearchComponent></SearchComponent> -->
+                <v-card-title>
+                  dependency
+                </v-card-title>
+                <v-card-text style="height: 100%">
+                  <DepGraph
+                    v-bind:subgraphId="subgraphId"
+                    v-bind:pathToShow="pathToShow"
+                    v-bind:selectedItem="graphSelectedItem"
+                    v-bind:selectedConnectiveDomainId="graphSelectedConnectiveDomainId"
+                    @vertexSelected="cnmdVertex"
+                    @edgeSelected="cnmdEdge"
+                    @connectiveDomainSelected="cnmdConnectiveDomain"
+                    @vertexMoved="cnmdVertexMoved"
+                    @connectiveDomainMoved="cnmdDomainMoved"
+                  ></DepGraph>
                 </v-card-text>
               </v-card>
-            <v-card>
-              <v-card-text>
-                <v-treeview
-                dense
-                  v-model="tree"
-                  :open.sync="open"
-                  :items="items"
-                  activatable
-                  item-key="key"
-                  item-text="str"
-                  open-on-click
-                  @update:active="treeActive"
-                  :active.sync="active"
-                  return-object
+              <v-card
+                  v-if="selectType!=3"
                 >
-                  <template v-slot:prepend="{ item, open }">
+                  <v-card-text align="center">
+                    <!-- <v-form
+                      align="center"
+                      justify="center"
+                    > -->
+                      
+                      <v-btn class="mr-5" >查看所在连通域</v-btn>
+                      <v-btn class="mr-5"  v-if="selectType==1" @click="SourceCodedialog=true">查看源代码</v-btn>
+                      <v-btn class="mr-5"  @click="setAsStart" v-if="selectType==1">设置为起点</v-btn>
+                      <v-btn class="mr-5"  @click="setAsEnd" v-if="selectType==1">设置为终点</v-btn>
+                      <v-btn class="mr-5"  @click="debug">haha</v-btn>
                   
-                    <v-icon v-if="!item.file">
-                      {{ open ? 'mdi-folder-open' : 'mdi-folder' }}
-                    </v-icon>
-                  
-                    <v-icon v-else>
-                      {{ files[item.file] }}
-                    </v-icon>
-                  </template>
-                </v-treeview>
-              </v-card-text>
-            </v-card>
-          <!-- </v-list> -->
-        </v-col>
-
-        <v-col cols="2">
-          <v-card class="mt-5" v-if="selectType==1" hidden>
-              <v-card-title>
-                源代码
-              </v-card-title>
-              <v-card-text>
-                <div id="codeView" v-highlight>
-                    <pre><code v-html="src"></code></pre>
-                </div>
-              </v-card-text>
-            </v-card>
-            <v-card class="mt-5" v-if="selectType==2">
-              <v-card-title>
-                紧密度
-              </v-card-title>
-              <v-card-text>
-                {{edgeSelected.closeness}}
-              </v-card-text>
-            </v-card>
-            <v-card class="mt-5">
-              <v-card-title>
-                标注
-              </v-card-title>
-              <v-card-text>
-                <v-textarea
-                  v-model="tag"
-                  auto-grow
-                  outlined=""
-                >
-                </v-textarea>
-                <v-btn @click="saveTag">保存</v-btn>
-              </v-card-text>
-            </v-card>
-            <v-card class="mt-5">
-              <v-card-title>
-                路径搜索
-              </v-card-title>
-              <v-card-text>
-                <v-list-item-title justify="center">起点</v-list-item-title>
-                <v-autocomplete
-                  @update-items="updateItems"
-                  v-model="startVertex"
-                  :items="vertexs"
-                ></v-autocomplete>
-                <v-list-item-title>终点</v-list-item-title>
-                <v-autocomplete
-                  @update-items="updateItems"
-                  v-model="endVertex"
-                  :items="vertexs"
-
-                ></v-autocomplete>
-                <v-btn @click="searchPath">搜索</v-btn>
-              </v-card-text>
-            </v-card>
-            
-            <!-- <v-row> -->
-            <v-card class="mt-5">
-              <v-card-text>
-                <v-card-title>
-                  路径总数：{{pathNum}}
-                </v-card-title>
-                <v-list-item-group v-model="path">
-                  <v-list-item
-                    v-for="(path, i) in paths"
-                    :key="i"
+                    <!-- </v-form> -->
+                  </v-card-text>
+                </v-card>
+              <v-card>
+                <v-card-text>
+                  <v-treeview
+                  dense
+                    v-model="tree"
+                    :open.sync="open"
+                    :items="items"
+                    activatable
+                    item-key="key"
+                    item-text="str"
+                    open-on-click
+                    @update:active="treeActive"
+                    :active.sync="active"
+                    return-object
                   >
-                  <v-list-item-content>
-                    <v-list-item-title @click="selectPath(path)">路径：{{i + 1}} 长度：{{path.length}}</v-list-item-title>
-                  </v-list-item-content>
-                  </v-list-item>
-                </v-list-item-group>
-              </v-card-text>
-            </v-card>
-              
+                    <template v-slot:prepend="{ item, open }">
+                    
+                      <v-icon v-if="!item.file">
+                        {{ open ? 'mdi-folder-open' : 'mdi-folder' }}
+                      </v-icon>
+                    
+                      <v-icon v-else>
+                        {{ files[item.file] }}
+                      </v-icon>
+                    </template>
+                  </v-treeview>
+                </v-card-text>
+              </v-card>
+            <!-- </v-list> -->
+          </v-col>
 
-        </v-col>
-      </v-row>
-    </v-container>
+          <v-col cols="2">
+            <v-card class="mt-5" v-if="selectType==1" hidden>
+                <v-card-title>
+                  源代码
+                </v-card-title>
+                <v-card-text>
+                  <div id="codeView" v-highlight>
+                      <pre><code v-html="src"></code></pre>
+                  </div>
+                </v-card-text>
+              </v-card>
+              <v-card class="mt-5" v-if="selectType==2">
+                <v-card-title>
+                  紧密度
+                </v-card-title>
+                <v-card-text>
+                  {{edgeSelected.closeness}}
+                </v-card-text>
+              </v-card>
+              <v-card class="mt-5">
+                <v-card-title>
+                  标注
+                </v-card-title>
+                <v-card-text>
+                  <v-textarea
+                    v-model="tag"
+                    auto-grow
+                    outlined=""
+                  >
+                  </v-textarea>
+                  <v-btn @click="saveTag">保存</v-btn>
+                </v-card-text>
+              </v-card>
+              <v-card class="mt-5">
+                <v-card-title>
+                  路径搜索
+                </v-card-title>
+                <v-card-text>
+                  <v-list-item-title justify="center">起点</v-list-item-title>
+                  <v-autocomplete
+                    @update-items="updateItems"
+                    v-model="startVertex"
+                    :items="vertexs"
+                  ></v-autocomplete>
+                  <v-list-item-title>终点</v-list-item-title>
+                  <v-autocomplete
+                    @update-items="updateItems"
+                    v-model="endVertex"
+                    :items="vertexs"
+
+                  ></v-autocomplete>
+                  <v-btn @click="searchPath">搜索</v-btn>
+                </v-card-text>
+              </v-card>
+              
+              <!-- <v-row> -->
+              <v-card class="mt-5">
+                <v-card-text>
+                  <v-card-title>
+                    路径总数：{{pathNum}}
+                  </v-card-title>
+                  <v-list-item-group v-model="path">
+                    <v-list-item
+                      v-for="(path, i) in paths"
+                      :key="i"
+                    >
+                    <v-list-item-content>
+                      <v-list-item-title @click="selectPath(path)">路径：{{i + 1}} 长度：{{path.length}}</v-list-item-title>
+                    </v-list-item-content>
+                    </v-list-item>
+                  </v-list-item-group>
+                </v-card-text>
+              </v-card>
+                
+
+          </v-col>
+        </v-row>
+      </v-container>
     </v-content>
 
   </v-app>
@@ -324,6 +333,7 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph, putCo
         ],
         errMsg: "",
         dialogErr: false,
+        dialogDeleteSubgraph: false,
         SourceCodedialog: false,
         overlay: true,
         path: 0,
