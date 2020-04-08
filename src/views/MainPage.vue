@@ -169,6 +169,7 @@
                   @edgeSelected="cnmdEdge"
                   @connectiveDomainSelected="cnmdConnectiveDomain"
                   @vertexMoved="cnmdVertexMoved"
+                  @connectiveDomainMoved="cnmdDomainMoved"
                 ></DepGraph>
               </v-card-text>
             </v-card>
@@ -306,7 +307,7 @@
 
 <script>
 import DepGraph from "@/components/DepGraph";
-import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph, putConnectiveDomain} from "../request/api";
+import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph, putConnectiveDomain, putConnectiveDomainPosition} from "../request/api";
 //import {} from "../request/api";
 //import SearchComponent from '../components/SearchAuto'
   export default {
@@ -499,6 +500,15 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph, putCo
       cnmdVertexMoved(vertex){
         console.log("vertex Moved, id:", vertex);
         this.vertexMoved(vertex);
+      },
+      cnmdDomainMoved(domain){
+        console.log("domain moved");
+        putConnectiveDomainPosition(this.projectId, domain.id, domain.dx, domain.dy).then(res => {
+          console.log(res);
+        }).catch(err => {
+          this.Alert(err.response.data.errMsg);
+        })
+
       },
       saveTag(){
         if(this.selectType == 1){

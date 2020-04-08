@@ -186,4 +186,18 @@ export const postAdmin = (usrName, pwd) => post("/adminSession", {username: usrN
  */
 export const addAdmin = (username, pwd, inviteCode) => post("/admin", {id: null, username: username, pwdMd5: pwd, inviteCode: inviteCode});
 
-export const putProject =(projectId, projectName) => put("/project/" + projectId + "/dynamic", {id: projectId, projectName: projectName})
+/**
+ * 更新项目名
+ * @param {*} projectId 
+ * @param {*} projectName 
+ */
+export const putProject = (projectId, projectName) => put("/project/" + projectId + "/dynamic", {id: projectId, projectName: projectName})
+
+/**
+ * 移动连通域
+ * @param {*} projectId 
+ * @param {*} domainId 
+ * @param {*} dx 
+ * @param {*} dy 
+ */
+export const putConnectiveDomainPosition = (projectId, domainId, dx, dy) => put("/project/" + projectId + "/connectiveDomain/" + domainId + "/position?relativeX=" + dx + "&relativeY=" + dy);
