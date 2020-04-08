@@ -220,6 +220,15 @@ export default {
                 this.projects = res.data;
                 this.projects.forEach(p => {
                     p.pid = p.id;
+                    if(p.vertexNum == -1){
+                        p.vertexNum = '-';
+                    }
+                    if(p.edgeNum == -1){
+                        p.edgeNum = '-';
+                    }
+                    if(p.connectiveDomainNum == -1){
+                        p.connectiveDomainNum = '-';
+                    }
                 });
                 this.isLoading = false;
                 }).catch(err => this.Alert(err.response.data.errMsg));
