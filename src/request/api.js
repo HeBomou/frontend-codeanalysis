@@ -185,3 +185,5 @@ export const postAdmin = (usrName, pwd) => post("/adminSession", {username: usrN
  * @param {*} inviteCode 
  */
 export const addAdmin = (username, pwd, inviteCode) => post("/admin", {id: null, username: username, pwdMd5: pwd, inviteCode: inviteCode});
+
+export const putProject =(projectId, projectName) => put("/project/" + projectId + "/dynamic", {id: projectId, projectName: projectName})

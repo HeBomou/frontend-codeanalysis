@@ -140,6 +140,28 @@
                         :search="searchProject"
                         
                     >
+                        <template v-slot:item.projectName="props">
+                            <v-edit-dialog
+                            :return-value.sync="props.item.projectName"
+                            large
+                            persistent
+                            @save="saveProjectName(props.item)"
+                            >
+                            <div>{{ props.item.projectName }}</div>
+                            <template v-slot:input>
+                                <div class="mt-4 title">修改项目名</div>
+                            </template>
+                            <template v-slot:input>
+                                <v-text-field
+                                v-model="props.item.projectName"
+                                label="Edit"
+                                single-line
+                                counter
+                                autofocus
+                                ></v-text-field>
+                            </template>
+                            </v-edit-dialog>
+                        </template>
                         <template v-slot:item.id="props">
                             
                             <v-icon @click="toProject(props.item.id)">mdi-plus</v-icon>
@@ -155,7 +177,7 @@
     </v-app>
 </template>
 <script>
-import {getProjectsSingle, addProject, delProject} from "../request/api";
+import {getProjectsSingle, addProject, delProject, putProject} from "../request/api";
 export default {
     name: 'Project',
     data: () => ({
@@ -182,7 +204,7 @@ export default {
             }
         ],
         projectHeaders:[
-            {text: "项目名", value: "projectName"},
+            {text: "项目名(点击可修改)", value: "projectName"},
             {text: "顶点数", value: "vertexNum"}, 
             {text: "边数", value: "edgeNum"}, 
             {text: "连通域数", value: "connectiveDomainNum"},
@@ -257,6 +279,15 @@ export default {
             }).catch(err => {
                 this.Alert(err.response.data.errMsg);
             })
+
+        },
+        saveProjectName(p){
+            console.log(p);
+            putProject(p.id, p.projectName).then(res => {
+                console.log(res);
+            }).catch(err => {
+                this.Alert(err.response.data.errMsg);
+            });
 
         }
 
