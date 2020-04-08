@@ -116,25 +116,31 @@
                 class="mr-5 ml-5"
                 color="success"
                 v-if="is_signup == 0"
-                :disabled="!valid"
+                :disabled="(!valid) || loginPressed"
                 @click="login"
               >
               
-              <v-progress-circular
-                v-if="loginPressed"
-                indeterminate
-              >
-              </v-progress-circular>
-              <div v-else>login</div>
+                <v-progress-circular
+                  v-if="loginPressed"
+                  indeterminate
+                >
+                </v-progress-circular>
+                <div v-else>login</div>
               </v-btn>
               <v-btn
                 class="mr-5 ml-5"
                 color="success"
                 v-if="is_signup == 1"
-                :disabled="!valid"
+                :disabled="(!valid) || signUpPressed"
                 @click="register"
-              >sign up
+              >
+                <div v-if="signUpPressed">
+                  <v-progress-circular indeterminate></v-progress-circular>
+                </div>
+                <div v-else>sign up</div>
               </v-btn>
+            
+              
               <v-btn
                 class="mr-5 ml-5"
                 v-if="is_signup == 1"
@@ -191,6 +197,7 @@
           }
         ],
         loginPressed: false,//用于更改login按钮为转菊花
+        signUpPressed: false,//用于更改signup按钮为转菊花
         is_signup: 0,//是否是注册
         userName: "",
         password: "",
@@ -234,12 +241,15 @@
       async register() {
         //const res = await addUser(null, this.userName, this.password);
         //console.log(res);
+        this.signUpPressed = true;
         addUser(null, this.userName, this.password).then(res => {
           console.log(res);
+          this.signUpPressed = false;
           this.Alert("注册成功");
         })
           .catch(err => {
             console.log(err.response.data.errMsg);
+            this.signUpPressed = false;
             this.Alert(err.response.data.errMsg);
           })
       },
