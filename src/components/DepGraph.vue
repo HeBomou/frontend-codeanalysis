@@ -314,13 +314,17 @@ export default {
         });
       }
       // 显示新的高亮
+      let es = [];
       if (newPath) {
         newPath.forEach(eId => {
           let e = this.cy.getElementById("e" + eId);
-          if (e) e.data("color", "#A2CD5A");
+          if (e) {
+            e.data("color", "#A2CD5A");
+            es.push(e);
+          }
         });
       }
-      // this.cy.fit();
+      this.cy.fit(es);
     },
     initGraphTracker() {
       this.refreshGraph();
