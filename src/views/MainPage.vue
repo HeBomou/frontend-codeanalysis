@@ -866,6 +866,8 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph, putCo
         this.domainSelected = domain;
         console.log(domain);
         this.tag = domain.anotation;
+
+        
       },
       selectEdge(id){
         console.log("selectEdge id:");
@@ -877,6 +879,9 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph, putCo
         this.graphSelectedConnectiveDomainId = null;
         this.graphSelectedItem = {type: "e", id: this.edgeSelected.id};
         console.log(this.edgeSelected);
+
+        //把当前选中的顶点设置为这个边的一个顶点，方便选中所在连通域
+        this.vertexSelected = this.$store.state.project.vertexMap.get(this.edgeSelected.fromId);
         
       },
       //图中的点被移动
