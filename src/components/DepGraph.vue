@@ -313,13 +313,18 @@ export default {
         });
       }
     },
+    initGraphTracker() {
+      this.refreshGraph();
+      this.cy.center();
+    },
     connectiveDomainMapColorChangeTracker() {
       // TODO: 很麻烦不想改
       this.refreshGraph();
     }
   },
   computed: {
-    ...mapGetters(["connectiveDomainMapColorChangeTracker"])
+    ...mapGetters(["connectiveDomainMapColorChangeTracker"]),
+    ...mapGetters(["initGraphTracker"])
   }
 };
 </script>
