@@ -196,6 +196,7 @@
                     v-bind:pathToShow="pathToShow"
                     v-bind:selectedItem="graphSelectedItem"
                     v-bind:selectedConnectiveDomainId="graphSelectedConnectiveDomainId"
+                    v-bind:centerTracker="centerTracker"
                     @vertexSelected="cnmdVertex"
                     @edgeSelected="cnmdEdge"
                     @connectiveDomainSelected="cnmdConnectiveDomain"
@@ -459,7 +460,7 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph, putCo
             file: 'txt',
           },
         ],
-        //DepGraph的slot
+        //DepGraph的props
         //当前子图id
         subgraphId: null,
         //当前路径
@@ -468,6 +469,7 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph, putCo
         graphSelectedItem: null,
         //图中选中的连通域
         graphSelectedConnectiveDomainId: null,
+        centerTracker: 0,
 
         //当前选中的是顶点,1:顶点，2：边，3：连通域
         selectType: 1,
@@ -735,6 +737,8 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph, putCo
         console.log(val);
         this.selectVertex(val[0].functionId);
         this.active = val;
+
+        this.centerTracker += 1;
       },
       // //将一个
       // childrenToArray(children){
@@ -742,11 +746,16 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph, putCo
       // }
       // ,//搜索这个顶点
       searchVertexSelected(){
+        
+
         console.log(this.searchVertex);
         let v = this.getVertexByName(this.searchVertex);
         console.log("searchVertex");
         console.log(v);
         this.selectVertex(v.id);
+
+        //定位到这个点
+        this.centerTracker += 1;
 
       },
       //为了方便显示，把函数名全名中的包名类名去除
@@ -924,6 +933,16 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph, putCo
           }
         });
         this.subgraphId = sg.id;
+
+        //重置基本信息
+        this.vertexNum = 0;
+        this.edgeNum = 0;
+        this.domainNum = sg.connectiveDomainIds.length;
+        sg.connectiveDomainIds.forEach(did => {
+          let domain = this.$store.state.project.connectiveDomainMap.get(did);
+          this.vertexNum += domain.vertexIds.length;
+          this.edgeNum += domain.edgeIds.length;
+        })
       },
       //更新Thresholds
       reloadThresholds(){
@@ -958,6 +977,7 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph, putCo
       },
       checkDomain(){
         this.selectDomain(this.getDomainIdByVertexId(this.vertexSelected.id));
+        this.centerTracker += 1;
       },
       //根据点的id找到所在连通域的id
       getDomainIdByVertexId(vid){
