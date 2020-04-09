@@ -275,11 +275,11 @@ export default {
     return {};
   },
   watch: {
-    centerTracker(newItem) {
+    centerTracker() {
       if (this.selectedItem != undefined) {
-        this.cy.center(this.cy.getElementById(newItem.type + newItem.id));
-      } else {
-        this.cy.center(this.cy.getElementById("c" + newItem));
+        this.cy.center(this.cy.getElementById(this.selectedItem.type + this.selectedItem.id));
+      } else if (this.selectedConnectiveDomainId != undefined){
+        this.cy.center(this.cy.getElementById("c" + this.selectedConnectiveDomainId));
       }
     },
     selectedItem(newItem, oldItem) {
@@ -314,13 +314,17 @@ export default {
         });
       }
       // 显示新的高亮
+      let es = [];
       if (newPath) {
         newPath.forEach(eId => {
           let e = this.cy.getElementById("e" + eId);
-          if (e) e.data("color", "#A2CD5A");
+          if (e) {
+            e.data("color", "#A2CD5A");
+            es.push(e);
+          }
         });
       }
-      // this.cy.fit();
+      this.cy.fit(es);
     },
     initGraphTracker() {
       this.refreshGraph();
