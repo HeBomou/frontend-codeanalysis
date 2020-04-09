@@ -248,8 +248,7 @@
         position: absolute;
         left: 0;
         margin-left: calc((100% - 317px) / 2);/* 里面的大小应该与这个表单的宽度相同，可以让他处于中间 */
-        top: 0;
-        margin-top: 80px;
+        top: calc((100% - 800px) / 2);
         /*margin-top: calc( (100% - 600px) / 2);*/
     }
 

@@ -213,7 +213,7 @@
                       justify="center"
                     > -->
                       
-                      <v-btn class="mr-5" >查看所在连通域</v-btn>
+                      <v-btn class="mr-5" @click="checkDomain">查看所在连通域</v-btn>
                       <v-btn class="mr-5"  v-if="selectType==1" @click="SourceCodedialog=true">查看源代码</v-btn>
                       <v-btn class="mr-5"  @click="setAsStart" v-if="selectType==1">设置为起点</v-btn>
                       <v-btn class="mr-5"  @click="setAsEnd" v-if="selectType==1">设置为终点</v-btn>
