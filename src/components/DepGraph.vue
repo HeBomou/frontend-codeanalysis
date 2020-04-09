@@ -320,10 +320,11 @@ export default {
           if (e) e.data("color", "#A2CD5A");
         });
       }
+      // this.cy.fit();
     },
     initGraphTracker() {
       this.refreshGraph();
-      this.cy.center();
+      this.cy.fit();
     },
     connectiveDomainMapColorChangeTracker() {
       // TODO: 很麻烦不想改
