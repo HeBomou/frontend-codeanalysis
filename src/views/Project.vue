@@ -48,7 +48,14 @@
                         <v-btn
                             color="success"                                        
                             @click="addProject"
-                        >确定
+                            :disabled="addProjectConfirmPressed"
+                        >
+                            <div v-if="addProjectConfirmPressed">
+                                <v-progress-circular indeterminate color="white"></v-progress-circular>
+                            </div>
+                            <div v-else>
+                                确定
+                            </div>
                         </v-btn>
                         
                         <v-btn
@@ -73,7 +80,14 @@
                         <v-btn
                             color="success" 
                             @click="deleteProjectConfirmed()"
-                        >确定
+                            :disabled="deleteProjectConfirmPressed"
+                        >
+                            <div v-if="deleteProjectConfirmPressed">
+                                <v-progress-circular indeterminate color="white"></v-progress-circular>
+                            </div>
+                            <div v-else>
+                                确定
+                            </div>
                         </v-btn>
                         
                         <v-btn
@@ -183,6 +197,8 @@ export default {
     data: () => ({
         errMsg: "",
         dialogErr: false,
+        addProjectConfirmPressed: false,//转菊花判断
+        deleteProjectConfirmPressed: false,
         projects: [],
         dialog: false,
         dialogDelete: false,
@@ -238,16 +254,19 @@ export default {
             // }).catch(err => console.log(err));
         },
         addProject(){
+            this.addProjectConfirmPressed = true;
             console.log("projectName : " + this.projectName);
             console.log("projectUrl : " + this.projectUrl);
             console.log("UserId : " + this.$store.getters.userId);
             addProject(this.projectName, this.projectUrl, this.$store.getters.userId).then(res => {
                 console.log(res);
+
                 this.dialog = false;
                 this.setProjects();
             }).catch(err => {
                 this.Alert(err.response.data.errMsg);
             })
+            this.addProjectConfirmPressed = false;
             
         },
         /**
@@ -275,6 +294,7 @@ export default {
             this.dialogDelete = true;
         },
         deleteProjectConfirmed(){
+            this.deleteProjectConfirmPressed = true;
             console.log("delete project");
             console.log(this.projectToBeDelete);
             delProject(this.projectToBeDelete.id).then(res => {
@@ -288,6 +308,8 @@ export default {
             }).catch(err => {
                 this.Alert(err.response.data.errMsg);
             })
+            this.deleteProjectConfirmPressed = false;
+
 
         },
         saveProjectName(p){
