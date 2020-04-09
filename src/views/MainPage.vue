@@ -213,7 +213,7 @@
                       justify="center"
                     > -->
                       
-                      <v-btn class="mr-5" >查看所在连通域</v-btn>
+                      <v-btn class="mr-5" @click="checkDomain">查看所在连通域</v-btn>
                       <v-btn class="mr-5"  v-if="selectType==1" @click="SourceCodedialog=true">查看源代码</v-btn>
                       <v-btn class="mr-5"  @click="setAsStart" v-if="selectType==1">设置为起点</v-btn>
                       <v-btn class="mr-5"  @click="setAsEnd" v-if="selectType==1">设置为终点</v-btn>
@@ -518,9 +518,9 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph, putCo
         console.log(this.active);
       },
       //DevGraph的回调
-      cnmdVertex(id) {
-        console.log("Select on vertex", id);
-        this.selectVertex(id);
+      cnmdVertex(res) {
+        console.log("Select on vertex", res);
+        this.selectVertex(res);
       },cnmdEdge(id) {
         console.log("Select on edge", id);
         this.selectEdge(id)
@@ -941,6 +941,7 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph, putCo
           this.Alert("不能删除紧密度域值为0的子图");
         }
         delSubgraph(this.projectId, this.subgraphId).then(res => {
+          this.thresholds.splice(this.thresholds.indexOf(this.thresholdSelected), 1);
           this.thresholdSelected = 0;
           this.selectThreshold();
           this.dialogDeleteSubgraph = false;
@@ -949,7 +950,23 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph, putCo
           this.dialogDeleteSubgraph = false;
           this.Alert(err.response.data.errMsg);
         })
+      },
+      checkDomain(){
+        this.selectDomain(this.getDomainIdByVertexId(this.vertexSelected.id));
+      },
+      //根据点的id找到所在连通域的id
+      getDomainIdByVertexId(vid){
+        let subgraph = this.$store.state.project.subgraphMap.get(this.subgraphId);
+        let result = 0;
+        subgraph.connectiveDomainIds.forEach(did => {
+          let domain = this.$store.state.project.connectiveDomainMap.get(did);
+          if(domain.vertexIds.indexOf(vid) != -1){
+            result = domain.id;
+          }
+        });
+        return result;
       }
+      
 
     },
     mounted(){
