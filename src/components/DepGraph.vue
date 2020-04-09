@@ -265,6 +265,7 @@ export default {
     }
   },
   props: {
+    centerTracker: Number,
     selectedItem: Object,
     selectedConnectiveDomainId: Number,
     subgraphId: Number,
@@ -274,6 +275,13 @@ export default {
     return {};
   },
   watch: {
+    centerTracker(newItem) {
+      if (selectedItem != undefined) {
+        this.cy.center(this.cy.getElementById(newItem.type + newItem.id));
+      } else {
+        this.cy.center(this.cy.getElementById("c" + newItem));
+      }
+    },
     selectedItem(newItem, oldItem) {
       if (oldItem) {
         let item = this.cy.getElementById(oldItem.type + oldItem.id);
@@ -313,13 +321,18 @@ export default {
         });
       }
     },
+    initGraphTracker() {
+      this.refreshGraph();
+      this.cy.center();
+    },
     connectiveDomainMapColorChangeTracker() {
       // TODO: 很麻烦不想改
       this.refreshGraph();
     }
   },
   computed: {
-    ...mapGetters(["connectiveDomainMapColorChangeTracker"])
+    ...mapGetters(["connectiveDomainMapColorChangeTracker"]),
+    ...mapGetters(["initGraphTracker"])
   }
 };
 </script>
