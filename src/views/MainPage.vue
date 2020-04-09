@@ -188,7 +188,7 @@
                 <!-- <v-list-item-title>搜索顶点</v-list-item-title>
                 <SearchComponent></SearchComponent> -->
                 <v-card-title>
-                  dependency
+                  dependency<v-spacer /><v-btn @click="centerTracker+=1">移动到当前选中对象</v-btn>
                 </v-card-title>
                 <v-card-text style="height: 100%">
                   <DepGraph
@@ -740,7 +740,7 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph, putCo
         this.selectVertex(val[0].functionId);
         this.active = val;
 
-        this.centerTracker += 1;
+        //this.centerTracker += 1;
       },
       // //将一个
       // childrenToArray(children){
@@ -757,7 +757,7 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph, putCo
         this.selectVertex(v.id);
 
         //定位到这个点
-        this.centerTracker += 1;
+       //this.centerTracker += 1;
 
       },
       //为了方便显示，把函数名全名中的包名类名去除
