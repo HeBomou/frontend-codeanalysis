@@ -117,10 +117,7 @@ export default {
           let node = evt.target;
           if (this._snode) this._snode.unselect();
           this._snode = node;
-          this.$emit("vertexSelected", {
-            id: parseInt(node.data("id").substring(1)),
-            connectiveDomainId: parseInt(node.parent().substring(1))
-          });
+          this.$emit("vertexSelected", parseInt(node.data("id").substring(1)));
         });
       this.cy.edges().on("select", evt => {
         this.$emit(
