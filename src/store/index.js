@@ -25,6 +25,7 @@ export default new Vuex.Store({
         [2, { id: 2, anotation: "Cn 2", color: "#DB7093", vertexIds: [1, 2], edgeIds: [1] }],
         [3, { id: 3, anotation: "cnm 3", color: "#FF7F24", vertexIds: [3, 4], edgeIds: [3] }]
       ]),
+      initGraphTracker: 0,
       connectiveDomainMapColorChangeTracker: 0,
       subgraphMap: new Map([
         [1, { id: 1, threshold: 0, name: "Default", connectiveDomainIds: [1] }],
@@ -33,7 +34,7 @@ export default new Vuex.Store({
     },
     userId: 0,
     projectId: 0,
-    adminId:0
+    adminId: 0
 
 
   },
@@ -49,17 +50,17 @@ export default new Vuex.Store({
       state.project.connectiveDomainMap.get(p.id).color = p.color
       Vue.set(state.project, "connectiveDomainMapColorChangeTracker", state.project.connectiveDomainMapColorChangeTracker + 1)
     },
-    setUserId(state, id){
+    setUserId(state, id) {
       state.userId = id;
       localStorage.userId = id;
-    },setAdminId(state, id){
+    }, setAdminId(state, id) {
       state.adminId = id;
       localStorage.adminId = id;
     },
-    setProjectId(state, pid){
+    setProjectId(state, pid) {
       state.projectId = pid;
       localStorage.projectId = pid;
-    },addSubGraph(state, subgraph){
+    }, addSubGraph(state, subgraph) {
       let domainId = [];
       subgraph.connectiveDomains.forEach(domain => {
         domainId.push(domain.id);
@@ -74,7 +75,7 @@ export default new Vuex.Store({
 
       });
     },
-    initProject(state, data){
+    initProject(state, data) {
       state.projectId = data.dynamicVo.projectName;
       state.project.vertexMap.clear();
       state.project.edgeMap.clear();
@@ -83,7 +84,7 @@ export default new Vuex.Store({
       // console.log("vertex:");
 
       data.vertices.forEach(vertex => {
-        
+
         state.project.vertexMap.set(vertex.id, {
           id: vertex.id, functionName: vertex.functionName, sourceCode: vertex.sourceCode, anotation: vertex.dynamicVo.anotation, x: vertex.dynamicVo.x, y: vertex.dynamicVo.y
         });
@@ -92,11 +93,11 @@ export default new Vuex.Store({
 
       // console.log("edge:");
       data.edges.forEach(edge => {
-        if(edge.dynamicVo == null){
+        if (edge.dynamicVo == null) {
           state.project.edgeMap.set(edge.id, {
             id: edge.id, fromId: edge.fromId, toId: edge.toId, closeness: edge.closeness, anotation: ""
           });
-        }else{
+        } else {
           state.project.edgeMap.set(edge.id, {
             id: edge.id, fromId: edge.fromId, toId: edge.toId, closeness: edge.closeness, anotation: edge.dynamicVo.anotation
           });
@@ -121,19 +122,19 @@ export default new Vuex.Store({
 
         });
       });
-      
+
       // console.log("data");
       // console.log(data);
       // console.log("state.project.subgraphMap.size");
-      console.log(state.project.subgraphMap);
-      console.log(state.project.vertexMap);
-      console.log(state.project.edgeMap);
-      Vue.set(state.project, "connectiveDomainMapColorChangeTracker", state.project.connectiveDomainMapColorChangeTracker + 1);
-    }, updateVertex(state, vertex){
+      // console.log(state.project.subgraphMap);
+      // console.log(state.project.vertexMap);
+      // console.log(state.project.edgeMap);
+      Vue.set(state.project, "initGraphTracker", state.project.initGraphTracker + 1);
+    }, updateVertex(state, vertex) {
       state.project.vertexMap.set(vertex.id, vertex);
-    }, updateEdge(state, edge){
+    }, updateEdge(state, edge) {
       state.project.edgeMap.set(edge.id, edge);
-    }, updateDomain(state, domain){
+    }, updateDomain(state, domain) {
       state.project.connectiveDomainMap.set(domain.id, domain);
     }
   },
@@ -163,23 +164,26 @@ export default new Vuex.Store({
         subgraphs: null // TODO: 处理子图
       }
     },
-    connectiveDomainMapColorChangeTracker(state) {
-      return state.project.connectiveDomainMapColorChangeTracker
+    initGraphTracker(state) {
+      return state.project.initGraphTracker;
     },
-    userId(state){
-      if(!state.userId || state.userId == 0){
+    connectiveDomainMapColorChangeTracker(state) {
+      return state.project.connectiveDomainMapColorChangeTracker;
+    },
+    userId(state) {
+      if (!state.userId || state.userId == 0) {
         state.userId = localStorage.getItem('userId');
       }
       return state.userId;
     },
-    adminId(state){
-      if(!state.adminId || state.adminId == 0){
+    adminId(state) {
+      if (!state.adminId || state.adminId == 0) {
         state.adminId = localStorage.getItem('adminId');
       }
       return state.adminId;
     },
-    projectId(state){
-      if(!state.projectId || state.projectId == 0){
+    projectId(state) {
+      if (!state.projectId || state.projectId == 0) {
         state.projectId = localStorage.getItem('projectId');
       }
       return state.projectId;
