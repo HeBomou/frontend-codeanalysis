@@ -275,7 +275,7 @@ export default {
     return {};
   },
   watch: {
-    centerTracker(newItem) {
+    centerTracker() {
       if (this.selectedItem != undefined) {
         this.cy.center(this.cy.getElementById(this.selectedItem.type + this.selectedItem.id));
       } else if (this.selectedConnectiveDomainId != undefined){
