@@ -22,6 +22,7 @@ export default {
           selector: "edge",
           style: {
             content: "data(relationship)",
+            width: "data(width)",
             "curve-style": "bezier",
             "line-color": "data(color)",
             "target-arrow-color": "data(color)",
@@ -228,7 +229,8 @@ export default {
             target: "n" + e.toId,
             relationship: "", // 可以显示紧密度 e.closeness.toFixed(3),
             color: "#999999",
-            oriColor: "#999999"
+            oriColor: "#999999",
+            width: 2.5
           }
         });
       });
@@ -277,9 +279,13 @@ export default {
   watch: {
     centerTracker() {
       if (this.selectedItem != undefined) {
-        this.cy.center(this.cy.getElementById(this.selectedItem.type + this.selectedItem.id));
-      } else if (this.selectedConnectiveDomainId != undefined){
-        this.cy.center(this.cy.getElementById("c" + this.selectedConnectiveDomainId));
+        this.cy.center(
+          this.cy.getElementById(this.selectedItem.type + this.selectedItem.id)
+        );
+      } else if (this.selectedConnectiveDomainId != undefined) {
+        this.cy.center(
+          this.cy.getElementById("c" + this.selectedConnectiveDomainId)
+        );
       }
     },
     selectedItem(newItem, oldItem) {
@@ -310,7 +316,10 @@ export default {
       if (oldPath) {
         oldPath.forEach(eId => {
           let e = this.cy.getElementById("e" + eId);
-          if (e) e.data("color", e.data("oriColor"));
+          if (e) {
+            e.data("color", e.data("oriColor"));
+            e.data("width", 2.5);
+          }
         });
       }
       // 显示新的高亮
@@ -320,6 +329,7 @@ export default {
           let e = this.cy.getElementById("e" + eId);
           if (e) {
             e.data("color", "#A2CD5A");
+            e.data("width", 10);
             es.push(e);
           }
         });
