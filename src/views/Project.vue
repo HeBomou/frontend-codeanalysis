@@ -143,7 +143,7 @@
                         single-line
                         hide-details
                     ></v-text-field>
-                    <v-btn @click="dialog=true" color="success">添加</v-btn>
+                    <v-btn @click="dialog=true" color="success" class="ml-5">添加</v-btn>
                 </v-card-title>
                 <v-card-text>
                     <v-data-table

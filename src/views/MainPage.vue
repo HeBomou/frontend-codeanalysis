@@ -138,7 +138,7 @@
               <v-row>
                 <!-- <v-col cols="12"> -->
                   <v-col cols="6">
-                    <v-card >
+                    <v-card height="200px">
                       <v-card-title>
                         紧密度域值
                       </v-card-title>
@@ -164,7 +164,7 @@
                     </v-card>
                   </v-col>
                   <v-col cols="6">
-                    <v-card>
+                    <v-card height="200px"> 
                       <v-card-title>
                         顶点搜索
                       </v-card-title>
