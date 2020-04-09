@@ -383,8 +383,6 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph, putCo
         endVertex: "3",
         //当前选中的顶点/边/连通域
         vertexSelected: null,
-        //当前选中的顶点所在的连通域的id
-        vertexSelectedDomainid: 0,
         edgeSelected: null,
         domainSelected: null,
         //所有的顶点
@@ -520,8 +518,8 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph, putCo
         console.log(this.active);
       },
       //DevGraph的回调
-      cnmdVertex(id) {
-        console.log("Select on vertex", id);
+      cnmdVertex(res) {
+        console.log("Select on vertex", res.id);
         this.selectVertex(id);
       },cnmdEdge(id) {
         console.log("Select on edge", id);
@@ -953,10 +951,21 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph, putCo
         })
       },
       checkDomain(){
-        let vid = this.vertexSelected.id;
-        let sid = this.subgraphId;
-        this.selectDomain(id);
+        this.selectDomain(this.getDomainIdByVertexId(this.vertexSelected.id));
+      },
+      //根据点的id找到所在连通域的id
+      getDomainIdByVertexId(vid){
+        let subgraph = this.$store.state.project.subgraphMap.get(this.subgraphId);
+        let result = 0;
+        subgraph.connectiveDomainIds.forEach(did => {
+          let domain = this.$store.state.project.connectiveDomainMap.get(did);
+          if(domain.vertexIds.indexOf(vid) != -1){
+            result = domain.id;
+          }
+        });
+        return result;
       }
+      
 
     },
     mounted(){
