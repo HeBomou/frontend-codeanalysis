@@ -383,6 +383,8 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph, putCo
         endVertex: "3",
         //当前选中的顶点/边/连通域
         vertexSelected: null,
+        //当前选中的顶点所在的连通域的id
+        vertexSelectedDomainid: 0,
         edgeSelected: null,
         domainSelected: null,
         //所有的顶点
@@ -949,6 +951,11 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph, putCo
           this.dialogDeleteSubgraph = false;
           this.Alert(err.response.data.errMsg);
         })
+      },
+      checkDomain(){
+        let vid = this.vertexSelected.id;
+        let sid = this.subgraphId;
+        this.selectDomain(id);
       }
 
     },
