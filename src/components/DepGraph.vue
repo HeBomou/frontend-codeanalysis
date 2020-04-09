@@ -277,9 +277,9 @@ export default {
   watch: {
     centerTracker(newItem) {
       if (this.selectedItem != undefined) {
-        this.cy.center(this.cy.getElementById(newItem.type + newItem.id));
-      } else {
-        this.cy.center(this.cy.getElementById("c" + newItem));
+        this.cy.center(this.cy.getElementById(this.selectedItem.type + this.selectedItem.id));
+      } else if (this.selectedConnectiveDomainId != undefined){
+        this.cy.center(this.cy.getElementById("c" + this.selectedConnectiveDomainId));
       }
     },
     selectedItem(newItem, oldItem) {
