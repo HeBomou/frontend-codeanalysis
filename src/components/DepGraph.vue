@@ -276,7 +276,7 @@ export default {
   },
   watch: {
     centerTracker(newItem) {
-      if (selectedItem != undefined) {
+      if (this.selectedItem != undefined) {
         this.cy.center(this.cy.getElementById(newItem.type + newItem.id));
       } else {
         this.cy.center(this.cy.getElementById("c" + newItem));
