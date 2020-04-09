@@ -89,7 +89,7 @@ export default new Vuex.Store({
           id: vertex.id, functionName: vertex.functionName, sourceCode: vertex.sourceCode, anotation: vertex.dynamicVo.anotation, x: vertex.dynamicVo.x, y: vertex.dynamicVo.y
         });
         // console.log(vertex);
-      })
+      });
 
       // console.log("edge:");
       data.edges.forEach(edge => {
