@@ -519,8 +519,8 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph, putCo
       },
       //DevGraph的回调
       cnmdVertex(res) {
-        console.log("Select on vertex", res.id);
-        this.selectVertex(id);
+        console.log("Select on vertex", res);
+        this.selectVertex(res);
       },cnmdEdge(id) {
         console.log("Select on edge", id);
         this.selectEdge(id)
@@ -941,6 +941,7 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph, putCo
           this.Alert("不能删除紧密度域值为0的子图");
         }
         delSubgraph(this.projectId, this.subgraphId).then(res => {
+          this.thresholds.splice(this.thresholds.indexOf(this.thresholdSelected), 1);
           this.thresholdSelected = 0;
           this.selectThreshold();
           this.dialogDeleteSubgraph = false;
