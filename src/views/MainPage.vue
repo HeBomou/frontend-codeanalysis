@@ -235,7 +235,7 @@
                     item-text="str"
                     open-on-click
                     @update:active="treeActive"
-                    :active.sync="active"
+                    :active="active"
                     return-object
                   >
                     <template v-slot:prepend="{ item, open }">
@@ -470,6 +470,8 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph, putCo
         //图中选中的连通域
         graphSelectedConnectiveDomainId: null,
         centerTracker: 0,
+        //当前选择节点是否时从包结构组件发出的。
+        isTreeSelectVertex: false,
 
         //当前选中的是顶点,1:顶点，2：边，3：连通域
         selectType: 1,
