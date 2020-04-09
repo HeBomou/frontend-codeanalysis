@@ -211,7 +211,7 @@
       },
       //登录
       async login() {
-        console.log(this.$store.state.userId);
+        //console.log(this.$store.state.userId);
         await postAdmin(this.userName, this.password).then(res => {
             this.$store.commit('setAdminId', res.data);
             this.$router.push('/admin');

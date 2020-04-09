@@ -51,11 +51,14 @@ export default new Vuex.Store({
     },
     setUserId(state, id){
       state.userId = id;
+      localStorage.userId = id;
     },setAdminId(state, id){
       state.adminId = id;
+      localStorage.adminId = id;
     },
     setProjectId(state, pid){
       state.projectId = pid;
+      localStorage.projectId = pid;
     },addSubGraph(state, subgraph){
       let domainId = [];
       subgraph.connectiveDomains.forEach(domain => {
@@ -164,7 +167,22 @@ export default new Vuex.Store({
       return state.project.connectiveDomainMapColorChangeTracker
     },
     userId(state){
+      if(!state.userId || state.userId == 0){
+        state.userId = localStorage.getItem('userId');
+      }
       return state.userId;
     },
+    adminId(state){
+      if(!state.adminId || state.adminId == 0){
+        state.adminId = localStorage.getItem('adminId');
+      }
+      return state.adminId;
+    },
+    projectId(state){
+      if(!state.projectId || state.projectId == 0){
+        state.projectId = localStorage.getItem('projectId');
+      }
+      return state.projectId;
+    }
   }
 })

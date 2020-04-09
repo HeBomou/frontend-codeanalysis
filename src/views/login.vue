@@ -136,7 +136,7 @@
                 @click="register"
               >
                 <div v-if="signUpPressed">
-                  <v-progress-circular indeterminate color="white"></v-progress-circular>
+                  <v-progress-circular indeterminate color="white "></v-progress-circular>
                 </div>
                 <div v-else>sign up</div>
               </v-btn>
@@ -225,13 +225,13 @@
       },
       //登录
       async login() {
-        console.log(this.$store.state.userId);
+        //console.log(this.$store.state.userId);
         this.loginPressed = true;
         await addSession(this.userName, this.password).then(res => {
             this.$store.commit('setUserId', res.data);
             //TODO:debug
             //this.$store.commit('setUserId', 233);
-            console.log(this.$store.state.userId);
+            //console.log(this.$store.state.userId);
             this.$router.push('/project');
         }).catch(err => {
           this.loginPressed =false;

@@ -11,6 +11,11 @@ export default {
     return {
       code: "int i = 0;\n\treturn i;"
     }
+  },
+  mounted(){
+    console.log("mounted");
+    let userId = this.$store.getters.userId;
+    console.log(userId);
   }
 }
 </script>

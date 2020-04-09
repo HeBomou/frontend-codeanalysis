@@ -953,7 +953,9 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph, putCo
 
     },
     mounted(){
-      let userId = this.$store.state.userId;
+      let userId = this.$store.getters.userId;
+      console.log("********************");
+      console.log(userId);
       if(userId == 0){
         //代表没有登录
         this.$router.push("/login");
@@ -961,9 +963,9 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph, putCo
       //初始化各个数据
       console.log("mounted");
       //TODO:debug
-      this.projectId = this.$store.state.projectId
+      this.projectId = this.$store.getters.projectId;
       //this.projectId = 1;
-      //console.log("project id:" + this.projectId);
+      console.log("project id:" + this.projectId);
       getProject(this.projectId).then(res => {
           console.log("res.data:");
           console.log(res.data);

@@ -213,8 +213,8 @@ export default {
         ]
     }),methods:{
         setProjects(){
-            console.log("onMount, UserId: " + this.$store.state.userId);
-            getProjectsSingle(this.$store.state.userId).then(res => {
+            console.log("onMount, UserId: " + this.$store.getters.userId);
+            getProjectsSingle(this.$store.getters.userId).then(res => {
                 console.log("getProjects");
                 console.log(res.data);
                 this.projects = res.data;
@@ -240,8 +240,8 @@ export default {
         addProject(){
             console.log("projectName : " + this.projectName);
             console.log("projectUrl : " + this.projectUrl);
-            console.log("UserId : " + this.$store.state.userId);
-            addProject(this.projectName, this.projectUrl, this.$store.state.userId).then(res => {
+            console.log("UserId : " + this.$store.getters.userId);
+            addProject(this.projectName, this.projectUrl, this.$store.getters.userId).then(res => {
                 console.log(res);
                 this.dialog = false;
                 this.setProjects();
@@ -303,7 +303,7 @@ export default {
         
 
     },mounted(){
-        this.userId = this.$store.state.userId;
+        this.userId = this.$store.getters.userId;
         console.log("userId ", this.userId);
         console.log(this.userId);
         if(this.userId == 0){
