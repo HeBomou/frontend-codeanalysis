@@ -95,7 +95,7 @@ export default {
           if (this._snode) this._snode.unselect();
           this._snode = node;
           if (node.data("id").charAt(0) == "n") {
-            if (node.data("parent") == undefined) {
+            if (node.parent() == undefined) {
               // 选中无所属联通域的点
               this.$emit(
                 "vertexSelected",
@@ -117,7 +117,10 @@ export default {
           let node = evt.target;
           if (this._snode) this._snode.unselect();
           this._snode = node;
-          this.$emit("vertexSelected", parseInt(node.data("id").substring(1)));
+          this.$emit("vertexSelected", {
+            id: parseInt(node.data("id").substring(1)),
+            connectiveDomainId: parseInt(node.parent().substring(1))
+          });
         });
       this.cy.edges().on("select", evt => {
         this.$emit(
