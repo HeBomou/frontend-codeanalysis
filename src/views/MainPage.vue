@@ -404,7 +404,6 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph, putCo
           xls: 'mdi-file-excel',
           javaFunc: 'mdi-alpha-f-box',
           javaClass: 'mdi-alpha-c-box',
-          javaFile: 'mdi-language-java'
         },
         tree: [],
         active: [],
@@ -681,12 +680,6 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph, putCo
       changeFileType(root){
         if(root.children[0].children.length == 0){
           root.file = "javaClass";
-          return;
-        }else if(root.children[0].children[0].children.length == 0){
-          root.file = "javaFile";
-          root.children.forEach(children => {
-            this.changeFileType(children);
-          })
           return;
         }else {
           root.children.forEach(children => {
