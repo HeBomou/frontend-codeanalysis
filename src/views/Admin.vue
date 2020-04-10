@@ -12,6 +12,8 @@
                 </v-card-text>
             </v-card>
         </v-dialog>
+        
+        
         <v-dialog
             v-model="dialogProject"
             width="500">
@@ -37,6 +39,23 @@
                 </v-card-text>
             </v-card>
         </v-dialog>
+        <v-dialog
+            v-model="dialogUser"
+            width="800">
+            <v-card
+            justify="center"
+            >
+            <v-data-table
+                no-data-text="无项目"
+                :headers="projectHeaders"
+                :items="singleUserProjects"
+            >
+                <template v-slot:item.id="props">
+                    <v-icon @click="checkProject(props.item.id)">mdi-plus</v-icon>
+                </template>
+            </v-data-table>
+            </v-card>
+        </v-dialog>
        <v-app-bar
             app
             clipped-left
@@ -47,10 +66,10 @@
             <v-spacer />
             <v-spacer />
             <v-spacer />
+            <v-spacer />
 
             <v-btn @click="adminLogout">退出登录</v-btn>
 
-            <v-spacer />
         </v-app-bar>
         <v-content>
             <v-card>
@@ -90,7 +109,12 @@
                         :headers="userHeaders"
                         :items="users"
                         :search="searchUser"
+                        
+                        @item-expanded="checkUserAllProject"
                     >
+                        <template v-slot:item.id="props">
+                            <v-icon @click="checkUserAllProject(props.item.id)">mdi-plus</v-icon>
+                        </template>
                     </v-data-table>
                 </v-card-text>
             </v-card>
@@ -126,19 +150,22 @@
 
 </template>
 <script>
-import {getProjectBasicAttributeAll, getAllUsers, getProjectProfile} from "../request/api";
+import {getProjectBasicAttributeAll, getAllUsers, getProjectProfile, getProjectsSingle} from "../request/api";
 export default {
     data(){
         return {
             errMsg: "",
             dialogErr: false,
             dialogProject: false,
+            dialogUser: false,
             adminname: "leo",
             isLoading: true,
+            isLoadingUser: true,
             users: [
             ],
             projects:[
             ],
+            singleUserProjects:[],//某个用户的所有项目
             projectHeaders: [
                 {text: "项目名", value: "projectName"}, 
                 {text: "顶点数", value: "vertexNum"}, 
@@ -147,7 +174,8 @@ export default {
                 {text: "查看详情", value: "id"}
             ],
             userHeaders: [
-                {text: "用户名", value: "username"}
+                {text: "用户名", value: "username"},
+                {text: "查看详情", value: "id"},
             ],
             projectDetail: [
 
@@ -163,7 +191,7 @@ export default {
                 connectiveDomainAnotationNum: "连通域标注数",
             },
             searchProject: null,
-            searchUser: null
+            searchUser: null,
         }
     }, mounted(){
         if(this.$store.getters.adminId == 0){
@@ -210,6 +238,17 @@ export default {
         adminLogout(){
             this.$store.commit('setAdminId', 0);
             this.$router.push("/adminLogin");
+        },
+        //查看某个用户的所有project
+        checkUserAllProject(id){
+            getProjectsSingle(id).then(res =>{
+                console.log(res);
+                this.singleUserProjects = res.data;
+                this.dialogUser = true;
+            }).catch(err => {
+                console.log(err);
+            })
+            console.log(id);
         }
     }
 }

@@ -491,7 +491,8 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph, putCo
         newThreshold: 0,
         isThreholdNameRules: [
           v => !!v || "请输入名称",
-        ]
+        ],
+        isSaveTag: false,//由于调用http请求的都是update，无法区分保存标注和移动顶点
 
       }
       
@@ -543,9 +544,9 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph, putCo
         }).catch(err => {
           this.Alert(err.response.data.errMsg);
         })
-
       },
       saveTag(){
+        this.isSaveTag = true;
         if(this.selectType == 1){
           this.vertexSelected.anotation = this.tag;
           this.updateVertex(this.vertexSelected);
@@ -556,6 +557,7 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph, putCo
           this.domainSelected.anotation = this.tag;
           this.updateDomain(this.domainSelected);
         }
+        
         
       },
       //更新边，对store和后端进行更新
@@ -568,6 +570,10 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph, putCo
           anotation: edge.anotation
         }).then(res => {
           console.log(res);
+          if(this.isSaveTag){
+            this.Alert("保存成功");
+            this.isSaveTag = false;
+          }
         }).catch(err  => {
           this.Alert(err.response.data.errMsg);
         });
@@ -589,6 +595,10 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph, putCo
           y: vertex.y
         }).then(res => {
           console.log(res);
+          if(this.isSaveTag){
+            this.Alert("保存成功");
+            this.isSaveTag = false;
+          }
         }).catch(err => {
           this.Alert(err.response.data.errMsg);
         });
@@ -602,6 +612,10 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph, putCo
           color: domain.color
         }).then(res => {
           console.log("update Domain success ", res);
+          if(this.isSaveTag){
+            this.Alert("保存成功");
+            this.isSaveTag = false;
+          }
         }).catch(err => {
           this.Alert(err.response.data.errMsg);
         })

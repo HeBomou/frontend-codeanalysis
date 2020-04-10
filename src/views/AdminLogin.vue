@@ -80,7 +80,7 @@
               <v-text-field
                 class="mr-5 ml-5"
                 v-model="inviteCode"
-                :rules="inviteRules"
+                :rules="inviteCodeRules"
                 label="Invite code"
                 required
                 v-if="is_signup == 1"
