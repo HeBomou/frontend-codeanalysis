@@ -362,9 +362,9 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph, putCo
         //搜索的路径总数
         pathNum: 0,
         //源代码
-        src: "int s = abc;\n\treturn s;",
+        src: "",
         //标注
-        tag: "tagtagtag",
+        tag: "",
         //项目名
         projectName: "project1",
         //项目id
