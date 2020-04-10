@@ -66,10 +66,10 @@
             <v-spacer />
             <v-spacer />
             <v-spacer />
+            <v-spacer />
 
             <v-btn @click="adminLogout">退出登录</v-btn>
 
-            <v-spacer />
         </v-app-bar>
         <v-content>
             <v-card>
