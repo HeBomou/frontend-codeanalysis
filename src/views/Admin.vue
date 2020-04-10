@@ -176,7 +176,6 @@ export default {
             userHeaders: [
                 {text: "用户名", value: "username"},
                 {text: "查看详情", value: "id"},
-                { text: '', value: 'data-table-expand' }
             ],
             projectDetail: [
 
