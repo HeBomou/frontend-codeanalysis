@@ -256,14 +256,7 @@
 
           <v-col cols="2">
             <v-card class="mt-5" v-if="selectType==1" hidden>
-                <v-card-title>
-                  源代码
-                </v-card-title>
-                <v-card-text>
-                  <div id="codeView" v-highlight>
-                      <pre><code v-html="src"></code></pre>
-                  </div>
-                </v-card-text>
+
               </v-card>
               <v-card class="mt-5" v-if="selectType==2">
                 <v-card-title>
