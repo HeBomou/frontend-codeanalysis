@@ -3,118 +3,79 @@
     <v-overlay :value="overlay">
       <v-progress-circular indeterminate></v-progress-circular>
     </v-overlay>
-    <v-dialog v-model="SourceCodedialog">
+    <v-dialog v-model="SourceCodedialog" width="70%">
       <v-card>
-        <v-card-title>haha</v-card-title>
+        <v-card-title>{{this.vertexSelected == undefined ? "" : this.vertexSelected.functionName}}</v-card-title>
         <v-card-text>
           <div id="codeView" v-highlight>
-                    <pre><code v-html="src"></code></pre>
-                </div>
+            <pre><code v-html="src" style="width: 100%"></code></pre>
+          </div>
         </v-card-text>
       </v-card>
     </v-dialog>
     <v-dialog v-model="dialogDeleteSubgraph" width="500px">
       <v-card>
         <v-card-title>删除子图</v-card-title>
-        <v-card-text color="red">
-            子图被删除后无法恢复，且所有标注都会被删除！
-        </v-card-text>
+        <v-card-text color="red">子图被删除后无法恢复，且所有标注都会被删除！</v-card-text>
         <v-card-actions>
-            <v-spacer />
-                <v-btn
-                    color="success" 
-                    @click="deleteSubgraphConfirmed()"
-                >确定
-                </v-btn>
-                
-                <v-btn
-                    color="error"   
-                    @click="dialogDeleteSubgraph=false;"
-                    
-                >取消
-                </v-btn>
+          <v-spacer />
+          <v-btn color="success" @click="deleteSubgraphConfirmed()">确定</v-btn>
+
+          <v-btn color="error" @click="dialogDeleteSubgraph=false;">取消</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-dialog
-      v-model="dialogErr"
-      width="500">
-      <v-card
-      justify="center"
-      >
-          <v-card-title>{{errMsg}}</v-card-title>
-          <v-card-text>
-            <v-btn color="error" @click="dialogErr=false">确定</v-btn>
-          </v-card-text>
+    <v-dialog v-model="dialogErr" width="500">
+      <v-card justify="center">
+        <v-card-title>{{errMsg}}</v-card-title>
+        <v-card-text>
+          <v-btn color="error" @click="dialogErr=false">确定</v-btn>
+        </v-card-text>
       </v-card>
     </v-dialog>
-      <v-dialog
-        v-model="dialogThreshold"
-        width="500">
-      <v-card
-      justify="center"
-      >
-          <v-card-title>添加紧密度域值</v-card-title>
-          <v-card-text>
-            <v-form
-              v-model="newThresholdValid"
-            >
-              <v-text-field
-                  class="mr-5 ml-5"
-                  v-model="newThreshold"
-                  :rules="isThreholdRules"
-                  label="紧密度域值"
-                  required
-                  flat
-                  outlined
-                  rounded
-                ></v-text-field>
-                <v-text-field
-                  class="mr-5 ml-5"
-                  v-model="newThresholdName"
-                  :rules="isThreholdNameRules"
-                  label="新子图名称"
-                  required
-                  flat
-                  outlined
-                  rounded
-                ></v-text-field>
-              <v-btn 
-                color="success" 
-                @click="addThreshold()"
-                :disabled="!newThresholdValid"
-                >确定</v-btn>
-            </v-form>
-          </v-card-text>
+    <v-dialog v-model="dialogThreshold" width="500">
+      <v-card justify="center">
+        <v-card-title>添加紧密度域值</v-card-title>
+        <v-card-text>
+          <v-form v-model="newThresholdValid">
+            <v-text-field
+              class="mr-5 ml-5"
+              v-model="newThreshold"
+              :rules="isThreholdRules"
+              label="紧密度域值"
+              required
+              flat
+              outlined
+              rounded
+            ></v-text-field>
+            <v-text-field
+              class="mr-5 ml-5"
+              v-model="newThresholdName"
+              :rules="isThreholdNameRules"
+              label="新子图名称"
+              required
+              flat
+              outlined
+              rounded
+            ></v-text-field>
+            <v-btn color="success" @click="addThreshold()" :disabled="!newThresholdValid">确定</v-btn>
+          </v-form>
+        </v-card-text>
       </v-card>
     </v-dialog>
-    <v-app-bar
-      app
-      clipped-left
-      color="amber"
-    >
-      <span class="title ml-3 mr-5">项目名:&nbsp;<span class="font-weight-light">{{projectName}}</span></span>
-      
+    <v-app-bar app clipped-left color="amber">
+      <span class="title ml-3 mr-5">
+        项目名:&nbsp;
+        <span class="font-weight-light">{{projectName}}</span>
+      </span>
 
       <v-spacer />
       <span>基本信息</span>
-      <v-divider
-        class="mr-5 ml-5"
-        inset
-        vertical
-      ></v-divider>
+      <v-divider class="mr-5 ml-5" inset vertical></v-divider>
       <span>顶点数：{{vertexNum}}</span>
-      <v-divider
-        class="mr-5 ml-5"
-        inset
-        vertical
-      ></v-divider>
+      <v-divider class="mr-5 ml-5" inset vertical></v-divider>
       <span>边数：{{edgeNum}}</span>
-      <v-divider
-        class="mr-5 ml-5"
-        inset
-        vertical
-      ></v-divider>
+      <v-divider class="mr-5 ml-5" inset vertical></v-divider>
       <span>连通域数：{{domainNum}}</span>
       <v-spacer />
       <v-spacer />
@@ -122,795 +83,765 @@
       <v-btn class="mr-4" @click="toProject()">切换项目</v-btn>
 
       <v-btn @click="logout()">退出登录</v-btn>
-
-
-    
     </v-app-bar>
     <v-content>
       <v-container fluid>
         <v-row>
-
           <v-col cols="10">
             <!-- <v-list
               dense
               class="grey lighten-4"
-            > -->
-              <v-row>
-                <!-- <v-col cols="12"> -->
-                  <v-col cols="6">
-                    <v-card height="200px">
-                      <v-card-title>
-                        紧密度域值
-                      </v-card-title>
-                      <v-card-text>
-                          <v-autocomplete
-                            @update:search-input="selectThreshold()"
-                            v-model="thresholdSelected"
-                            :items="thresholds"
-                            append-outer-icon="mdi-plus"
-                            @click:append-outer="dialogThreshold=true"
-                          >
-                            <template v-slot:item="data">
-                              {{data.item}}
-                              <v-icon @click="debug">mdi-wronge</v-icon>
-                            </template>
-                          </v-autocomplete>
-                      </v-card-text>
-                      <v-card-actions>
-                        <v-row justify="center">
-                          <v-btn @click="dialogDeleteSubgraph=true">删除子图</v-btn>
-                        </v-row>
-                      </v-card-actions>
-                    </v-card>
-                  </v-col>
-                  <v-col cols="6">
-                    <v-card height="200px"> 
-                      <v-card-title>
-                        顶点搜索
-                      </v-card-title>
-                      <v-card-text>
-                        <v-autocomplete
-                          @update-items="updateItems"
-                          v-model="searchVertex"
-                          :items="vertexs"
-                          @change="searchVertexSelected"
-                        ></v-autocomplete>
-                      </v-card-text>
-                    </v-card>
-                  </v-col>
-                
-                <!-- </v-col> -->
-              </v-row>
-              
-              <v-card
-              style="height: 500px"
-              >
-                <!-- <v-list-item-title>搜索顶点</v-list-item-title>
-                <SearchComponent></SearchComponent> -->
-                <v-card-title style="height: 20%">
-                  dependency<v-spacer /><v-btn @click="centerTracker+=1">移动到当前选中对象</v-btn>
-                </v-card-title>
-                <v-card-text style="height: 80%">
-                  <DepGraph
-                    v-bind:subgraphId="subgraphId"
-                    v-bind:pathToShow="pathToShow"
-                    v-bind:selectedItem="graphSelectedItem"
-                    v-bind:selectedConnectiveDomainId="graphSelectedConnectiveDomainId"
-                    v-bind:centerTracker="centerTracker"
-                    @vertexSelected="cnmdVertex"
-                    @edgeSelected="cnmdEdge"
-                    @connectiveDomainSelected="cnmdConnectiveDomain"
-                    @vertexMoved="cnmdVertexMoved"
-                    @connectiveDomainMoved="cnmdDomainMoved"
-                  ></DepGraph>
-                </v-card-text>
-              </v-card>
-              <v-card
-                  v-if="selectType!=3"
-                >
-                  <v-card-text align="center">
-                    <!-- <v-form
-                      align="center"
-                      justify="center"
-                    > -->
-                      
-                      <v-btn class="mr-5" @click="checkDomain">查看所在连通域</v-btn>
-                      <v-btn class="mr-5"  v-if="selectType==1" @click="SourceCodedialog=true">查看源代码</v-btn>
-                      <v-btn class="mr-5"  @click="setAsStart" v-if="selectType==1">设置为起点</v-btn>
-                      <v-btn class="mr-5"  @click="setAsEnd" v-if="selectType==1">设置为终点</v-btn>
-                      <v-btn class="mr-5"  @click="debug">haha</v-btn>
-                  
-                    <!-- </v-form> -->
+            >-->
+            <v-row>
+              <!-- <v-col cols="12"> -->
+              <v-col cols="6">
+                <v-card height="200px">
+                  <v-card-title>紧密度域值</v-card-title>
+                  <v-card-text>
+                    <v-autocomplete
+                      @update:search-input="selectThreshold()"
+                      v-model="thresholdSelected"
+                      :items="thresholds"
+                      append-outer-icon="mdi-plus"
+                      @click:append-outer="dialogThreshold=true"
+                    >
+                      <template v-slot:item="data">
+                        {{data.item}}
+                        <v-icon @click="debug">mdi-wronge</v-icon>
+                      </template>
+                    </v-autocomplete>
+                  </v-card-text>
+                  <v-card-actions>
+                    <v-row justify="center">
+                      <v-btn @click="dialogDeleteSubgraph=true">删除子图</v-btn>
+                    </v-row>
+                  </v-card-actions>
+                </v-card>
+              </v-col>
+              <v-col cols="6">
+                <v-card height="200px">
+                  <v-card-title>顶点搜索</v-card-title>
+                  <v-card-text>
+                    <v-autocomplete
+                      @update-items="updateItems"
+                      v-model="searchVertex"
+                      :items="vertexs"
+                      @change="searchVertexSelected"
+                    ></v-autocomplete>
                   </v-card-text>
                 </v-card>
-              <v-card>
-                <v-card-text>
-                  <v-treeview
+              </v-col>
+
+              <!-- </v-col> -->
+            </v-row>
+
+            <v-card style="height: 500px">
+              <!-- <v-list-item-title>搜索顶点</v-list-item-title>
+              <SearchComponent></SearchComponent>-->
+              <v-card-title style="height: 20%">
+                dependency
+                <v-spacer />
+                <v-btn @click="centerTracker+=1">移动到当前选中对象</v-btn>
+              </v-card-title>
+              <v-card-text style="height: 80%">
+                <DepGraph
+                  v-bind:subgraphId="subgraphId"
+                  v-bind:pathToShow="pathToShow"
+                  v-bind:selectedItem="graphSelectedItem"
+                  v-bind:selectedConnectiveDomainId="graphSelectedConnectiveDomainId"
+                  v-bind:centerTracker="centerTracker"
+                  @vertexSelected="cnmdVertex"
+                  @edgeSelected="cnmdEdge"
+                  @connectiveDomainSelected="cnmdConnectiveDomain"
+                  @vertexMoved="cnmdVertexMoved"
+                  @connectiveDomainMoved="cnmdDomainMoved"
+                ></DepGraph>
+              </v-card-text>
+            </v-card>
+            <v-card v-if="selectType!=3">
+              <v-card-text align="center">
+                <!-- <v-form
+                      align="center"
+                      justify="center"
+                >-->
+
+                <v-btn class="mr-5" @click="checkDomain">查看所在连通域</v-btn>
+                <v-btn class="mr-5" v-if="selectType==1" @click="SourceCodedialog=true">查看源代码</v-btn>
+                <v-btn class="mr-5" @click="setAsStart" v-if="selectType==1">设置为起点</v-btn>
+                <v-btn class="mr-5" @click="setAsEnd" v-if="selectType==1">设置为终点</v-btn>
+                <v-btn class="mr-5" @click="debug">haha</v-btn>
+
+                <!-- </v-form> -->
+              </v-card-text>
+            </v-card>
+            <v-card>
+              <v-card-text>
+                <v-treeview
                   dense
-                    v-model="tree"
-                    :open.sync="open"
-                    :items="items"
-                    activatable
-                    item-key="key"
-                    item-text="str"
-                    open-on-click
-                    @update:active="treeActive"
-                    :active="active"
-                    return-object
-                  >
-                    <template v-slot:prepend="{ item, open }">
-                    
-                      <v-icon v-if="!item.file">
-                        {{ open ? 'mdi-folder-open' : 'mdi-folder' }}
-                      </v-icon>
-                    
-                      <v-icon v-else>
-                        {{ files[item.file] }}
-                      </v-icon>
-                    </template>
-                  </v-treeview>
-                </v-card-text>
-              </v-card>
+                  v-model="tree"
+                  :open.sync="open"
+                  :items="items"
+                  activatable
+                  item-key="key"
+                  item-text="str"
+                  open-on-click
+                  @update:active="treeActive"
+                  :active="active"
+                  return-object
+                >
+                  <template v-slot:prepend="{ item, open }">
+                    <v-icon v-if="!item.file">{{ open ? 'mdi-folder-open' : 'mdi-folder' }}</v-icon>
+
+                    <v-icon v-else>{{ files[item.file] }}</v-icon>
+                  </template>
+                </v-treeview>
+              </v-card-text>
+            </v-card>
             <!-- </v-list> -->
           </v-col>
 
           <v-col cols="2">
-            <v-card class="mt-5" v-if="selectType==1" hidden>
+            <v-card class="mt-5" v-if="selectType==1" hidden></v-card>
+            <v-card class="mt-5" v-if="selectType==2">
+              <v-card-title>紧密度</v-card-title>
+              <v-card-text>{{edgeSelected.closeness}}</v-card-text>
+            </v-card>
+            <v-card class="mt-5">
+              <v-card-title>标注</v-card-title>
+              <v-card-text>
+                <v-textarea v-model="tag" auto-grow outlined></v-textarea>
+                <v-btn @click="saveTag">保存</v-btn>
+              </v-card-text>
+            </v-card>
+            <v-card class="mt-5">
+              <v-card-title>路径搜索</v-card-title>
+              <v-card-text>
+                <v-list-item-title justify="center">起点</v-list-item-title>
+                <v-autocomplete @update-items="updateItems" v-model="startVertex" :items="vertexs"></v-autocomplete>
+                <v-list-item-title>终点</v-list-item-title>
+                <v-autocomplete @update-items="updateItems" v-model="endVertex" :items="vertexs"></v-autocomplete>
+                <v-btn @click="searchPath">搜索</v-btn>
+              </v-card-text>
+            </v-card>
 
-              </v-card>
-              <v-card class="mt-5" v-if="selectType==2">
-                <v-card-title>
-                  紧密度
-                </v-card-title>
-                <v-card-text>
-                  {{edgeSelected.closeness}}
-                </v-card-text>
-              </v-card>
-              <v-card class="mt-5">
-                <v-card-title>
-                  标注
-                </v-card-title>
-                <v-card-text>
-                  <v-textarea
-                    v-model="tag"
-                    auto-grow
-                    outlined=""
-                  >
-                  </v-textarea>
-                  <v-btn @click="saveTag">保存</v-btn>
-                </v-card-text>
-              </v-card>
-              <v-card class="mt-5">
-                <v-card-title>
-                  路径搜索
-                </v-card-title>
-                <v-card-text>
-                  <v-list-item-title justify="center">起点</v-list-item-title>
-                  <v-autocomplete
-                    @update-items="updateItems"
-                    v-model="startVertex"
-                    :items="vertexs"
-                  ></v-autocomplete>
-                  <v-list-item-title>终点</v-list-item-title>
-                  <v-autocomplete
-                    @update-items="updateItems"
-                    v-model="endVertex"
-                    :items="vertexs"
-
-                  ></v-autocomplete>
-                  <v-btn @click="searchPath">搜索</v-btn>
-                </v-card-text>
-              </v-card>
-              
-              <!-- <v-row> -->
-              <v-card class="mt-5">
-                <v-card-text>
-                  <v-card-title>
-                    路径总数：{{pathNum}}
-                  </v-card-title>
-                  <v-list-item-group v-model="path">
-                    <v-list-item
-                      v-for="(path, i) in paths"
-                      :key="i"
-                    >
+            <!-- <v-row> -->
+            <v-card class="mt-5">
+              <v-card-text>
+                <v-card-title>路径总数：{{pathNum}}</v-card-title>
+                <v-list-item-group v-model="path">
+                  <v-list-item v-for="(path, i) in paths" :key="i">
                     <v-list-item-content>
                       <v-list-item-title @click="selectPath(path)">路径：{{i + 1}} 长度：{{path.length}}</v-list-item-title>
                     </v-list-item-content>
-                    </v-list-item>
-                  </v-list-item-group>
-                </v-card-text>
-              </v-card>
-                
-
+                  </v-list-item>
+                </v-list-item-group>
+              </v-card-text>
+            </v-card>
           </v-col>
         </v-row>
       </v-container>
     </v-content>
-
   </v-app>
 </template>
 
 <script>
 import DepGraph from "@/components/DepGraph";
-import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph, putConnectiveDomain, putConnectiveDomainPosition, delSubgraph} from "../request/api";
+import {
+  getProject,
+  putVertex,
+  putEdge,
+  getOriginalGraphPath,
+  addSubgraph,
+  putConnectiveDomain,
+  putConnectiveDomainPosition,
+  delSubgraph
+} from "../request/api";
 //import {} from "../request/api";
 //import SearchComponent from '../components/SearchAuto'
-  export default {
-    props: {
-      source: String,
-    },components: {
-      
-      DepGraph
-    },
-    data (){
-      return{
-        //路径
-        paths: [
-        ],
-        errMsg: "",
-        dialogErr: false,
-        dialogDeleteSubgraph: false,
-        SourceCodedialog: false,
-        overlay: true,
-        path: 0,
-        //顶点
-        vertexNum: 5,
-        //边数
-        edgeNum: 3,
-        //连通域数
-        domainNum: 2,
-        //搜索的路径总数
-        pathNum: 0,
-        //源代码
-        src: "",
-        //标注
-        tag: "",
-        //项目名
-        projectName: "project1",
-        //项目id
-        projectId: 0,
-        //搜索的顶点
-        searchVertex: "",
-        //起点
-        startVertex: "",
-        //终点
-        endVertex: "3",
-        //当前选中的顶点/边/连通域
-        vertexSelected: null,
-        edgeSelected: null,
-        domainSelected: null,
-        //所有的顶点
-        vertexs: [
-            "haha",
-            123,
-            234
-        ],
-        open: [{key: '/src'}],
-        files: {
-          html: 'mdi-language-html5',
-          js: 'mdi-language-java',
-          json: 'mdi-json',
-          md: 'mdi-markdown',
-          pdf: 'mdi-file-pdf',
-          png: 'mdi-file-image',
-          txt: 'mdi-file-document-outline',
-          xls: 'mdi-file-excel',
-          javaFunc: 'mdi-alpha-f-box',
-          javaClass: 'mdi-alpha-c-box',
+export default {
+  props: {
+    source: String
+  },
+  components: {
+    DepGraph
+  },
+  data() {
+    return {
+      //路径
+      paths: [],
+      errMsg: "",
+      dialogErr: false,
+      dialogDeleteSubgraph: false,
+      SourceCodedialog: false,
+      overlay: true,
+      path: 0,
+      //顶点
+      vertexNum: 5,
+      //边数
+      edgeNum: 3,
+      //连通域数
+      domainNum: 2,
+      //搜索的路径总数
+      pathNum: 0,
+      //源代码
+      src: "",
+      //标注
+      tag: "",
+      //项目名
+      projectName: "project1",
+      //项目id
+      projectId: 0,
+      //搜索的顶点
+      searchVertex: "",
+      //起点
+      startVertex: "",
+      //终点
+      endVertex: "3",
+      //当前选中的顶点/边/连通域
+      vertexSelected: null,
+      edgeSelected: null,
+      domainSelected: null,
+      //所有的顶点
+      vertexs: ["haha", 123, 234],
+      open: [{ key: "/src" }],
+      files: {
+        html: "mdi-language-html5",
+        js: "mdi-language-java",
+        json: "mdi-json",
+        md: "mdi-markdown",
+        pdf: "mdi-file-pdf",
+        png: "mdi-file-image",
+        txt: "mdi-file-document-outline",
+        xls: "mdi-file-excel",
+        javaFunc: "mdi-alpha-f-box",
+        javaClass: "mdi-alpha-c-box"
+      },
+      tree: [],
+      active: [],
+      items: [
+        {
+          str: ".git"
         },
-        tree: [],
-        active: [],
-        items: [
-          {
-            str: '.git',
-          },
-          {
-            str: 'node_modules',
-          },
-          {
-            str: 'public',
-            children: [
-              {
-                str: 'static',
-                children: [{
-                  str: 'logo.png',
-                  file: 'png',
-                }],
-              },
-              {
-                str: 'favicon.ico',
-                file: 'png',
-              },
-              {
-                str: 'index.html',
-                file: 'html',
-              },
-            ],
-          },
-          {
-            str: '.gitignore',
-            file: 'txt',
-          },
-          {
-            str: 'babel.config.js',
-            file: 'js',
-          },
-          {
-            str: 'package.json',
-            file: 'json',
-          },
-          {
-            str: 'README.md',
-            file: 'md',
-          },
-          {
-            str: 'vue.config.js',
-            file: 'js',
-          },
-          {
-            str: 'yarn.lock',
-            file: 'txt',
-          },
-        ],
-        //DepGraph的props
-        //当前子图id
-        subgraphId: null,
-        //当前路径
-        pathToShow: null,    
-        //图中选中的点边
-        graphSelectedItem: null,
-        //图中选中的连通域
-        graphSelectedConnectiveDomainId: null,
-        centerTracker: 0,
-        //当前选择节点是否时从包结构组件发出的。
-        isTreeSelectVertex: false,
+        {
+          str: "node_modules"
+        },
+        {
+          str: "public",
+          children: [
+            {
+              str: "static",
+              children: [
+                {
+                  str: "logo.png",
+                  file: "png"
+                }
+              ]
+            },
+            {
+              str: "favicon.ico",
+              file: "png"
+            },
+            {
+              str: "index.html",
+              file: "html"
+            }
+          ]
+        },
+        {
+          str: ".gitignore",
+          file: "txt"
+        },
+        {
+          str: "babel.config.js",
+          file: "js"
+        },
+        {
+          str: "package.json",
+          file: "json"
+        },
+        {
+          str: "README.md",
+          file: "md"
+        },
+        {
+          str: "vue.config.js",
+          file: "js"
+        },
+        {
+          str: "yarn.lock",
+          file: "txt"
+        }
+      ],
+      //DepGraph的props
+      //当前子图id
+      subgraphId: null,
+      //当前路径
+      pathToShow: null,
+      //图中选中的点边
+      graphSelectedItem: null,
+      //图中选中的连通域
+      graphSelectedConnectiveDomainId: null,
+      centerTracker: 0,
+      //当前选择节点是否时从包结构组件发出的。
+      isTreeSelectVertex: false,
 
-        //当前选中的是顶点,1:顶点，2：边，3：连通域
-        selectType: 1,
-        //所有的threshold
-        thresholds: [0, 1],
-        thresholdSelected: 0,
-        //是否弹出新的紧密度的dialog
-        dialogThreshold: false,
-        //
-        isThreholdRules: [
-          v => !!v || "请输入紧密度域值",
-          v => (!isNaN(v)) || "紧密度域值应为数值",
-          v => (v <= 1 && v >= 0) || "紧密度域值应为大于0小于1的数值",
-          v => (this.thresholds.indexOf(parseFloat(v)) == -1) || "该紧密度域值已经设置过，不可重复添加" 
-        ],
-        newThresholdValid: false,
-        newThresholdName: "new Subgraph",
-        newThreshold: 0,
-        isThreholdNameRules: [
-          v => !!v || "请输入名称",
-        ],
-        isSaveTag: false,//由于调用http请求的都是update，无法区分保存标注和移动顶点
-
-      }
-      
-    }, methods: {
-      updateItems (text) {
-          text;
+      //当前选中的是顶点,1:顶点，2：边，3：连通域
+      selectType: 1,
+      //所有的threshold
+      thresholds: [0, 1],
+      thresholdSelected: 0,
+      //是否弹出新的紧密度的dialog
+      dialogThreshold: false,
+      //
+      isThreholdRules: [
+        v => !!v || "请输入紧密度域值",
+        v => !isNaN(v) || "紧密度域值应为数值",
+        v => (v <= 1 && v >= 0) || "紧密度域值应为大于0小于1的数值",
+        v =>
+          this.thresholds.indexOf(parseFloat(v)) == -1 ||
+          "该紧密度域值已经设置过，不可重复添加"
+      ],
+      newThresholdValid: false,
+      newThresholdName: "new Subgraph",
+      newThreshold: 0,
+      isThreholdNameRules: [v => !!v || "请输入名称"],
+      isSaveTag: false //由于调用http请求的都是update，无法区分保存标注和移动顶点
+    };
+  },
+  methods: {
+    updateItems(text) {
+      text;
       //   yourGetItemsMethod(text).then( (response) => {
       //     this.items = response
       //   })
-      },
-      setAsStart(){
-        this.startVertex = this.searchVertex;
-      },
-      setAsEnd(){
-        this.endVertex = this.searchVertex;
-      },
-      changeItem(val){
-        this.searchVertex = val;
-      },
-      debug(){
-        // console.log(this.searchVertex);
-        // console.log(this.startVertex);
-        // console.log(this.endVertex);
-        // console.log(this.tree);
-        //console.log(this.thresholdSelected);
-        console.log("active");
-        console.log(this.active);
-      },
-      //DevGraph的回调
-      cnmdVertex(res) {
-        console.log("Select on vertex", res);
-        this.selectVertex(res);
-      },cnmdEdge(id) {
-        console.log("Select on edge", id);
-        this.selectEdge(id)
-      },
-      cnmdConnectiveDomain(id) {
-        console.log("select on connective domain", id);
-        this.selectDomain(id);
-      },
-      cnmdVertexMoved(vertex){
-        console.log("vertex Moved, id:", vertex);
-        this.vertexMoved(vertex);
-      },
-      cnmdDomainMoved(domain){
-        console.log("domain moved");
-        putConnectiveDomainPosition(this.projectId, domain.id, domain.dx, domain.dy).then(res => {
+    },
+    setAsStart() {
+      this.startVertex = this.searchVertex;
+    },
+    setAsEnd() {
+      this.endVertex = this.searchVertex;
+    },
+    changeItem(val) {
+      this.searchVertex = val;
+    },
+    debug() {
+      // console.log(this.searchVertex);
+      // console.log(this.startVertex);
+      // console.log(this.endVertex);
+      // console.log(this.tree);
+      //console.log(this.thresholdSelected);
+      console.log("active");
+      console.log(this.active);
+    },
+    //DevGraph的回调
+    cnmdVertex(res) {
+      console.log("Select on vertex", res);
+      this.selectVertex(res);
+    },
+    cnmdEdge(id) {
+      console.log("Select on edge", id);
+      this.selectEdge(id);
+    },
+    cnmdConnectiveDomain(id) {
+      console.log("select on connective domain", id);
+      this.selectDomain(id);
+    },
+    cnmdVertexMoved(vertex) {
+      console.log("vertex Moved, id:", vertex);
+      this.vertexMoved(vertex);
+    },
+    cnmdDomainMoved(domain) {
+      console.log("domain moved");
+      putConnectiveDomainPosition(
+        this.projectId,
+        domain.id,
+        domain.dx,
+        domain.dy
+      )
+        .then(res => {
           console.log(res);
-        }).catch(err => {
-          this.Alert(err.response.data.errMsg);
         })
-      },
-      saveTag(){
-        this.isSaveTag = true;
-        if(this.selectType == 1){
-          this.vertexSelected.anotation = this.tag;
-          this.updateVertex(this.vertexSelected);
-        }else if(this.selectType == 2){
-          this.edgeSelected.anotation = this.tag;
-          this.updateEdge(this.edgeSelected);
-        }else if(this.selectType == 3){
-          this.domainSelected.anotation = this.tag;
-          this.updateDomain(this.domainSelected);
-        }
-        
-        
-      },
-      //更新边，对store和后端进行更新
-      updateEdge(edge){
-        console.log(edge);
-        this.$store.commit("updateEdge", edge);
-        console.log("updateEdge");
-        putEdge(this.projectId, edge.id, {
-          id: edge.id,
-          anotation: edge.anotation
-        }).then(res => {
+        .catch(err => {
+          this.Alert(err.response.data.errMsg);
+        });
+    },
+    saveTag() {
+      this.isSaveTag = true;
+      if (this.selectType == 1) {
+        this.vertexSelected.anotation = this.tag;
+        this.updateVertex(this.vertexSelected);
+      } else if (this.selectType == 2) {
+        this.edgeSelected.anotation = this.tag;
+        this.updateEdge(this.edgeSelected);
+      } else if (this.selectType == 3) {
+        this.domainSelected.anotation = this.tag;
+        this.updateDomain(this.domainSelected);
+      }
+    },
+    //更新边，对store和后端进行更新
+    updateEdge(edge) {
+      console.log(edge);
+      this.$store.commit("updateEdge", edge);
+      console.log("updateEdge");
+      putEdge(this.projectId, edge.id, {
+        id: edge.id,
+        anotation: edge.anotation
+      })
+        .then(res => {
           console.log(res);
-          if(this.isSaveTag){
+          if (this.isSaveTag) {
             this.Alert("保存成功");
             this.isSaveTag = false;
           }
-        }).catch(err  => {
+        })
+        .catch(err => {
           this.Alert(err.response.data.errMsg);
         });
-      },
-      //更新顶点，对store和后端进行更新
-      updateVertex(vertex){
-        this.$store.commit("updateVertex", vertex);
-        console.log("update vertex");
-        console.log({
-          id: vertex.id,
-          anotation: vertex.anotation,
-          x: vertex.x,
-          y: vertex.y
-        });
-        putVertex(this.projectId, vertex.id, {
-          id: vertex.id,
-          anotation: vertex.anotation,
-          x: vertex.x,
-          y: vertex.y
-        }).then(res => {
+    },
+    //更新顶点，对store和后端进行更新
+    updateVertex(vertex) {
+      this.$store.commit("updateVertex", vertex);
+      console.log("update vertex");
+      console.log({
+        id: vertex.id,
+        anotation: vertex.anotation,
+        x: vertex.x,
+        y: vertex.y
+      });
+      putVertex(this.projectId, vertex.id, {
+        id: vertex.id,
+        anotation: vertex.anotation,
+        x: vertex.x,
+        y: vertex.y
+      })
+        .then(res => {
           console.log(res);
-          if(this.isSaveTag){
+          if (this.isSaveTag) {
             this.Alert("保存成功");
             this.isSaveTag = false;
           }
-        }).catch(err => {
+        })
+        .catch(err => {
           this.Alert(err.response.data.errMsg);
         });
-      },
-      updateDomain(domain){
-        this.$store.commit("updateDomain", domain);
-        console.log("update domain");
-        putConnectiveDomain(this.projectId, this.subgraphId, domain.id, {
-          id: domain.id,
-          anotation: domain.anotation,
-          color: domain.color
-        }).then(res => {
+    },
+    updateDomain(domain) {
+      this.$store.commit("updateDomain", domain);
+      console.log("update domain");
+      putConnectiveDomain(this.projectId, this.subgraphId, domain.id, {
+        id: domain.id,
+        anotation: domain.anotation,
+        color: domain.color
+      })
+        .then(res => {
           console.log("update Domain success ", res);
-          if(this.isSaveTag){
+          if (this.isSaveTag) {
             this.Alert("保存成功");
             this.isSaveTag = false;
           }
-        }).catch(err => {
+        })
+        .catch(err => {
           this.Alert(err.response.data.errMsg);
+        });
+    },
+    //搜索路径
+    searchPath() {
+      console.log("searchPath");
+      getOriginalGraphPath(
+        this.projectId,
+        this.getVertexIdByName(this.startVertex),
+        this.getVertexIdByName(this.endVertex)
+      )
+        .then(res => {
+          console.log("search Path success, res:");
+          console.log(res.data);
+          this.pathNum = res.data.num;
+          this.paths = res.data.paths;
         })
+        .catch(err => {
+          this.Alert(err.response.data.errMsg);
+        });
+    },
+    setVertexs() {
+      let Vs = this.$store.state.project.vertexMap;
+      this.vertexs = [];
+      Vs.forEach(v => {
+        this.vertexs.push(v.functionName);
+      });
+      // console.log("vertexs:");
+      // console.log(this.vertexs);
+      // console.log(this.vertexs[0][1]);
+      // console.log((this.vertexs[0][1]).functionName);
+    },
+    Alert(msg) {
+      this.errMsg = msg;
+      this.dialogErr = true;
+    },
+    /**
+     * 初始化项目
+     */
+    initProject(data) {
+      console.log("initProject, data:");
+      console.log(data);
+      this.projectName = data.dynamicVo.projectName;
+      this.$store.commit("initProject", data);
 
-      },
-      //搜索路径
-      searchPath(){
-        console.log("searchPath");
-        getOriginalGraphPath(this.projectId, this.getVertexIdByName(this.startVertex), this.getVertexIdByName(this.endVertex))
-          .then(res => {
-            console.log("search Path success, res:");
-            console.log(res.data);
-            this.pathNum = res.data.num;
-            this.paths = res.data.paths;
-          }).catch(err => {
-            this.Alert(err.response.data.errMsg);
-          });
-      },
-      setVertexs(){
-        let Vs = this.$store.state.project.vertexMap;
-        this.vertexs = [];
-        Vs.forEach(v => {
-          this.vertexs.push(v.functionName);
-        })
-        // console.log("vertexs:");
-        // console.log(this.vertexs);
-        // console.log(this.vertexs[0][1]);
-        // console.log((this.vertexs[0][1]).functionName);
-      },Alert(msg){
-        this.errMsg = msg;
-        this.dialogErr = true;
-      },
-      /**
-       * 初始化项目
-       */
-      initProject(data){
-        console.log("initProject, data:");
-        console.log(data);
-        this.projectName = data.dynamicVo.projectName;
-        this.$store.commit('initProject', data);
+      //初始的子图为默认子图，域值为0
+      this.$store.state.project.subgraphMap.forEach(subgraph => {
+        //console.log(subgraph);
+        if (subgraph.threshold == 0) {
+          //console.log(subgraph.id);
+          this.subgraphId = subgraph.id;
+        }
+      });
+      //设置基本信息
+      this.vertexNum = this.$store.state.project.vertexMap.size;
+      this.edgeNum = this.$store.state.project.edgeMap.size;
+      this.domainNum = this.$store.state.project.subgraphMap.get(
+        this.subgraphId
+      ).connectiveDomainIds.length;
 
-        //初始的子图为默认子图，域值为0
-        this.$store.state.project.subgraphMap.forEach(subgraph => {
-          //console.log(subgraph);
-          if(subgraph.threshold == 0){
-            //console.log(subgraph.id);
-            this.subgraphId = subgraph.id;
-          }
-        })
-        //设置基本信息
-        this.vertexNum = this.$store.state.project.vertexMap.size;
-        this.edgeNum = this.$store.state.project.edgeMap.size;
-        this.domainNum = this.$store.state.project.subgraphMap.get(this.subgraphId).connectiveDomainIds.length;
+      //设置点集合
+      this.setVertexs();
 
-        //设置点集合
-        this.setVertexs();
+      //设置包结构
+      console.log("exp");
+      console.log(this.items);
+      //TODO:debug
+      this.preproPackage([data.packageRoot], "");
+      this.items = [data.packageRoot];
+      this.changeFileType(this.items[0]);
+      console.log("get");
+      console.log(this.items);
 
-        //设置包结构
-        console.log("exp");
-        console.log(this.items);
-        //TODO:debug
-        this.preproPackage([data.packageRoot], "");
-        this.items = [data.packageRoot];
-        this.changeFileType(this.items[0]);
-        console.log("get");
-        console.log(this.items);
+      //设置子图
+      this.reloadThresholds();
 
-        //设置子图
-        this.reloadThresholds();
-
-        //停止转菊花
-        this.overlay = false;
-
-      },
-      //根据children 的情况判断是文件夹/文件/类/文件
-      changeFileType(root){
-        if(root.children[0].children.length == 0){
-          root.file = "javaClass";
-          return;
-        }else {
-          root.children.forEach(children => {
-            this.changeFileType(children);
-          })
+      //停止转菊花
+      this.overlay = false;
+    },
+    //根据children 的情况判断是文件夹/文件/类/文件
+    changeFileType(root) {
+      if (root.children[0].children.length == 0) {
+        root.file = "javaClass";
+        return;
+      } else {
+        root.children.forEach(children => {
+          this.changeFileType(children);
+        });
+        return;
+      }
+    },
+    //对包结构进行预处理工作，设置文件类型（文件夹/类/方法），根据函数节点id获得函数名，放入children中
+    //fatherKey是父亲的key，加上自己的str为自己的key
+    preproPackage(root, fatherKey) {
+      root.forEach(node => {
+        node.key = fatherKey + "/" + node.str;
+        if (node.children.length == 0 && node.functions == 0) {
           return;
         }
+        if (node.functions.length == 0) {
+          //文件夹，对所有子节点进行递归
+          // console.log("folder");
+          node.children = this.preproPackage(node.children, node.key);
+        } else {
+          //func
+          // console.log("not folder");
+          node.functions.forEach(func => {
+            // console.log(func);
+            // console.log("childer");
+            // console.log(node.children);
+            let vertex = this.getVertexById(func);
+            node.children.push({
+              str: this.getShortFuncName(vertex.functionName),
+              file: "javaFunc",
+              key: vertex.functionName,
+              functionId: func,
+              children: []
+            });
+          }, node.children);
+          // console.log(node.children);
+        }
+      });
+      // console.log("res")
+      // console.log(root);
+      return root;
+    },
+    //对active事件的回调函数
+    //val:所有的active节点的数组
+    treeActive(val) {
+      console.log(val);
+      this.selectVertex(val[0].functionId);
+      this.active = val;
 
-      },
-      //对包结构进行预处理工作，设置文件类型（文件夹/类/方法），根据函数节点id获得函数名，放入children中
-      //fatherKey是父亲的key，加上自己的str为自己的key
-      preproPackage(root, fatherKey){
-        root.forEach(node => {
-          node.key = fatherKey + "/" + node.str;
-          if(node.children.length == 0 && node.functions == 0){
-            return;
-          }
-          if(node.functions.length == 0){
-            //文件夹，对所有子节点进行递归
-            // console.log("folder");
-            node.children = this.preproPackage(node.children, node.key);
-          }else{
-            //func
-            // console.log("not folder");
-            node.functions.forEach(func => {
-              // console.log(func);
-              // console.log("childer");
-              // console.log(node.children);
-              let vertex = this.getVertexById(func);
-              node.children.push({
-                str: this.getShortFuncName(vertex.functionName),
-                file: "javaFunc",
-                key: vertex.functionName,
-                functionId: func,
-                children: []
-              });
+      //this.centerTracker += 1;
+    },
+    // //将一个
+    // childrenToArray(children){
+    //   children.forEach(child)
+    // }
+    // ,//搜索这个顶点
+    searchVertexSelected() {
+      console.log(this.searchVertex);
+      let v = this.getVertexByName(this.searchVertex);
+      console.log("searchVertex");
+      console.log(v);
+      this.selectVertex(v.id);
 
-            }, node.children);
-              // console.log(node.children);
+      //定位到这个点
+      //this.centerTracker += 1;
+    },
+    //为了方便显示，把函数名全名中的包名类名去除
+    getShortFuncName(str) {
+      let arr = str.split(":");
+      return arr[1];
+    },
+    getVertexIdByName(name) {
+      let vMap = this.$store.state.project.vertexMap;
+      let result = null;
+      vMap.forEach(v => {
+        if (v.functionName == name) {
+          result = v.id;
+        }
+      });
+      return result;
+    },
+    getVertexByName(name) {
+      let vMap = this.$store.state.project.vertexMap;
+      let result = null;
+      vMap.forEach(v => {
+        if (v.functionName == name) {
+          result = v;
+        }
+      });
+      return result;
+    },
+    getVertexById(id) {
+      let vMap = this.$store.state.project.vertexMap;
+      return vMap.get(id);
+    }, //选中某个顶点
+    selectVertex(id) {
+      this.selectType = 1;
+      this.vertexSelected = this.getVertexById(id);
+      this.src = this.vertexSelected.sourceCode;
+      this.tag = this.vertexSelected.anotation;
+      this.pathToShow = null;
+      this.graphSelectedConnectiveDomainId = null;
 
-          }
-        });
-        // console.log("res")
-        // console.log(root);
-        return root;
-      },
-      //对active事件的回调函数
-      //val:所有的active节点的数组
-      treeActive(val){
-        console.log(val);
-        this.selectVertex(val[0].functionId);
-        this.active = val;
+      this.searchVertex = this.vertexSelected.functionName;
+      this.graphSelectedItem = { type: "n", id: this.vertexSelected.id };
 
-        //this.centerTracker += 1;
-      },
-      // //将一个
-      // childrenToArray(children){
-      //   children.forEach(child)
-      // }
-      // ,//搜索这个顶点
-      searchVertexSelected(){
-        
+      //处理包结构:active函数，打开父节点
+      let funcKey = this.vertexSelected.functionName;
+      this.active = [{ key: funcKey }];
+      let openName = this.getFathersKeyByFuncKey(funcKey);
+      let newOpen = [];
+      openName.forEach(name => {
+        // if(this.open.indexOf({key: name}) == -1){
+        newOpen.push({ key: name });
+        // }
+      });
+      this.open = newOpen;
 
-        console.log(this.searchVertex);
-        let v = this.getVertexByName(this.searchVertex);
-        console.log("searchVertex");
-        console.log(v);
-        this.selectVertex(v.id);
+      console.log("active");
+      console.log(this.active);
 
-        //定位到这个点
-       //this.centerTracker += 1;
+      console.log("this.graphSelectedItem");
+      console.log(this.graphSelectedItem);
+    },
+    getFathersKeyByFuncKey(funcKey) {
+      //根据函数名得到所有父节点的key的数组
+      let result = [];
+      let fathers = funcKey.split(":")[0].split(".");
 
-      },
-      //为了方便显示，把函数名全名中的包名类名去除
-      getShortFuncName(str){
-        let arr = str.split(":");
-        return arr[1];
-      },
-      getVertexIdByName(name){
-        let vMap = this.$store.state.project.vertexMap;
-        let result = null;
-        vMap.forEach(v => {
-          if(v.functionName == name){
-            result = v.id;
-          }
-        })
-        return result;
-      },
-      getVertexByName(name){
-        let vMap = this.$store.state.project.vertexMap;
-        let result = null;
-        vMap.forEach(v => {
-          if(v.functionName == name){
-            result = v;
-          }
-        })
-        return result;
-
-      },getVertexById(id){
-        let vMap = this.$store.state.project.vertexMap;
-        return vMap.get(id);
-      }, //选中某个顶点
-      selectVertex(id){
-        this.selectType = 1;
-        this.vertexSelected = this.getVertexById(id);
-        this.src = this.vertexSelected.sourceCode;
-        this.tag = this.vertexSelected.anotation;
-        this.pathToShow = null;
-        this.graphSelectedConnectiveDomainId = null;
-
-        this.searchVertex = this.vertexSelected.functionName;
-        this.graphSelectedItem = {type: "n", id: this.vertexSelected.id};
-
-        //处理包结构:active函数，打开父节点
-        let funcKey = this.vertexSelected.functionName;
-        this.active = [{key: funcKey}];
-        let openName = this.getFathersKeyByFuncKey(funcKey);
-        let newOpen = [];
-        openName.forEach(name => {
-          // if(this.open.indexOf({key: name}) == -1){
-            newOpen.push({key: name});
-          // }
-        });
-        this.open = newOpen;
-        
-        console.log("active");
-        console.log(this.active);
-
-        console.log("this.graphSelectedItem");
-        console.log(this.graphSelectedItem);
-      },getFathersKeyByFuncKey(funcKey){
-        //根据函数名得到所有父节点的key的数组
-        let result = [];
-        let fathers = funcKey.split(":")[0].split(".");
-
-        let nowUrl = "/src";
+      let nowUrl = "/src";
+      result.push(nowUrl);
+      fathers.forEach(name => {
+        nowUrl += "/" + name;
         result.push(nowUrl);
-        fathers.forEach(name => {
-          nowUrl += "/" + name;
-          result.push(nowUrl);
-        })
-        console.log("resultF");
-        console.log(result);
+      });
+      console.log("resultF");
+      console.log(result);
 
-        return result;
-      },
-      //node是当前节点，fatherkeys是他所有父亲的key的数组，funckey是目标, 如果没有则返回空
-      //TODO:不知道为什么，这样搜索的结果是所有文件夹打开，怀疑跟js的作用域特性有关
-      // searchFatherKeysByFuncKey(fatherKeys, node, funcKey){
-      //   console.log("node");
-      //   console.log(node);
-      //   console.log("fatherKeys");
-      //   console.log(fatherKeys);
-      //   if(node.children.length == 0){
-      //     //叶节点
-      //     if(node.key != funcKey){
-      //       console.log("lmiss");
-      //       return null;
-      //     }else{
-      //       console.log("lhit");
-      //       return fatherKeys;
-      //     }
-      //   }else{
-      //     //非叶节点
-      //     let result = null;
-      //     let newKeys = fatherKeys;
-      //     newKeys.push({key: node.key});
-          
-      //     node.children.forEach(child => {
-      //       let res = this.searchFatherKeysByFuncKey(newKeys, child, funcKey);
-      //       if(res != null){
-      //         result = res;
-      //       }
-      //     })
-      //     return result;
-      //   }
+      return result;
+    },
+    //node是当前节点，fatherkeys是他所有父亲的key的数组，funckey是目标, 如果没有则返回空
+    //TODO:不知道为什么，这样搜索的结果是所有文件夹打开，怀疑跟js的作用域特性有关
+    // searchFatherKeysByFuncKey(fatherKeys, node, funcKey){
+    //   console.log("node");
+    //   console.log(node);
+    //   console.log("fatherKeys");
+    //   console.log(fatherKeys);
+    //   if(node.children.length == 0){
+    //     //叶节点
+    //     if(node.key != funcKey){
+    //       console.log("lmiss");
+    //       return null;
+    //     }else{
+    //       console.log("lhit");
+    //       return fatherKeys;
+    //     }
+    //   }else{
+    //     //非叶节点
+    //     let result = null;
+    //     let newKeys = fatherKeys;
+    //     newKeys.push({key: node.key});
 
-      // },
-      selectDomain(id){
-        //选中某个连通域
-        console.log("selectDomain");
-        console.log(id);
-        this.selectType = 3;
-        this.graphSelectedItem = null;
-        this.pathToShow = null;
-        this.graphSelectedConnectiveDomainId = id;
-        let domain = this.$store.state.project.connectiveDomainMap.get(id);
-        this.domainSelected = domain;
-        console.log(domain);
-        this.tag = domain.anotation;
+    //     node.children.forEach(child => {
+    //       let res = this.searchFatherKeysByFuncKey(newKeys, child, funcKey);
+    //       if(res != null){
+    //         result = res;
+    //       }
+    //     })
+    //     return result;
+    //   }
 
-        
-      },
-      selectEdge(id){
-        console.log("selectEdge id:");
-        console.log(id);
-        this.selectType = 2;
-        this.edgeSelected = this.$store.state.project.edgeMap.get(id);
-        this.tag = this.edgeSelected.anotation;
-        this.pathToShow = null;
-        this.graphSelectedConnectiveDomainId = null;
-        this.graphSelectedItem = {type: "e", id: this.edgeSelected.id};
-        console.log(this.edgeSelected);
+    // },
+    selectDomain(id) {
+      //选中某个连通域
+      console.log("selectDomain");
+      console.log(id);
+      this.selectType = 3;
+      this.graphSelectedItem = null;
+      this.pathToShow = null;
+      this.graphSelectedConnectiveDomainId = id;
+      let domain = this.$store.state.project.connectiveDomainMap.get(id);
+      this.domainSelected = domain;
+      console.log(domain);
+      this.tag = domain.anotation;
+    },
+    selectEdge(id) {
+      console.log("selectEdge id:");
+      console.log(id);
+      this.selectType = 2;
+      this.edgeSelected = this.$store.state.project.edgeMap.get(id);
+      this.tag = this.edgeSelected.anotation;
+      this.pathToShow = null;
+      this.graphSelectedConnectiveDomainId = null;
+      this.graphSelectedItem = { type: "e", id: this.edgeSelected.id };
+      console.log(this.edgeSelected);
 
-        //把当前选中的顶点设置为这个边的一个顶点，方便选中所在连通域
-        this.vertexSelected = this.$store.state.project.vertexMap.get(this.edgeSelected.fromId);
-        
-      },
-      //图中的点被移动
-      vertexMoved(vertex){
-        console.log("vertex moved");
-        this.updateVertex(this.$store.state.project.vertexMap.get(vertex.id));
-      },
-      selectPath(path){
-        console.log(path);
-        this.graphSelectedItem = null;
-        this.graphSelectedConnectiveDomainId = null;
+      //把当前选中的顶点设置为这个边的一个顶点，方便选中所在连通域
+      this.vertexSelected = this.$store.state.project.vertexMap.get(
+        this.edgeSelected.fromId
+      );
+    },
+    //图中的点被移动
+    vertexMoved(vertex) {
+      console.log("vertex moved");
+      this.updateVertex(this.$store.state.project.vertexMap.get(vertex.id));
+    },
+    selectPath(path) {
+      console.log(path);
+      this.graphSelectedItem = null;
+      this.graphSelectedConnectiveDomainId = null;
 
-          this.pathToShow = path;
-      },
-      //添加一个紧密度域值
-      addThreshold(){
-        console.log("addThreshold");
-        addSubgraph(this.projectId, this.newThreshold, this.newThresholdName)
+      this.pathToShow = path;
+    },
+    //添加一个紧密度域值
+    addThreshold() {
+      console.log("addThreshold");
+      addSubgraph(this.projectId, this.newThreshold, this.newThresholdName)
         .then(res => {
           console.log("addThreshold success");
           console.log(res);
@@ -919,116 +850,118 @@ import {getProject, putVertex, putEdge, getOriginalGraphPath, addSubgraph, putCo
           this.reloadThresholds();
           this.thresholdSelected = this.newThreshold;
           this.selectThreshold();
-        }).catch(err => {
+        })
+        .catch(err => {
           this.dialogThreshold = false;
           this.Alert(err.response.data.errMsg);
         });
-      },
-      //选择一个已有的紧密度域值
-      selectThreshold(){
-        console.log("selectThreshold", this.thresholdSelected);
-        let sg = null;
-        //找到对应子图
-        this.$store.state.project.subgraphMap.forEach(subgraph => {
-          if(subgraph.threshold == this.thresholdSelected){
-            sg = subgraph;
-          }
-        });
-        this.subgraphId = sg.id;
-
-        //重置基本信息
-        this.vertexNum = 0;
-        this.edgeNum = 0;
-        this.domainNum = sg.connectiveDomainIds.length;
-        sg.connectiveDomainIds.forEach(did => {
-          let domain = this.$store.state.project.connectiveDomainMap.get(did);
-          this.vertexNum += domain.vertexIds.length;
-          this.edgeNum += domain.edgeIds.length;
-        })
-      },
-      //更新Thresholds
-      reloadThresholds(){
-        let sMap = this.$store.state.project.subgraphMap;
-        this.thresholds = [];
-        sMap.forEach(subgraph => {
-          this.thresholds.push(subgraph.threshold);
-        })
-      },
-      toProject(){
-        this.$router.push('/project');
-      },
-      logout(){
-        this.$store.commit("setUserId", 0);
-        this.$router.push("/login");
-      },
-      deleteSubgraphConfirmed(){
-        if(this.thresholdSelected == 0){
-          this.dialogDeleteSubgraph = false;
-          this.Alert("不能删除紧密度域值为0的子图");
+    },
+    //选择一个已有的紧密度域值
+    selectThreshold() {
+      console.log("selectThreshold", this.thresholdSelected);
+      let sg = null;
+      //找到对应子图
+      this.$store.state.project.subgraphMap.forEach(subgraph => {
+        if (subgraph.threshold == this.thresholdSelected) {
+          sg = subgraph;
         }
-        delSubgraph(this.projectId, this.subgraphId).then(res => {
-          this.thresholds.splice(this.thresholds.indexOf(this.thresholdSelected), 1);
+      });
+      this.subgraphId = sg.id;
+
+      //重置基本信息
+      this.vertexNum = 0;
+      this.edgeNum = 0;
+      this.domainNum = sg.connectiveDomainIds.length;
+      sg.connectiveDomainIds.forEach(did => {
+        let domain = this.$store.state.project.connectiveDomainMap.get(did);
+        this.vertexNum += domain.vertexIds.length;
+        this.edgeNum += domain.edgeIds.length;
+      });
+    },
+    //更新Thresholds
+    reloadThresholds() {
+      let sMap = this.$store.state.project.subgraphMap;
+      this.thresholds = [];
+      sMap.forEach(subgraph => {
+        this.thresholds.push(subgraph.threshold);
+      });
+    },
+    toProject() {
+      this.$router.push("/project");
+    },
+    logout() {
+      this.$store.commit("setUserId", 0);
+      this.$router.push("/login");
+    },
+    deleteSubgraphConfirmed() {
+      if (this.thresholdSelected == 0) {
+        this.dialogDeleteSubgraph = false;
+        this.Alert("不能删除紧密度域值为0的子图");
+      }
+      delSubgraph(this.projectId, this.subgraphId)
+        .then(res => {
+          this.thresholds.splice(
+            this.thresholds.indexOf(this.thresholdSelected),
+            1
+          );
           this.thresholdSelected = 0;
           this.selectThreshold();
           this.dialogDeleteSubgraph = false;
           console.log(res);
-        }).catch(err => {
+        })
+        .catch(err => {
           this.dialogDeleteSubgraph = false;
           this.Alert(err.response.data.errMsg);
-        })
-      },
-      checkDomain(){
-        this.selectDomain(this.getDomainIdByVertexId(this.vertexSelected.id));
-        this.centerTracker += 1;
-      },
-      //根据点的id找到所在连通域的id
-      getDomainIdByVertexId(vid){
-        let subgraph = this.$store.state.project.subgraphMap.get(this.subgraphId);
-        let result = 0;
-        subgraph.connectiveDomainIds.forEach(did => {
-          let domain = this.$store.state.project.connectiveDomainMap.get(did);
-          if(domain.vertexIds.indexOf(vid) != -1){
-            result = domain.id;
-          }
         });
-        return result;
-      }
-      
-
     },
-    mounted(){
-      let userId = this.$store.getters.userId;
-      console.log("********************");
-      console.log(userId);
-      if(userId == 0){
-        //代表没有登录
-        this.$router.push("/login");
-      }
-      //初始化各个数据
-      console.log("mounted");
-      //TODO:debug
-      this.projectId = this.$store.getters.projectId;
-      //this.projectId = 1;
-      console.log("project id:" + this.projectId);
-      getProject(this.projectId).then(res => {
-          console.log("res.data:");
-          console.log(res.data);
-          this.initProject(res.data);
-        }).catch(err => {
-          this.overlay = false;
-          this.Alert(err.response.data.errMsg);
-          this.$router.push('/project')
-        });
-
-
-      
+    checkDomain() {
+      this.selectDomain(this.getDomainIdByVertexId(this.vertexSelected.id));
+      this.centerTracker += 1;
+    },
+    //根据点的id找到所在连通域的id
+    getDomainIdByVertexId(vid) {
+      let subgraph = this.$store.state.project.subgraphMap.get(this.subgraphId);
+      let result = 0;
+      subgraph.connectiveDomainIds.forEach(did => {
+        let domain = this.$store.state.project.connectiveDomainMap.get(did);
+        if (domain.vertexIds.indexOf(vid) != -1) {
+          result = domain.id;
+        }
+      });
+      return result;
     }
-}
+  },
+  mounted() {
+    let userId = this.$store.getters.userId;
+    console.log("********************");
+    console.log(userId);
+    if (userId == 0) {
+      //代表没有登录
+      this.$router.push("/login");
+    }
+    //初始化各个数据
+    console.log("mounted");
+    //TODO:debug
+    this.projectId = this.$store.getters.projectId;
+    //this.projectId = 1;
+    console.log("project id:" + this.projectId);
+    getProject(this.projectId)
+      .then(res => {
+        console.log("res.data:");
+        console.log(res.data);
+        this.initProject(res.data);
+      })
+      .catch(err => {
+        this.overlay = false;
+        this.Alert(err.response.data.errMsg);
+        this.$router.push("/project");
+      });
+  }
+};
 </script>
 
 <style>
 #keep .v-navigation-drawer__border {
-  display: none
+  display: none;
 }
-
 </style>
