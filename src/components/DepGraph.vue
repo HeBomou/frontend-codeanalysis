@@ -279,13 +279,17 @@ export default {
   watch: {
     centerTracker() {
       if (this.selectedItem != undefined) {
-        this.cy.center(
-          this.cy.getElementById(this.selectedItem.type + this.selectedItem.id)
-        );
+        this.cy.animate({
+          center: {
+            eles: this.cy.$("#" + this.selectedItem.type + this.selectedItem.id)
+          }
+        });
       } else if (this.selectedConnectiveDomainId != undefined) {
-        this.cy.center(
-          this.cy.getElementById("c" + this.selectedConnectiveDomainId)
-        );
+        this.cy.animate({
+          center: {
+            eles: this.cy.$("#c" + this.selectedConnectiveDomainId)
+          }
+        });
       }
     },
     selectedItem(newItem, oldItem) {
@@ -334,7 +338,13 @@ export default {
           }
         });
       }
-      this.cy.fit(es);
+      console.log(es);
+      if (es.length != 0)
+        this.cy.animate({
+          fit: {
+            eles: es
+          }
+        });
     },
     initGraphTracker() {
       this.refreshGraph();

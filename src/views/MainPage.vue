@@ -187,10 +187,10 @@
               >
                 <!-- <v-list-item-title>搜索顶点</v-list-item-title>
                 <SearchComponent></SearchComponent> -->
-                <v-card-title>
+                <v-card-title style="height: 20%">
                   dependency<v-spacer /><v-btn @click="centerTracker+=1">移动到当前选中对象</v-btn>
                 </v-card-title>
-                <v-card-text style="height: 100%">
+                <v-card-text style="height: 80%">
                   <DepGraph
                     v-bind:subgraphId="subgraphId"
                     v-bind:pathToShow="pathToShow"
