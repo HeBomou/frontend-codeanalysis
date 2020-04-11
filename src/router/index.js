@@ -1,14 +1,15 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import HalouCao from '@/views/HalouCao'
+//import HalouCao from '@/views/HalouCao'
 
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '/',
-    name: 'HalouCao',
-    component: HalouCao
+    // name: 'HalouCao',
+    // component: HalouCao
+    redirect: "/login"
   }, {
     path: '/login',
     name: 'Login',
