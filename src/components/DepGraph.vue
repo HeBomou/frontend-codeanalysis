@@ -327,18 +327,17 @@ export default {
         });
       }
       // 显示新的高亮
-      let es = [];
+      let es = this.cy.collection();
       if (newPath) {
         newPath.forEach(eId => {
           let e = this.cy.getElementById("e" + eId);
           if (e) {
             e.data("color", "#A2CD5A");
             e.data("width", 10);
-            es.push(e);
+            es = es.union(e);
           }
         });
       }
-      console.log(es);
       if (es.length != 0)
         this.cy.animate({
           fit: {
