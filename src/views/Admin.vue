@@ -197,6 +197,7 @@ export default {
         if(this.$store.getters.adminId == 0){
             this.$router.push("/adminLogin");
         }
+        this.adminname = this.$store.state.adminName;
         getProjectBasicAttributeAll().then(res => {
             console.log(res);
             this.projects = res.data;

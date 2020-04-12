@@ -26,7 +26,7 @@ export default new Vuex.Store({
     userId: 0,
     projectId: 0,
     adminId: 0,
-    projectRawData: null//项目的相关数据，未处理
+    adminName: "leo"
 
 
   },
@@ -66,6 +66,8 @@ export default new Vuex.Store({
         connectiveDomainIds: domainId
 
       });
+    },setAdminName(state, data){
+      state.adminName = data;
     },
     initProject(state, data) {
       state.projectId = data.dynamicVo.projectName;

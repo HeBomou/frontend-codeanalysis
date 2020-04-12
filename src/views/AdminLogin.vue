@@ -213,6 +213,7 @@
       async login() {
         //console.log(this.$store.state.userId);
         await postAdmin(this.userName, this.password).then(res => {
+            this.$store.commit("setAdminName", this.userName);
             this.$store.commit('setAdminId', res.data);
             this.$router.push('/admin');
         }).catch(err => {
