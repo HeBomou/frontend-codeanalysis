@@ -16,6 +16,9 @@
             <v-card>
                 <v-card-title>增加项目</v-card-title>
                 <v-card-text>
+                    <div>1.请上传maven项目；非maven项目请在项目根目录创建target文件夹，其中放进此项目编译的jar包</div>
+                    <div>2.建议使用国内的git仓库（gitee, gitlab），尽量不要使用github，因为会比较慢</div>
+                    <div>3.暂时不支持私有项目</div>
                     <v-form>
                         <v-text-field
                             class="mr-5 ml-5"
