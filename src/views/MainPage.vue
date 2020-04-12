@@ -29,7 +29,7 @@
       <v-card justify="center">
         <v-card-title>{{errMsg}}</v-card-title>
         <v-card-text>
-          <v-btn color="error" @click="dialogErr=false">确定</v-btn>
+          <v-btn color="error" @click="dialogConfirm">确定</v-btn>
         </v-card-text>
       </v-card>
     </v-dialog>
@@ -929,6 +929,13 @@ export default {
         }
       });
       return result;
+    },
+    dialogConfirm(){
+      this.dialogErr = false;
+      if(this.errMsg == "项目正在解析"){
+        this.$router.push("/project");
+        this.errMsg = "";
+      }
     }
   },
   mounted() {
@@ -954,7 +961,7 @@ export default {
       .catch(err => {
         this.overlay = false;
         this.Alert(err.response.data.errMsg);
-        this.$router.push("/project");
+        
       });
   }
 };
