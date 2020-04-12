@@ -9,32 +9,24 @@ export default new Vuex.Store({
       id: 1,
       projectName: "projectName 1",
       vertexMap: new Map([
-        [1, { id: 1, functionName: "com.orf.cnmd1:dsfsd(int d)", sourceCode: "nmbd yuanma 1", anotation: "anotation", x: 100, y: 100 }],
-        [2, { id: 2, functionName: "com.ex.cnmd2:fdsf(float d)", sourceCode: "nmbd yuanma 2", anotation: "anotation", x: 100, y: 200 }],
-        [3, { id: 3, functionName: "sdf.fds.cnmd3:fdsf(int df)", sourceCode: "nmbd yuanma 3", anotation: "anotation", x: 200, y: 100 }],
-        [4, { id: 4, functionName: "top.dsf.cnmd4:func(char ds)", sourceCode: "nmbd yuanma 4", anotation: "anotation", x: 200, y: 200 }],
-        [5, { id: 5, functionName: "top.dsf.cnmd5:funcd(float dsf)", sourceCode: "nmbd yuanma 4", anotation: "anotation", x: 300, y: 200 }]
+        [1, { id: 1, functionName: "wellcome to happy 6+", sourceCode: "hello", anotation: "hello", x: 100, y: 100 }],
       ]),
       edgeMap: new Map([
-        [1, { id: 1, fromId: 1, toId: 2, closeness: 0.3, anotation: "edge 1" }],
-        [2, { id: 2, fromId: 2, toId: 3, closeness: 0.1, anotation: "edge 2" }],
-        [3, { id: 3, fromId: 3, toId: 4, closeness: 0.3, anotation: "edge 3" }]
+        [1, { id: 1, fromId: 1, toId: 1, closeness: 1, anotation: "edge 1" }],
       ]),
       connectiveDomainMap: new Map([
-        [1, { id: 1, anotation: "Cnmd 1", color: "#8DB6CD", vertexIds: [1, 2, 3, 4], edgeIds: [1, 2, 3] }],
-        [2, { id: 2, anotation: "Cn 2", color: "#DB7093", vertexIds: [1, 2], edgeIds: [1] }],
-        [3, { id: 3, anotation: "cnm 3", color: "#FF7F24", vertexIds: [3, 4], edgeIds: [3] }]
+        [1, { id: 1, anotation: "hello", color: "#8DB6CD", vertexIds: [1], edgeIds: [1] }],
       ]),
       initGraphTracker: 0,
       connectiveDomainMapColorChangeTracker: 0,
       subgraphMap: new Map([
         [1, { id: 1, threshold: 0, name: "Default", connectiveDomainIds: [1] }],
-        [2, { id: 2, threshold: 0.2, name: "Subgraph 1", connectiveDomainIds: [2, 3] }]
       ])
     },
     userId: 0,
     projectId: 0,
-    adminId: 0
+    adminId: 0,
+    projectRawData: null//项目的相关数据，未处理
 
 
   },
@@ -81,17 +73,17 @@ export default new Vuex.Store({
       state.project.edgeMap.clear();
       state.project.connectiveDomainMap.clear();
       state.project.subgraphMap.clear();
-      // console.log("vertex:");
+      // //console.log("vertex:");
 
       data.vertices.forEach(vertex => {
 
         state.project.vertexMap.set(vertex.id, {
           id: vertex.id, functionName: vertex.functionName, sourceCode: vertex.sourceCode, anotation: vertex.dynamicVo.anotation, x: vertex.dynamicVo.x, y: vertex.dynamicVo.y
         });
-        // console.log(vertex);
+        // //console.log(vertex);
       });
 
-      // console.log("edge:");
+      // //console.log("edge:");
       data.edges.forEach(edge => {
         if (edge.dynamicVo == null) {
           state.project.edgeMap.set(edge.id, {
@@ -102,9 +94,9 @@ export default new Vuex.Store({
             id: edge.id, fromId: edge.fromId, toId: edge.toId, closeness: edge.closeness, anotation: edge.dynamicVo.anotation
           });
         }
-        // console.log(edge);
+        // //console.log(edge);
       });
-      // console.log("sb:");
+      // //console.log("sb:");
 
       //subgraph
       data.subgraphs.forEach(subgraph => {
@@ -123,12 +115,12 @@ export default new Vuex.Store({
         });
       });
 
-      // console.log("data");
-      // console.log(data);
-      // console.log("state.project.subgraphMap.size");
-      // console.log(state.project.subgraphMap);
-      // console.log(state.project.vertexMap);
-      // console.log(state.project.edgeMap);
+      // //console.log("data");
+      // //console.log(data);
+      // //console.log("state.project.subgraphMap.size");
+      // //console.log(state.project.subgraphMap);
+      // //console.log(state.project.vertexMap);
+      // //console.log(state.project.edgeMap);
       Vue.set(state.project, "initGraphTracker", state.project.initGraphTracker + 1);
     }, updateVertex(state, vertex) {
       state.project.vertexMap.set(vertex.id, vertex);
@@ -136,6 +128,8 @@ export default new Vuex.Store({
       state.project.edgeMap.set(edge.id, edge);
     }, updateDomain(state, domain) {
       state.project.connectiveDomainMap.set(domain.id, domain);
+    }, rojectRawData(state, data){
+      state.projectRawData = data;
     }
   },
   actions: {
