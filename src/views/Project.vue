@@ -19,6 +19,7 @@
                     <div>1.请上传maven项目；非maven项目请在项目根目录创建target文件夹，其中放进此项目编译的jar包</div>
                     <div>2.建议使用国内的git仓库（gitee, gitlab），尽量不要使用github，因为会比较慢</div>
                     <div>3.暂时不支持私有项目</div>
+                    <div></div>
                     <v-form>
                         <v-text-field
                             class="mr-5 ml-5"
@@ -181,7 +182,7 @@
                         </template>
                         <template v-slot:item.id="props">
                             
-                            <v-icon @click="toProject(props.item.id)">mdi-circle</v-icon>
+                            <v-icon @click="toProject(props.item.id)">mdi-plus</v-icon>
                         </template>
                         <template v-slot:item.pid="props">
                             <v-btn @click="deleteProject(props.item.id)">删除</v-btn>
@@ -227,7 +228,7 @@ export default {
             {text: "顶点数", value: "vertexNum"}, 
             {text: "边数", value: "edgeNum"}, 
             {text: "连通域数", value: "connectiveDomainNum"},
-            {text: "选择", value: "id"},
+            {text: "详情", value: "id"},
             {text: "删除", value: "pid"}
         ]
     }),methods:{
