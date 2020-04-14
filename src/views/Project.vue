@@ -267,6 +267,8 @@ export default {
 
                 this.dialog = false;
                 this.setProjects();
+                this.projectName = "";
+                this.projectUrl = "";
             }).catch(err => {
                 this.Alert(err.response.data.errMsg);
             })
