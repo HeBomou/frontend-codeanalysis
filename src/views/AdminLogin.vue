@@ -225,7 +225,7 @@
         //const res = await addUser(null, this.userName, this.password);
         ////console.log(res);
         addAdmin(this.userName, this.password, this.inviteCode).then(res => {
-          //console.log(res);
+          console.log(res);
           this.Alert("注册成功");
         })
           .catch(err => {

@@ -247,7 +247,7 @@ export default {
                 this.singleUserProjects = res.data;
                 this.dialogUser = true;
             }).catch(err => {
-                //console.log(err);
+                console.log(err);
             })
             //console.log(id);
         }
