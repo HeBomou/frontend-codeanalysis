@@ -801,6 +801,7 @@ export default {
       //选中某个连通域
       //console.log("selectDomain");
       //console.log(id);
+      //haha
       this.selectType = 3;
       this.graphSelectedItem = null;
       this.pathToShow = null;
