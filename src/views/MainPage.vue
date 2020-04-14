@@ -150,11 +150,11 @@
                   v-bind:selectedItem="graphSelectedItem"
                   v-bind:selectedConnectiveDomainId="graphSelectedConnectiveDomainId"
                   v-bind:centerTracker="centerTracker"
-                  @vertexSelected="cnmdVertex"
-                  @edgeSelected="cnmdEdge"
-                  @connectiveDomainSelected="cnmdConnectiveDomain"
-                  @vertexMoved="cnmdVertexMoved"
-                  @connectiveDomainMoved="cnmdDomainMoved"
+                  @vertexSelected="depGraphVertex"
+                  @edgeSelected="depGraphEdge"
+                  @connectiveDomainSelected="depGraphConnectiveDomain"
+                  @vertexMoved="depGraphVertexMoved"
+                  @connectiveDomainMoved="depGraphDomainMoved"
                 ></DepGraph>
               </v-card-text>
             </v-card>
@@ -433,23 +433,23 @@ export default {
       console.log(this.active);
     },
     //DevGraph的回调
-    cnmdVertex(res) {
+    depGraphVertex(res) {
       console.log("Select on vertex", res);
       this.selectVertex(res);
     },
-    cnmdEdge(id) {
+    depGraphEdge(id) {
       console.log("Select on edge", id);
       this.selectEdge(id);
     },
-    cnmdConnectiveDomain(id) {
+    depGraphConnectiveDomain(id) {
       console.log("select on connective domain", id);
       this.selectDomain(id);
     },
-    cnmdVertexMoved(vertex) {
+    depGraphVertexMoved(vertex) {
       console.log("vertex Moved, id:", vertex);
       this.vertexMoved(vertex);
     },
-    cnmdDomainMoved(domain) {
+    depGraphDomainMoved(domain) {
       console.log("domain moved");
       putConnectiveDomainPosition(
         this.projectId,
