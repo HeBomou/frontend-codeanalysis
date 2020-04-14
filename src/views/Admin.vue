@@ -199,14 +199,14 @@ export default {
         }
         this.adminname = this.$store.state.adminName;
         getProjectBasicAttributeAll().then(res => {
-            console.log(res);
+            //console.log(res);
             this.projects = res.data;
             this.isLoading = false;
         }).catch(err => {
             this.Alert(err.response.data.errMsg);
         });
         getAllUsers().then(res => {
-            console.log(res);
+            //console.log(res);
             this.users = res.data;
         }).catch(err => {
             this.Alert(err.response.data.errMsg);
@@ -216,9 +216,9 @@ export default {
             this.errMsg = msg;
             this.dialogErr = true;
         },clickProject(){
-            console.log("haha");
+            //console.log("haha");
         },checkProject(id){
-            console.log(id);
+            //console.log(id);
             // getProject(id).then(res => {
 
             // }).carch(err => {
@@ -226,7 +226,7 @@ export default {
             // })
             this.dialogProject = true;
             getProjectProfile(id).then(res => {
-                console.log(res);
+                //console.log(res);
                 this.projectDetail = res.data;
                 delete this.projectDetail.id;
                 
@@ -243,13 +243,13 @@ export default {
         //查看某个用户的所有project
         checkUserAllProject(id){
             getProjectsSingle(id).then(res =>{
-                console.log(res);
+                //console.log(res);
                 this.singleUserProjects = res.data;
                 this.dialogUser = true;
             }).catch(err => {
-                console.log(err);
+                //console.log(err);
             })
-            console.log(id);
+            //console.log(id);
         }
     }
 }

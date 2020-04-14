@@ -16,7 +16,7 @@ export function get(url, params){
         })
         .then(res => {
             resolve(res);
-            //console.log(res);
+            ////console.log(res);
         })
         .catch(err => {
             reject(err)
@@ -36,7 +36,7 @@ export function post(url, params) {
             resolve(res);
         })
         .catch(err => {
-            console.log(err);
+            //console.log(err);
 
             reject(err)
         })
@@ -75,7 +75,7 @@ export function put(url, params) {
             resolve(res);
         })
         .catch(err => {
-            //console.log(err);
+            ////console.log(err);
             reject(err)
         })
     });

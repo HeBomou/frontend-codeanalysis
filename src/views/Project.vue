@@ -233,10 +233,10 @@ export default {
         ]
     }),methods:{
         setProjects(){
-            console.log("onMount, UserId: " + this.$store.getters.userId);
+            //console.log("onMount, UserId: " + this.$store.getters.userId);
             getProjectsSingle(this.$store.getters.userId).then(res => {
-                console.log("getProjects");
-                console.log(res.data);
+                //console.log("getProjects");
+                //console.log(res.data);
                 this.projects = res.data;
                 this.projects.forEach(p => {
                     p.pid = p.id;
@@ -253,15 +253,15 @@ export default {
                 this.isLoading = false;
                 }).catch(err => this.Alert(err.response.data.errMsg));
             // getProjects(this.$store.state.userId).then(res => {
-            //     console.log(res.data);
+            //     //console.log(res.data);
             //     this.projects = res.data;
-            // }).catch(err => console.log(err));
+            // }).catch(err => //console.log(err));
         },
         addProject(){
             this.addProjectConfirmPressed = true;
-            console.log("projectName : " + this.projectName);
-            console.log("projectUrl : " + this.projectUrl);
-            console.log("UserId : " + this.$store.getters.userId);
+            //console.log("projectName : " + this.projectName);
+            //console.log("projectUrl : " + this.projectUrl);
+            //console.log("UserId : " + this.$store.getters.userId);
             addProject(this.projectName, this.projectUrl, this.$store.getters.userId).then(res => {
                 console.log(res);
 
@@ -279,7 +279,7 @@ export default {
          * 进入这个项目
          */
         toProject(i){
-            console.log(i);
+            //console.log(i);
             this.$store.commit("setProjectId",i);
             this.$router.push("/dependency");
         },Alert(msg){
@@ -291,7 +291,7 @@ export default {
             this.$router.push('/login');
         },
         deleteProject(i){
-            console.log(i);
+            //console.log(i);
             this.projects.forEach(p => {
                 if(p.id == i){
                     this.projectToBeDelete = p;
@@ -301,8 +301,8 @@ export default {
         },
         deleteProjectConfirmed(){
             this.deleteProjectConfirmPressed = true;
-            console.log("delete project");
-            console.log(this.projectToBeDelete);
+            //console.log("delete project");
+            //console.log(this.projectToBeDelete);
             delProject(this.projectToBeDelete.id).then(res => {
                 console.log(res);
                 this.dialogDelete = false;
@@ -319,7 +319,7 @@ export default {
 
         },
         saveProjectName(p){
-            console.log(p);
+            //console.log(p);
             putProject(p.id, p.projectName).then(res => {
                 console.log(res);
             }).catch(err => {
@@ -332,8 +332,8 @@ export default {
 
     },mounted(){
         this.userId = this.$store.getters.userId;
-        console.log("userId ", this.userId);
-        console.log(this.userId);
+        //console.log("userId ", this.userId);
+        //console.log(this.userId);
         if(this.userId == 0){
             this.$router.push('/login');
         }
