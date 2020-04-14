@@ -1,28 +1,3 @@
-# frontend-codeanalysis
-
-## Project setup
-```
-npm install
-```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
-
 # 前端检查点导航
 
 前端页面位置在/src/views下，store下为vuex全局数据，request使用axios封装http请求，components中为封装的组件，主要是cytoscape，assets放置图片文件等资源，router为路由，plugins中是一些相关插件，包括代码高亮和vuetify组件库。
@@ -47,7 +22,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 选中某个顶点的方法：src/views/MainPage.vue: selectVertex(id)
 
-## 检查点3 添加标注、展开包结构、显示源代码 
+## 检查点3 添加标注、展开包结构、显示源代码
 
 标注保存 src/views/MainPage.vue: saveTag() 根据当前选中的类型调用不同接口保存
 
@@ -82,7 +57,3 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 ## 检查点7 管理员
 
 管理员界面为/src/views/Admin.vue，其中用v-data-table组件展示相关数据。
-
-
-
-
