@@ -92,7 +92,7 @@ export default{
     },
     search () {
       this.$refs.search.blur()
-      console.log(this.text)
+      //console.log(this.text)
       // this.$router.push()
     }
   }

@@ -41,15 +41,15 @@ export default {
   methods: {
     cnmdVertex(id) {
       this.selectedItem = { type: "n", id };
-      console.log("Select on vertex", id);
+      //console.log("Select on vertex", id);
     },
     cnmdEdge(id) {
       this.selectedItem = { type: "e", id };
-      console.log("Select on edge", id);
+      //console.log("Select on edge", id);
     },
     cnmdConnectiveDomain(id) {
       this.selectedConnectiveDomainId = id;
-      console.log("select on connective domain", id);
+      //console.log("select on connective domain", id);
     },
     toAdminLogin(){
       this.$router.push("adminLogin");

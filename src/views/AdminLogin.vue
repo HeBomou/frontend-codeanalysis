@@ -211,7 +211,7 @@
       },
       //登录
       async login() {
-        //console.log(this.$store.state.userId);
+        ////console.log(this.$store.state.userId);
         await postAdmin(this.userName, this.password).then(res => {
             this.$store.commit("setAdminName", this.userName);
             this.$store.commit('setAdminId', res.data);
@@ -223,13 +223,13 @@
       },
       async register() {
         //const res = await addUser(null, this.userName, this.password);
-        //console.log(res);
+        ////console.log(res);
         addAdmin(this.userName, this.password, this.inviteCode).then(res => {
           console.log(res);
           this.Alert("注册成功");
         })
           .catch(err => {
-            console.log(err.response.data.errMsg);
+            //console.log(err.response.data.errMsg);
             this.Alert(err.response.data.errMsg);
           })
       },

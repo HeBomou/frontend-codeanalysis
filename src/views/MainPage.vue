@@ -300,7 +300,7 @@ export default {
       vertexSelected: null,
       edgeSelected: null,
       domainSelected: null,
-      //所有的顶点
+      //所有的顶点的名字，这里注意要在子图切换的时候进行更改。
       vertexs: ["haha", 123, 234],
       open: [{ key: "/src" }],
       files: {
@@ -429,28 +429,28 @@ export default {
       // console.log(this.endVertex);
       // console.log(this.tree);
       //console.log(this.thresholdSelected);
-      console.log("active");
-      console.log(this.active);
+      //console.log("active");
+      //console.log(this.active);
     },
     //DevGraph的回调
     depGraphVertex(res) {
-      console.log("Select on vertex", res);
+      //console.log("Select on vertex", res);
       this.selectVertex(res);
     },
     depGraphEdge(id) {
-      console.log("Select on edge", id);
+      //console.log("Select on edge", id);
       this.selectEdge(id);
     },
     depGraphConnectiveDomain(id) {
-      console.log("select on connective domain", id);
+      //console.log("select on connective domain", id);
       this.selectDomain(id);
     },
     depGraphVertexMoved(vertex) {
-      console.log("vertex Moved, id:", vertex);
+      //console.log("vertex Moved, id:", vertex);
       this.vertexMoved(vertex);
     },
     depGraphDomainMoved(domain) {
-      console.log("domain moved");
+      //console.log("domain moved");
       putConnectiveDomainPosition(
         this.projectId,
         domain.id,
@@ -479,9 +479,9 @@ export default {
     },
     //更新边，对store和后端进行更新
     updateEdge(edge) {
-      console.log(edge);
+      //console.log(edge);
       this.$store.commit("updateEdge", edge);
-      console.log("updateEdge");
+      //console.log("updateEdge");
       putEdge(this.projectId, edge.id, {
         id: edge.id,
         anotation: edge.anotation
@@ -500,13 +500,13 @@ export default {
     //更新顶点，对store和后端进行更新
     updateVertex(vertex) {
       this.$store.commit("updateVertex", vertex);
-      console.log("update vertex");
-      console.log({
-        id: vertex.id,
-        anotation: vertex.anotation,
-        x: vertex.x,
-        y: vertex.y
-      });
+      //console.log("update vertex");
+      // console.log({
+      //   id: vertex.id,
+      //   anotation: vertex.anotation,
+      //   x: vertex.x,
+      //   y: vertex.y
+      // });
       putVertex(this.projectId, vertex.id, {
         id: vertex.id,
         anotation: vertex.anotation,
@@ -526,7 +526,7 @@ export default {
     },
     updateDomain(domain) {
       this.$store.commit("updateDomain", domain);
-      console.log("update domain");
+      //console.log("update domain");
       putConnectiveDomain(this.projectId, this.subgraphId, domain.id, {
         id: domain.id,
         anotation: domain.anotation,
@@ -545,15 +545,15 @@ export default {
     },
     //搜索路径
     searchPath() {
-      console.log("searchPath");
+      //console.log("searchPath");
       getOriginalGraphPath(
         this.projectId,
         this.getVertexIdByName(this.startVertex),
         this.getVertexIdByName(this.endVertex)
       )
         .then(res => {
-          console.log("search Path success, res:");
-          console.log(res.data);
+          //console.log("search Path success, res:");
+          //console.log(res.data);
           this.pathNum = res.data.num;
           this.paths = res.data.paths;
         })
@@ -580,8 +580,8 @@ export default {
      * 初始化项目
      */
     initProject(data) {
-      console.log("initProject, data:");
-      console.log(data);
+      //console.log("initProject, data:");
+      //console.log(data);
       this.projectName = data.dynamicVo.projectName;
       this.$store.commit("initProject", data);
 
@@ -604,14 +604,14 @@ export default {
       this.setVertexs();
 
       //设置包结构
-      console.log("exp");
-      console.log(this.items);
+      //console.log("exp");
+      //console.log(this.items);
       //TODO:debug
       this.preproPackage([data.packageRoot], "");
       this.items = [data.packageRoot];
       this.changeFileType(this.items[0]);
-      console.log("get");
-      console.log(this.items);
+      //console.log("get");
+      //console.log(this.items);
 
       //设置子图
       this.reloadThresholds();
@@ -669,7 +669,7 @@ export default {
     //对active事件的回调函数
     //val:所有的active节点的数组
     treeActive(val) {
-      console.log(val);
+      //console.log(val);
       this.selectVertex(val[0].functionId);
       this.active = val;
 
@@ -681,10 +681,10 @@ export default {
     // }
     // ,//搜索这个顶点
     searchVertexSelected() {
-      console.log(this.searchVertex);
+      //console.log(this.searchVertex);
       let v = this.getVertexByName(this.searchVertex);
-      console.log("searchVertex");
-      console.log(v);
+      //console.log("searchVertex");
+      //console.log(v);
       this.selectVertex(v.id);
 
       //定位到这个点
@@ -729,6 +729,7 @@ export default {
 
       this.searchVertex = this.vertexSelected.functionName;
       this.graphSelectedItem = { type: "n", id: this.vertexSelected.id };
+      //console.log(this.graphSelectedItem);
 
       //处理包结构:active函数，打开父节点
       let funcKey = this.vertexSelected.functionName;
@@ -742,11 +743,11 @@ export default {
       });
       this.open = newOpen;
 
-      console.log("active");
-      console.log(this.active);
+      //console.log("active");
+      //console.log(this.active);
 
-      console.log("this.graphSelectedItem");
-      console.log(this.graphSelectedItem);
+      //console.log("this.graphSelectedItem");
+      //console.log(this.graphSelectedItem);
     },
     getFathersKeyByFuncKey(funcKey) {
       //根据函数名得到所有父节点的key的数组
@@ -759,8 +760,8 @@ export default {
         nowUrl += "/" + name;
         result.push(nowUrl);
       });
-      console.log("resultF");
-      console.log(result);
+      //console.log("resultF");
+      //console.log(result);
 
       return result;
     },
@@ -798,27 +799,28 @@ export default {
     // },
     selectDomain(id) {
       //选中某个连通域
-      console.log("selectDomain");
-      console.log(id);
+      //console.log("selectDomain");
+      //console.log(id);
+      //haha
       this.selectType = 3;
       this.graphSelectedItem = null;
       this.pathToShow = null;
       this.graphSelectedConnectiveDomainId = id;
       let domain = this.$store.state.project.connectiveDomainMap.get(id);
       this.domainSelected = domain;
-      console.log(domain);
+      //console.log(domain);
       this.tag = domain.anotation;
     },
     selectEdge(id) {
-      console.log("selectEdge id:");
-      console.log(id);
+      //console.log("selectEdge id:");
+      //console.log(id);
       this.selectType = 2;
       this.edgeSelected = this.$store.state.project.edgeMap.get(id);
       this.tag = this.edgeSelected.anotation;
       this.pathToShow = null;
       this.graphSelectedConnectiveDomainId = null;
       this.graphSelectedItem = { type: "e", id: this.edgeSelected.id };
-      console.log(this.edgeSelected);
+      //console.log(this.edgeSelected);
 
       //把当前选中的顶点设置为这个边的一个顶点，方便选中所在连通域
       this.vertexSelected = this.$store.state.project.vertexMap.get(
@@ -827,11 +829,11 @@ export default {
     },
     //图中的点被移动
     vertexMoved(vertex) {
-      console.log("vertex moved");
+      //console.log("vertex moved");
       this.updateVertex(this.$store.state.project.vertexMap.get(vertex.id));
     },
     selectPath(path) {
-      console.log(path);
+      //console.log(path);
       this.graphSelectedItem = null;
       this.graphSelectedConnectiveDomainId = null;
 
@@ -839,11 +841,11 @@ export default {
     },
     //添加一个紧密度域值
     addThreshold() {
-      console.log("addThreshold");
+      //console.log("addThreshold");
       addSubgraph(this.projectId, this.newThreshold, this.newThresholdName)
         .then(res => {
-          console.log("addThreshold success");
-          console.log(res);
+          //console.log("addThreshold success");
+          //console.log(res);
           this.dialogThreshold = false;
           this.$store.commit("addSubGraph", res.data);
           this.reloadThresholds();
@@ -855,9 +857,9 @@ export default {
           this.Alert(err.response.data.errMsg);
         });
     },
-    //选择一个已有的紧密度域值
+    //选择一个已有的紧密度域值（选中的域值是this.thresholdSelected）
     selectThreshold() {
-      console.log("selectThreshold", this.thresholdSelected);
+      //console.log("selectThreshold", this.thresholdSelected);
       let sg = null;
       //找到对应子图
       this.$store.state.project.subgraphMap.forEach(subgraph => {
@@ -867,6 +869,9 @@ export default {
       });
       this.subgraphId = sg.id;
 
+      //重置搜索顶点的所有名称
+      this.vertexs = [];
+
       //重置基本信息
       this.vertexNum = 0;
       this.edgeNum = 0;
@@ -875,7 +880,14 @@ export default {
         let domain = this.$store.state.project.connectiveDomainMap.get(did);
         this.vertexNum += domain.vertexIds.length;
         this.edgeNum += domain.edgeIds.length;
+        domain.vertexIds.forEach(vid => {
+          this.vertexs.push(this.$store.state.project.vertexMap.get(vid).functionName);
+          //console.log((this.$store.state.project.vertexMap.get(eid)).functionName);
+          //console.log((this.$store.state.project.vertexMap.get(vid).functionName));
+          
+        })
       });
+
     },
     //更新Thresholds
     reloadThresholds() {
@@ -939,22 +951,22 @@ export default {
   },
   mounted() {
     let userId = this.$store.getters.userId;
-    console.log("********************");
-    console.log(userId);
+    //console.log("********************");
+    //console.log(userId);
     if (userId == 0) {
       //代表没有登录
       this.$router.push("/login");
     }
     //初始化各个数据
-    console.log("mounted");
+    //console.log("mounted");
     //TODO:debug
     this.projectId = this.$store.getters.projectId;
     //this.projectId = 1;
-    console.log("project id:" + this.projectId);
+    //console.log("project id:" + this.projectId);
     getProject(this.projectId)
       .then(res => {
-        console.log("res.data:");
-        console.log(res.data);
+        //console.log("res.data:");
+        //console.log(res.data);
         this.initProject(res.data);
       })
       .catch(err => {
