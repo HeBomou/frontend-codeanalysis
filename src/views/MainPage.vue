@@ -879,7 +879,7 @@ export default {
       sg.connectiveDomainIds.forEach(did => {
         let domain = this.$store.state.project.connectiveDomainMap.get(did);
         this.vertexNum += domain.vertexIds.length;
-        this.vertexNum += domain.edgeIds.length;
+        this.edgeNum += domain.edgeIds.length;
         domain.vertexIds.forEach(vid => {
           this.vertexs.push(this.$store.state.project.vertexMap.get(vid).functionName);
           //console.log((this.$store.state.project.vertexMap.get(eid)).functionName);
