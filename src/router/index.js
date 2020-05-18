@@ -28,6 +28,15 @@ const routes = [
     }
 
   }, {
+    path: '/team',
+    name: 'Team',
+    component: () => import("@/views/Team.vue"),
+    meta: {
+      title: "小组",
+      keepAlive: true
+    }
+
+  }, {
     path: '/admin',
     name: 'Admin',
     component: () => import("@/views/Admin.vue"),
