@@ -62,7 +62,7 @@ const routes = [
       title: "测试",
       keepAlive: true
     }
-  },{
+  }, {
     path: '/adminLogin',
     name: 'AdminLogin',
     component: () => import("@/views/AdminLogin.vue"),
@@ -70,7 +70,11 @@ const routes = [
       title: "管理员登录",
       keepAlive: true
     }
-  },{
+  }, {
+    path: '/chat',
+    name: 'chat',
+    component: () => import('@/views/Chat.vue')
+  }, {
     path: '/404',
     name: 'faid',
     component: () => import('@/views/404.vue'),
