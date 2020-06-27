@@ -1,7 +1,31 @@
 <template>
-  <v-container>
-    <h1>Chat test</h1>
-  </v-container>
+  <v-app id="dependency">
+    <v-app-bar app clipped-left color="amber">
+      <span class="title ml-3 mr-5">我的消息</span>
+      <!-- <v-spacer /> -->
+    </v-app-bar>
+    <v-content>
+      <v-container style="height: 100%;">
+        <v-row style="margin-top: 5%; height: 80%; background: #eee;">
+          <v-col cols="2" style="height: 100%; ">
+            <v-scroll>
+              <v-card height="80px"></v-card>
+              <v-card height="80px"></v-card>
+              <v-card height="80px"></v-card>
+              <v-card height="80px"></v-card>
+              <v-card height="80px"></v-card>
+              <v-card height="80px"></v-card>
+              <v-card height="80px"></v-card>
+              <v-card height="80px"></v-card>
+              <v-card height="80px"></v-card>
+              <v-card height="80px"></v-card>
+            </v-scroll>
+          </v-col>
+          <v-col cols="8">sdfsd</v-col>
+        </v-row>
+      </v-container>
+    </v-content>
+  </v-app>
 </template>
 
 <script>
