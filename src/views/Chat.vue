@@ -77,7 +77,8 @@ export default {
   name: "Chat",
   data() {
     return {
-      path: "ws://127.0.0.1:8080/chat",
+      // path: "ws://127.0.0.1:8080/chat",
+      path: "ws://101.201.150.49:8080/chat",
       socket: undefined,
       people: [
         { id: 1, name: "章鱼王" },
