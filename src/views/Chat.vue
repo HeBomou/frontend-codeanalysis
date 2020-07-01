@@ -77,8 +77,8 @@ export default {
   name: "Chat",
   data() {
     return {
-      // path: "ws://127.0.0.1:8080/chat",
-      path: "ws://101.201.150.49:8080/chat",
+      path: "ws://127.0.0.1:8080/chat",
+      // path: "ws://101.201.150.49:8080/chat",
       socket: undefined,
       people: [
         { id: 1, name: "章鱼王" },
@@ -97,7 +97,12 @@ export default {
       inputText: ""
     };
   },
+  created() {
+    this.newContact = this.$route.query.newContact;
+  },
   mounted() {
+    let userId = this.$store.getters.userId;
+    if (userId == 0) this.$router.push("/login");
     if (typeof WebSocket == undefined) alert("您的浏览器不支持该聊天室");
     else {
       this.socket = new WebSocket(this.path);
@@ -107,7 +112,7 @@ export default {
       this.socket.onclose = this.onclose;
 
       // 获取联系人列表
-      getContacts(this.$store.getters.userId).then(res => {
+      getContacts(userId).then(res => {
         console.log("contacts", res);
         this.people = [];
         res.data.forEach(p => {
@@ -122,24 +127,40 @@ export default {
   methods: {
     onopen() {
       console.log("WS: 连接成功");
-      this.socket.send(this.$store.getters.userId);
+      this.socket.send("i" + this.$store.getters.userId);
+      console.log(this.newContact);
+      if (this.newContact != undefined) this.socket.send("c" + this.newContact);
     },
     onclose() {
-      console.log("WS: 连接关闭");
+      // console.log("WS: 连接关闭");
     },
     onerror() {
-      console.log("WS: 错误发生");
+      // console.log("WS: 错误发生");
     },
     onmessage(msg) {
-      let msgRawObj = JSON.parse(msg.data);
-      let msgObj = {
-        id: msgRawObj.id,
-        me: msgRawObj.senderId == this.$store.getters.userId,
-        time: msgRawObj.time,
-        text: msgRawObj.content
-      };
-      console.log("WS: 收到消息 ", msgObj);
-      this.messages.push(msgObj);
+      if (msg.data[0] == "c") {
+        let p = JSON.parse(msg.data.substr(1));
+        console.log("new contact", p);
+        this.people.push({
+          id: p.id,
+          name: p.username
+        });
+      } else if (msg.data[0] == "m") {
+        let msgRawObj = JSON.parse(msg.data.substr(1));
+        let msgObj = {
+          id: msgRawObj.id,
+          me: msgRawObj.senderId == this.$store.getters.userId,
+          time: msgRawObj.time,
+          text: msgRawObj.content
+        };
+        let curPersonId = this.people[this.curPersonIndex].id;
+        if (
+          msgRawObj.senderId == curPersonId ||
+          msgRawObj.receiverId == curPersonId
+        )
+          this.messages.push(msgObj);
+        // console.log("WS: 收到消息 ", msgObj);
+      }
     },
     changePerson(index) {
       this.activeChat = true;
@@ -163,7 +184,7 @@ export default {
     sendMessage() {
       if (this.inputText == "") return;
       this.socket.send(
-        this.people[this.curPersonIndex].id + "," + this.inputText
+        "m" + this.people[this.curPersonIndex].id + "," + this.inputText
       );
       console.log("Try to send msg: ", this.inputText);
       this.inputText = "";
