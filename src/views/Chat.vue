@@ -24,7 +24,7 @@
                         <v-list-item-title v-text="item.name"></v-list-item-title>
                       </v-list-item-content>
                       <v-list-item-icon>
-                        <v-icon :color="item.read?'grey':'deep-purple accent-4'">mdi-chat</v-icon>
+                        <v-icon :color="item.read?'grey':'amber'">mdi-chat</v-icon>
                       </v-list-item-icon>
                     </v-list-item>
                     <v-divider :key="`divider-${item.id}`" class="my-0"></v-divider>
