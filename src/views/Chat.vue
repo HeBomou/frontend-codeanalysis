@@ -24,7 +24,7 @@
                         <v-list-item-title v-text="item.name"></v-list-item-title>
                       </v-list-item-content>
                       <v-list-item-icon>
-                        <v-icon>mdi-chat</v-icon>
+                        <v-icon :color="item.read?'grey':'deep-purple accent-4'">mdi-chat</v-icon>
                       </v-list-item-icon>
                     </v-list-item>
                     <v-divider :key="`divider-${item.id}`" class="my-0"></v-divider>
@@ -77,13 +77,13 @@ export default {
   name: "Chat",
   data() {
     return {
-      path: "ws://127.0.0.1:8080/chat",
-      // path: "ws://101.201.150.49:8080/chat",
+      // path: "ws://127.0.0.1:8080/chat",
+      path: "ws://101.201.150.49:8080/chat",
       socket: undefined,
       people: [
-        { id: 1, name: "章鱼王" },
-        { id: 2, name: "永不翘课" },
-        { id: 3, name: "胡子哥" }
+        { id: 1, name: "章鱼王", read: true },
+        { id: 2, name: "永不翘课", read: false },
+        { id: 3, name: "胡子哥", read: true }
       ],
       activeChat: false,
       curPersonIndex: 0,
@@ -117,8 +117,9 @@ export default {
         this.people = [];
         res.data.forEach(p => {
           this.people.push({
-            id: p.id,
-            name: p.username
+            id: p.userId,
+            name: p.username,
+            read: p.read == 1
           });
         });
       });
@@ -142,8 +143,9 @@ export default {
         let p = JSON.parse(msg.data.substr(1));
         console.log("new contact", p);
         this.people.push({
-          id: p.id,
-          name: p.username
+          id: p.userId,
+          name: p.username,
+          read: p.read == 1
         });
       } else if (msg.data[0] == "m") {
         let msgRawObj = JSON.parse(msg.data.substr(1));
@@ -160,26 +162,34 @@ export default {
         )
           this.messages.push(msgObj);
         // console.log("WS: 收到消息 ", msgObj);
+      } else if (msg.data[0] == 'r') {
+        let personId = parseInt(msg.data.substr(2));
+        let read = msg.data[1] == '1';
+        for (let i = 0; i < this.people.length; i++)
+          if (this.people[i].id == personId)
+            this.people[i].read = read;
       }
     },
     changePerson(index) {
       this.activeChat = true;
       this.curPersonIndex = index;
+      let curPersonId = this.people[index].id;
+      // 更新已读
+      this.socket.send("r" + curPersonId);
+      console.log("update read", this.people[index]);
       // 获取用户聊天记录
-      getMessages(this.$store.getters.userId, this.people[index].id).then(
-        res => {
-          console.log(res);
-          this.messages = [];
-          res.data.forEach(msgRawObj => {
-            this.messages.push({
-              id: msgRawObj.id,
-              me: msgRawObj.senderId == this.$store.getters.userId,
-              time: msgRawObj.time,
-              text: msgRawObj.content
-            });
+      getMessages(this.$store.getters.userId, curPersonId).then(res => {
+        console.log(res);
+        this.messages = [];
+        res.data.forEach(msgRawObj => {
+          this.messages.push({
+            id: msgRawObj.id,
+            me: msgRawObj.senderId == this.$store.getters.userId,
+            time: msgRawObj.time,
+            text: msgRawObj.content
           });
-        }
-      );
+        });
+      });
     },
     sendMessage() {
       if (this.inputText == "") return;
