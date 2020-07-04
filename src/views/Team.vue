@@ -77,21 +77,23 @@
                                     </v-icon>
                                 </template>
                                 <v-list>
-                                    <v-list-item>
-                                        <v-list-item-content>
-                                            <v-btn>
-                                            移除成员
-                                            </v-btn>
-                                        </v-list-item-content>
+                                    <v-list-item
+                                        @click="debug()"
+                                    >
+                                        <v-list-item-title>移除成员</v-list-item-title>
                                     </v-list-item>
-                                    <v-list-item>
-                                        <v-list-item-title><v-btn>变更权限</v-btn></v-list-item-title>
+                                    <v-list-item
+                                        @click="debug()"
+                                    >
+                                        <v-list-item-title>变更权限</v-list-item-title>
                                     </v-list-item>
-                                    <v-list-item>
-                                        <v-list-item-title><v-btn>私聊</v-btn></v-list-item-title>
+                                    <v-list-item
+                                        @click="debug()"
+                                    >
+                                        <v-list-item-title>私聊</v-list-item-title>
                                     </v-list-item>
                                 </v-list>
-                                </v-menu>
+                            </v-menu>
                         </td>
                     </tr>
                 </tbody>
@@ -182,18 +184,26 @@
                                     </v-icon>
                                 </template>
                                 <v-list>
-                                    <v-list-item>
-                                        <v-list-item-content>
-                                            <v-btn>
-                                            指定执行者
-                                            </v-btn>
-                                        </v-list-item-content>
+                                    <v-list-item
+                                        @click="debug()"
+                                    >
+                                        <v-list-item-title>
+                                        指定执行者
+                                        </v-list-item-title>
                                     </v-list-item>
-                                    <v-list-item>
-                                        <v-list-item-title><v-btn>提交</v-btn></v-list-item-title>
+                                    <v-list-item
+                                        @click="debug()"
+                                    >
+                                        <v-list-item-title>
+                                        提交
+                                        </v-list-item-title>
                                     </v-list-item>
-                                    <v-list-item>
-                                        <v-list-item-title><v-btn>删除</v-btn></v-list-item-title>
+                                    <v-list-item
+                                        @click="debug()"
+                                    >
+                                        <v-list-item-title>
+                                        删除
+                                        </v-list-item-title>
                                     </v-list-item>
                                 </v-list>
                             </v-menu>
