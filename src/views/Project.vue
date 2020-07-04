@@ -114,7 +114,7 @@
             <v-spacer />
             <v-spacer />
             <v-spacer />
-
+            <v-btn @click="toTeam" class="mr-5">我的小组</v-btn>
             <v-btn @click="logout">退出登录</v-btn>
 
 
@@ -326,6 +326,9 @@ export default {
                 this.Alert(err.response.data.errMsg);
             });
 
+        },
+        toTeam(){
+            this.$router.push('/team');
         }
 
         

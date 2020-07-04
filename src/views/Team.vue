@@ -1,5 +1,57 @@
 <template>
-    <v-tabs grow="true">
+<v-app id="keep">
+    <v-app-bar
+        app
+        clipped-left
+        color="amber"
+        >
+            <span class="title ml-3 mr-5">我的小组</span>
+            <v-spacer />
+            <v-spacer />
+            <v-spacer />
+            <v-btn @click="toProject" class="mr-5">我的项目</v-btn>
+            <v-btn @click="logout">退出登录</v-btn>
+        </v-app-bar>
+
+    <v-navigation-drawer
+      v-model="drawer"
+      app
+      clipped
+      color="grey lighten-4"
+    >
+        <v-list shaped>
+            <v-subheader>GROUPS</v-subheader>
+            <v-list-item-group v-model="groupChosenIndex" 
+                color="primary" 
+                mandatory="mandatory"
+                @change="change"
+            >
+                <v-list-item
+                v-for="(item, i) in groups"
+                :key="i"
+                >
+                <v-list-item-content>
+                    <v-list-item-title v-text="item.name"></v-list-item-title>
+                </v-list-item-content>
+                </v-list-item>
+            </v-list-item-group>
+        </v-list>
+    </v-navigation-drawer>
+
+    <v-content>
+        <v-dialog
+        v-model="dialogErr"
+        width="500">
+            <v-card>
+                <v-card-title>{{errMsg}}</v-card-title>
+                <v-card-text>
+                  <v-btn color="error" @click="dialogErr=false">确定</v-btn>
+                </v-card-text>
+            </v-card>
+        </v-dialog>
+      <v-container
+      >
+        <v-tabs>
         <v-tab>成员列表</v-tab>
         <v-tab-item>
             <!-- 成员列表 -->
@@ -13,8 +65,8 @@
                 </thead>
                  <tbody>
                     <tr v-for="item in teamMember" :key="item.name">
-                        <td>{{ item.name }}</td>
-                        <td>{{ item.authority }}</td>
+                        <td>{{ item.username }}</td>
+                        <td>{{ item.level }}</td>
                         <td>
                             <v-menu offset-y>
                                 <template v-slot:activator="{ on }">
@@ -48,7 +100,7 @@
         <v-tab>项目列表</v-tab>
         <v-tab-item>
             <!-- 项目列表 -->
-            <v-card>
+            <!-- <v-card>
                 <v-card-title>
                     项目列表
                     <v-spacer />
@@ -101,7 +153,7 @@
                         </template>
                     </v-data-table>
                 </v-card-text>
-            </v-card>
+            </v-card> -->
         </v-tab-item>
         <v-tab>任务列表</v-tab>
         <v-tab-item>
@@ -168,23 +220,93 @@
             </v-list>
         </v-tab-item>
     </v-tabs>
+      </v-container>
+    </v-content>
+  </v-app>
+    
 </template>
 <script>
+import {getAllGroup, getMembers, getNotice} from "../request/api";
 export default {
     data(){
         return {
+            userId: 0,
+            errMsg: "",
+            dialogErr: false,
+            drawer: true,
+            groupChosenIndex: 1,//当前选中的组, 为groups列表的index。
+            groupChosen: null,
+            searchProject: 1,//项目列表中正在搜索的项目
+            isLoading: true,
+            mandatory: true,
             teamMember: [
-                {name: "leo", authority: "1"},
-                {name: "yzj", authority: "0"}
+                {id: 1, username: "leo", level: "1"},
+                {id: 2, username: "yzj", level: "0"}
             ],
             notices: [
                 {title: "标题1", person: "leo", date: "2020-1-1", content: "hhhhhhhhhhhhhhhhhhhhhhhhcnm"},
-                {title: "标题2", person: "yzj", date: "2020-1-1", content: "cnmcnmcnmcnmcnmcnmcnm"}
+                {title: "标题2", person: "yzj", date: "2020-1-1", content: "1111111111111111111111111          "}
             ],
             tasks: [
                 {name: "foo", ddl:"2020-1-1", person:"leo"}
+            ],
+            groups: [
+                {id: 123, leaderId: 234, name: "group haha", inviteCode: 123123},
+                {id: 234, leaderId: 333, name: "hahasdf df", inviteCode: 234234},
+                {id: 3, leaderId: 333, name: "3", inviteCode: 234234},
+                {id: 4, leaderId: 333, name: "4", inviteCode: 234234}
+
+
             ]
         }
+    }
+    ,methods: {
+        Alert(msg){
+            this.errMsg = msg;
+            this.dialogErr = true;
+        },
+        toProject(){
+            this.$router.push("/project");
+        },
+        debug(){
+            console.log(this.groupChosenIndex);
+        },
+        logout(){
+            this.$store.commit("setUserId", 0);
+            this.$router.push('/login');
+        },
+        change(val){
+            //console.log(val);
+            this.groupChosen = this.groups.indexOf(val);
+            console.log(this.groupChosen);
+        },
+        /**
+         * 选择了某个小组，调用后端，更新页面显示的相关信息。
+         */
+        selectGroup(groupId){
+            getMembers(groupId).then(res => {
+                console.log(res);
+                //TODO:更新所有的小组相关信息
+                this.teamMember = res.data;
+                //获取小组公告
+                getNotice(this.groupChosen.id).then(res => {
+                    this.notices = res.data;
+                }).catch(err => {
+                    this.Alert(err.response.data.errMsg);
+                })
+            }).catch(err => {
+                this.Alert(err.response.data.errMsg);
+            })
+        }
+    }
+    ,mounted(){
+        this.userId = this.$store.getters.userId;
+        if(this.userId == 0){
+            this.$router.push('/login');
+        }
+        getAllGroup(this.userId).then(res => {
+            console.log(res);
+        }).catch(err => this.Alert(err.response.data.errMsg));
     }
 }
 </script>

@@ -201,3 +201,21 @@ export const putProject = (projectId, projectName) => put("/project/" + projectI
  * @param {*} dy 
  */
 export const putConnectiveDomainPosition = (projectId, domainId, dx, dy) => put("/project/" + projectId + "/connectiveDomain/" + domainId + "/position?relativeX=" + dx + "&relativeY=" + dy);
+
+/**
+ * 获得所有小组信息，传回列表
+ * @param {*} userId 
+ */
+export const getAllGroup = (userId) => get("/group/getgroup/" + userId);
+
+/**
+ * 获得某个小组的全部成员
+ * @param {*} groupId 
+ */
+export const getMembers = (groupId) => get("/group/getuser/" + groupId);
+
+/**
+ * 获取小组公告
+ * @param {*} groupId 
+ */
+export const getNotice = (groupId) => get("/group/notice/" + groupId);
