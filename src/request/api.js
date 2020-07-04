@@ -5,7 +5,7 @@ import { get, post, del, put } from './http'
  * @param {string} username 
  * @param {string} pwdMd5 
  */
-export const admin = (id, username, pwdMd5) => post("/admin", {id, username, pwdMd5});
+export const admin = (id, username, pwdMd5) => post("/admin", { id, username, pwdMd5 });
 export const similarFunction = (projectId, funcName) => get("/project/" + projectId + "/similarFunction", funcName);
 
 /**
@@ -13,7 +13,7 @@ export const similarFunction = (projectId, funcName) => get("/project/" + projec
  * @param {string} username 
  * @param {string} pwdMd5 
  */
-export const adminSession = (username, pwdMd5) => post("/adminSession", {username, pwdMd5});
+export const adminSession = (username, pwdMd5) => post("/adminSession", { username, pwdMd5 });
 
 /**
  * 查询子图最短路
@@ -22,7 +22,7 @@ export const adminSession = (username, pwdMd5) => post("/adminSession", {usernam
  * @param {long} startVertexId 
  * @param {long} endVertexIndex 
  */
-export const subgraphShortestPath = (projectId, subgraphId, startVertexId, endVertexIndex) => get("/project/" + projectId + "/subgraph/" + subgraphId + "/subgraphShortestPath", {startVertexId, endVertexIndex});
+export const subgraphShortestPath = (projectId, subgraphId, startVertexId, endVertexIndex) => get("/project/" + projectId + "/subgraph/" + subgraphId + "/subgraphShortestPath", { startVertexId, endVertexIndex });
 
 /**
  * 查询原图最短路
@@ -30,7 +30,7 @@ export const subgraphShortestPath = (projectId, subgraphId, startVertexId, endVe
  * @param {long} startVertexId 
  * @param {long} endVertexId 
  */
-export const originalGraphShortestPath = (projectId, startVertexId, endVertexId) => get("/project/" + projectId + "/originalGraphShortestPath", {startVertexId, endVertexId});
+export const originalGraphShortestPath = (projectId, startVertexId, endVertexId) => get("/project/" + projectId + "/originalGraphShortestPath", { startVertexId, endVertexId });
 
 /**
  * 查询子图
@@ -82,7 +82,7 @@ export const delProject = (id) => del("/project/" + id);
  * @param {string} url 	git仓库的url
  * @param {string} userId 
  */
-export const addProject = (projectName, url, userId) => post("/project?projectName=" + projectName + "&url=" + url + "&userId=" + userId,null);
+export const addProject = (projectName, url, userId) => post("/project?projectName=" + projectName + "&url=" + url + "&userId=" + userId, null);
 
 
 
@@ -97,7 +97,7 @@ export const removeSession = (id) => del("/session/" + id);
  * @param {string} username 
  * @param {string} pwdMd5 
  */
-export const addSession = (username, pwdMd5) => post("/session", {username, pwdMd5});
+export const addSession = (username, pwdMd5) => post("/session", { username, pwdMd5 });
 
 // TODO:export const updateUser = (id, username, pwdMd5) => put()
 
@@ -113,7 +113,7 @@ export const delUser = (id) => del("/user/" + id);
  * @param {*} username 
  * @param {*} pwdMd5 
  */
-export const addUser = (id, username, pwdMd5) => post("/user", {id, username, pwdMd5});
+export const addUser = (id, username, pwdMd5) => post("/user", { id, username, pwdMd5 });
 
 /**
  * 更新点的相关信息
@@ -146,7 +146,7 @@ export const getOriginalGraphPath = (projectId, startVertexId, endVertexId) => g
  * @param {*} domainId 
  * @param {*} domainVo 
  */
-export const putConnectiveDomain = (projectId, subgraphId, domainId, domainVo) => put("/project/" + projectId + "/subgraph/" + subgraphId + "/connectiveDomain/" + domainId +"/dynamic", domainVo);
+export const putConnectiveDomain = (projectId, subgraphId, domainId, domainVo) => put("/project/" + projectId + "/subgraph/" + subgraphId + "/connectiveDomain/" + domainId + "/dynamic", domainVo);
 
 /**
  * 获取所有项目的名称等动态信息，如果传了用户id，就是返回该用户的所有项目，否则返回所有项目
@@ -176,7 +176,7 @@ export const getProjectProfile = (projectId) => get("project/" + projectId + "/p
  * @param {*} usrName 
  * @param {*} pwd 
  */
-export const postAdmin = (usrName, pwd) => post("/adminSession", {username: usrName, pwdMd5: pwd});
+export const postAdmin = (usrName, pwd) => post("/adminSession", { username: usrName, pwdMd5: pwd });
 
 /**
  * 管理员注册
@@ -184,14 +184,14 @@ export const postAdmin = (usrName, pwd) => post("/adminSession", {username: usrN
  * @param {*} pwd 
  * @param {*} inviteCode 
  */
-export const addAdmin = (username, pwd, inviteCode) => post("/admin", {id: null, username: username, pwdMd5: pwd, inviteCode: inviteCode});
+export const addAdmin = (username, pwd, inviteCode) => post("/admin", { id: null, username: username, pwdMd5: pwd, inviteCode: inviteCode });
 
 /**
  * 更新项目名
  * @param {*} projectId 
  * @param {*} projectName 
  */
-export const putProject = (projectId, projectName) => put("/project/" + projectId + "/dynamic", {id: projectId, projectName: projectName})
+export const putProject = (projectId, projectName) => put("/project/" + projectId + "/dynamic", { id: projectId, projectName: projectName });
 
 /**
  * 移动连通域
@@ -219,3 +219,16 @@ export const getMembers = (groupId) => get("/group/getuser/" + groupId);
  * @param {*} groupId 
  */
 export const getNotice = (groupId) => get("/group/notice/" + groupId);
+
+/**
+ * 获取联系人列表
+ * @param {*} userId 
+ */
+export const getContacts = (userId) => get("/contact/" + userId);
+
+/**
+ * 获取两人之间发送的的所有消息
+ * @param {*} userId 
+ * @param {*} toUserId 
+ */
+export const getMessages = (userId, toUserId) => get("/message?senderId=" + userId + "&receiverId=" + toUserId);
