@@ -82,11 +82,29 @@
                                     >
                                         <v-list-item-title>移除成员</v-list-item-title>
                                     </v-list-item>
-                                    <v-list-item
-                                        @click="debug()"
-                                    >
-                                        <v-list-item-title>变更权限</v-list-item-title>
-                                    </v-list-item>
+                                        <v-menu top offset-x>
+                                            <template v-slot:activator="{ on, attrs }">
+                                                <v-list-item
+                                                    v-bind="attrs"
+                                                    v-on="on"
+                                                >
+                                                    <v-list-item-title>更改权限</v-list-item-title>
+                                                </v-list-item>
+                                            </template>
+
+                                            <v-list>
+                                                <v-list-item
+                                                    @click="debug()"
+                                                >
+                                                <v-list-item-title>权限1</v-list-item-title>
+                                                </v-list-item>
+                                                <v-list-item
+                                                    @click="debug()"
+                                                >
+                                                <v-list-item-title>权限2</v-list-item-title>
+                                                </v-list-item>
+                                            </v-list>
+                                        </v-menu>
                                     <v-list-item
                                         @click="debug()"
                                     >
@@ -254,7 +272,7 @@ export default {
                 {id: 2, username: "yzj", level: "0"}
             ],
             notices: [
-                {title: "标题1", person: "leo", date: "2020-1-1", content: "hhhhhhhhhhhhhhhhhhhhhhhhcnm"},
+                {title: "标题1", person: "leo", date: "2020-1-1", content: "-孙哥，他们去恰烧烤\n-你说的他们⾸先是谁，去那⾥恰，什么时候去的，我⼀问三不知。就我都没去，你都知道的，我，我不知道你⼀直在那⼉问。这种⼈是不是脑淤⾎啊我发觉，就别⼈不知道的⼀直在那问，那我叫你说你⼜说不归⼀，说不清楚。你⾃⼰是不是语⾔表达能⼒特别差，还是⾃⼰的脑回路有问题嘛。"},
                 {title: "标题2", person: "yzj", date: "2020-1-1", content: "1111111111111111111111111          "}
             ],
             tasks: [
