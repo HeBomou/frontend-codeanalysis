@@ -1,5 +1,55 @@
 <template>
 <v-app id="keep">
+    <v-dialog
+        v-model="dialogErr"
+        width="500">
+        <v-card>
+            <v-card-title>{{errMsg}}</v-card-title>
+            <v-card-text>
+                <v-btn color="error" @click="dialogErr=false">确定</v-btn>
+            </v-card-text>
+        </v-card>
+    </v-dialog>
+    <v-dialog
+        v-model="dialogNewGroup"
+        width="500">
+        <v-card>
+            <v-card-title>创建小组</v-card-title>
+            <v-card-text>
+                <v-form
+                    v-model="newGroupValid"
+                    ref="form"
+                >
+                    <v-text-field
+                    class="mr-5 ml-5"
+                    v-model="newGroupName"
+                    :rules="newGroupNameRules"
+                    label="groupName"
+                    clearable
+                    required
+                    flat
+                    outlined
+                ></v-text-field>
+                <v-btn
+                    class="mr-5 ml-5"
+                    color="success"
+                    :disabled="!newGroupValid"
+                    @click="confirmNewGroup"
+                >
+                确定
+                </v-btn>
+                
+                <v-btn
+                    class="mr-5 ml-5"
+                    color="error"
+                    @click="newGroupName='';dialogNewGroup=false;"
+                >
+                取消
+                </v-btn>
+                </v-form>
+            </v-card-text>
+        </v-card>
+    </v-dialog>
     <v-app-bar
         app
         clipped-left
@@ -20,7 +70,7 @@
       color="grey lighten-4"
     >
         <v-list shaped>
-            <v-subheader>GROUPS</v-subheader>
+            <v-subheader>GROUPS<v-spacer></v-spacer><v-icon @click="dialogNewGroup=true">mdi-plus</v-icon></v-subheader>      
             <v-list-item-group v-model="groupChosenIndex" 
                 color="primary" 
                 mandatory="mandatory"
@@ -39,16 +89,6 @@
     </v-navigation-drawer>
 
     <v-content>
-        <v-dialog
-        v-model="dialogErr"
-        width="500">
-            <v-card>
-                <v-card-title>{{errMsg}}</v-card-title>
-                <v-card-text>
-                  <v-btn color="error" @click="dialogErr=false">确定</v-btn>
-                </v-card-text>
-            </v-card>
-        </v-dialog>
       <v-container
       >
         <v-tabs>
@@ -261,12 +301,14 @@ export default {
             userId: 0,
             errMsg: "",
             dialogErr: false,
+            dialogNewGroup: false,
             drawer: true,
             groupChosenIndex: 1,//当前选中的组, 为groups列表的index。
             groupChosen: null,
             searchProject: 1,//项目列表中正在搜索的项目
             isLoading: true,
             mandatory: true,
+            newGroupValid: false,//新建小组输入内容是否合法
             teamMember: [
                 {id: 1, username: "leo", level: "1"},
                 {id: 2, username: "yzj", level: "0"}
@@ -285,7 +327,12 @@ export default {
                 {id: 4, leaderId: 333, name: "4", inviteCode: 234234}
 
 
-            ]
+            ],
+            newGroupNameRules:[
+                v => !!v || 'Name is required',
+                v => (v && v.length <= 10) || 'Name must be less than 10 characters',
+            ],
+            newGroupName: ""
         }
     }
     ,methods: {
@@ -325,6 +372,15 @@ export default {
             }).catch(err => {
                 this.Alert(err.response.data.errMsg);
             })
+        },
+        newGroup(){
+
+        },
+        //获取所有小组
+        getGroups(){
+            getAllGroup(this.userId).then(res => {
+                console.log(res);
+            }).catch(err => this.Alert(err.response.data.errMsg));
         }
     }
     ,mounted(){
@@ -332,9 +388,7 @@ export default {
         if(this.userId == 0){
             this.$router.push('/login');
         }
-        getAllGroup(this.userId).then(res => {
-            console.log(res);
-        }).catch(err => this.Alert(err.response.data.errMsg));
+        this.getGroups();
     }
 }
 </script>
