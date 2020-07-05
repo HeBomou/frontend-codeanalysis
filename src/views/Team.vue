@@ -71,7 +71,8 @@
     >
         <v-list shaped>
             <v-subheader>GROUPS<v-spacer></v-spacer><v-icon @click="dialogNewGroup=true">mdi-plus</v-icon></v-subheader>      
-            <v-list-item-group v-model="groupChosenIndex" 
+            <v-list-item-group 
+                v-model="groupChosenIndex" 
                 color="primary" 
                 mandatory="mandatory"
                 @change="change"
@@ -350,17 +351,21 @@ export default {
             this.$store.commit("setUserId", 0);
             this.$router.push('/login');
         },
+        //gourp side bar进行选择的事件回调函数
         change(val){
             //console.log(val);
-            this.groupChosen = this.groups.indexOf(val);
-            console.log(this.groupChosen);
+            this.selectGroup(this.groups[val].id);
+            //console.log(this.groupChosen);
         },
         /**
-         * 选择了某个小组，调用后端，更新页面显示的相关信息。
+         * 选择了某个小组，UI进行选择，调用后端，更新页面显示的相关信息。
          */
         selectGroup(groupId){
+            this.groupChosenIndex = this.groups.findIndex(item => item.id === groupId);
+            this.groupChosen = this.groups[this.groupChosenIndex];
+            console.log(this.groupChosen);
             getMembers(groupId).then(res => {
-                console.log(res);
+                //console.log(res);
                 //TODO:更新所有的小组相关信息
                 this.teamMember = res.data;
                 //获取小组公告
@@ -378,7 +383,8 @@ export default {
             getAllGroup(this.userId).then(res => {
                 console.log(res);
                 this.groups = res.data;
-            }).catch(err => this.Alert(err.response.data.errMsg));
+                this.selectGroup(this.groups[this.groups.length - 1].id);//由于考虑到新的组在最后，所以获取小组后默认选择最后一个
+            }).catch(err => this.Alert(err));
         },
         confirmNewGroup(){
             this.dialogNewGroup = false;
