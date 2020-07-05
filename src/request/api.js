@@ -232,3 +232,9 @@ export const getContacts = (userId) => get("/contact/" + userId);
  * @param {*} toUserId 
  */
 export const getMessages = (userId, toUserId) => get("/message?senderId=" + userId + "&receiverId=" + toUserId);
+
+/**
+ * 创建小组
+ * @param {*} group 
+ */
+export const postGroup = (group) => post("/group", group);

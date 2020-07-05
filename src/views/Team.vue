@@ -294,7 +294,7 @@
     
 </template>
 <script>
-import {getAllGroup, getMembers, getNotice} from "../request/api";
+import {getAllGroup, getMembers, getNotice, postGroup} from "../request/api";
 export default {
     data(){
         return {
@@ -373,14 +373,23 @@ export default {
                 this.Alert(err.response.data.errMsg);
             })
         },
-        newGroup(){
-
-        },
         //获取所有小组
         getGroups(){
             getAllGroup(this.userId).then(res => {
                 console.log(res);
+                this.groups = res.data;
             }).catch(err => this.Alert(err.response.data.errMsg));
+        },
+        confirmNewGroup(){
+            this.dialogNewGroup = false;
+            postGroup({leaderId: this.userId, name: this.newGroupName}).then(res => {
+                res;
+                this.newGroupName = "";
+                this.Alert("创建成功");
+                this.getGroups();
+            }).catch(err => {
+                this.Alert(err.response.data.errMsg);
+            })
         }
     }
     ,mounted(){
