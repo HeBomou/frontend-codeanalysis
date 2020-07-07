@@ -24,7 +24,7 @@
                     class="mr-5 ml-5"
                     v-model="newGroupName"
                     :rules="newGroupNameRules"
-                    label="groupName"
+                    label="Group Name"
                     clearable
                     required
                     flat
@@ -50,6 +50,39 @@
             </v-card-text>
         </v-card>
     </v-dialog>
+    <v-dialog
+        v-model="dialogJoinGroup"
+        width="500">
+        <v-card>
+            <v-card-title>加入小组</v-card-title>
+            <v-card-text>
+                <v-text-field
+                    class="mr-5 ml-5"
+                    v-model="joinGroupInviteCode"
+                    label="Group Name"
+                    clearable
+                    required
+                    flat
+                    outlined
+                ></v-text-field>
+                <v-btn
+                    class="mr-5 ml-5"
+                    color="success"
+                    @click="confirmJoinGroup"
+                >
+                确定
+                </v-btn>
+                
+                <v-btn
+                    class="mr-5 ml-5"
+                    color="error"
+                    @click="joinGroupName='';dialogJoinGroup=false;"
+                >
+                取消
+                </v-btn>
+            </v-card-text>
+        </v-card>
+    </v-dialog>
     <v-app-bar
         app
         clipped-left
@@ -59,6 +92,7 @@
             <v-spacer />
             <v-spacer />
             <v-spacer />
+            <v-btn @click="dialogJoinGroup=true" class="mr-5">加入小组</v-btn>
             <v-btn @click="toProject" class="mr-5">我的项目</v-btn>
             <v-btn @click="logout">退出登录</v-btn>
         </v-app-bar>
@@ -120,6 +154,7 @@
                                 <v-list>
                                     <v-list-item
                                         @click="debug()"
+                                        :disabled="item.level==='leader'"
                                     >
                                         <v-list-item-title>移除成员</v-list-item-title>
                                     </v-list-item>
@@ -303,6 +338,7 @@ export default {
             errMsg: "",
             dialogErr: false,
             dialogNewGroup: false,
+            dialogJoinGroup: false,
             drawer: true,
             groupChosenIndex: 1,//当前选中的组, 为groups列表的index。
             groupChosen: null,
@@ -333,7 +369,8 @@ export default {
                 v => !!v || 'Name is required',
                 v => (v && v.length <= 10) || 'Name must be less than 10 characters',
             ],
-            newGroupName: ""
+            newGroupName: "",
+            joinGroupInviteCode: "",
         }
     }
     ,methods: {
@@ -383,6 +420,9 @@ export default {
             getAllGroup(this.userId).then(res => {
                 console.log(res);
                 this.groups = res.data;
+                if(this.groups.length == 0){
+                    return;
+                }
                 this.selectGroup(this.groups[this.groups.length - 1].id);//由于考虑到新的组在最后，所以获取小组后默认选择最后一个
             }).catch(err => this.Alert(err));
         },
@@ -396,6 +436,9 @@ export default {
             }).catch(err => {
                 this.Alert(err.response.data.errMsg);
             })
+        },
+        confirmJoinGroup(){
+
         }
     }
     ,mounted(){
