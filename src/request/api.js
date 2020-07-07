@@ -245,4 +245,4 @@ export const postGroup = (group) => post("/group", group);
  * @param {*} userId 
  * @param {*} inviteCode 
  */
-export const postMember = (groupId, userId, inviteCode) => post("/group/" + groupId + "/add/" + userId, {inviteCode: inviteCode});
+export const postMember = (groupId, userId, inviteCode) => post("/group/" + groupId + "/add/" + userId + "?inviteCode=" + inviteCode);

@@ -35,8 +35,8 @@
         <v-card>
             <v-card-title>张雨奇邀请您加入小组 反共地下组织</v-card-title>
             <v-card-text>
-                <v-btn color="success" @click="dialogAdd=false" class="mr-5">确定</v-btn>
-                <v-btn color="error" @click="$router.push('/team')">同意</v-btn>
+                <v-btn color="success" @click="dialogAdd=false;confirmJoinGroup()" class="mr-5">确定</v-btn>
+                <v-btn color="error" @click="$router.push('/team')">拒绝</v-btn>
             </v-card-text>
         </v-card>
     </v-dialog>
@@ -48,7 +48,8 @@ export default {
     data(){
         return {
             errMsg: "",
-            dialogErr: true,
+            dialogErr: false,
+            dialogAdd: false,
             userId: 0,
             imageUrls: [
                 {
@@ -73,6 +74,14 @@ export default {
         Alert(msg){
             this.errMsg = msg;
             this.dialogErr = true;
+        },
+        confirmJoinGroup(){
+            postMember(this.$route.query.groupId, this.userId, this.$route.query.inviteCode).then(res => {
+                console.log(res);
+            }).catch(err => {
+                err;
+                this.Alert(err.response.data.errMsg);
+            })
         }
     },
     mounted(){
@@ -85,13 +94,7 @@ export default {
             this.Alert("组长的邀请链接有错误，请重新获取");
         }else{
             this.dialogAdd = true;
-            postMember(this.$route.query.groupId, this.userId, this.$route.query.inviteCode).then(res => {
-                console.log(res);
-            }).catch(err => {
-                err;
-                console.log(this.$route.query.inviteCode);
-                //this.Alert(err.response.data.errMsg);
-            })
+
         }
     },computed: {
       screenHeight() {
