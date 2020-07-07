@@ -150,7 +150,7 @@
                     </tr>
                 </thead>
                  <tbody>
-                    <tr>
+                    <tr v-if="user.level==='leader'">
                         <td></td>
                         <td><v-icon @click="setInvite">mdi-plus</v-icon></td>
                         <td></td>
@@ -362,7 +362,8 @@ export default {
             searchProject: 1,//项目列表中正在搜索的项目
             isLoading: true,
             mandatory: true,
-            newGroupValid: false,//新建小组输入内容是否合法
+            newGroupValid: false,//新建小组输入内容是否合法,
+            user: {},//当前用户在组中的身份
             teamMember: [
                 {id: 1, username: "leo", level: "1"},
                 {id: 2, username: "yzj", level: "0"}
@@ -423,6 +424,11 @@ export default {
                 //console.log(res);
                 //TODO:更新所有的小组相关信息
                 this.teamMember = res.data;
+
+                this.user = this.teamMember.find(item => {
+                    return item.id == this.userId;
+                });
+                console.log(this.user);
                 //获取小组公告
                 getNotice(this.groupChosen.id).then(res => {
                     this.notices = res.data;
