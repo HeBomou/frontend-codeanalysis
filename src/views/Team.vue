@@ -11,6 +11,17 @@
         </v-card>
     </v-dialog>
     <v-dialog
+        v-model="dialogInvite"
+        width="500">
+        <v-card>
+            <v-card-title>请复制以下链接发送到组员</v-card-title>
+            <v-card-text>
+                <p>{{inviteLink}}</p>
+                <v-btn color="error" @click="dialogInvite=false">确定</v-btn>
+            </v-card-text>
+        </v-card>
+    </v-dialog>
+    <v-dialog
         v-model="dialogNewGroup"
         width="500">
         <v-card>
@@ -139,6 +150,11 @@
                     </tr>
                 </thead>
                  <tbody>
+                    <tr>
+                        <td></td>
+                        <td><v-icon @click="setInvite">mdi-plus</v-icon></td>
+                        <td></td>
+                    </tr>
                     <tr v-for="item in teamMember" :key="item.name">
                         <td>{{ item.username }}</td>
                         <td>{{ item.level }}</td>
@@ -339,6 +355,7 @@ export default {
             dialogErr: false,
             dialogNewGroup: false,
             dialogJoinGroup: false,
+            dialogInvite: false,
             drawer: true,
             groupChosenIndex: 1,//当前选中的组, 为groups列表的index。
             groupChosen: null,
@@ -371,6 +388,7 @@ export default {
             ],
             newGroupName: "",
             joinGroupInviteCode: "",
+            inviteLink: ""
         }
     }
     ,methods: {
@@ -439,6 +457,10 @@ export default {
         },
         confirmJoinGroup(){
 
+        },
+        setInvite(){
+            this.dialogInvite = true;
+            this.inviteLink = window.location.host + "/#/invite?groupId=" + this.groupChosen.id + "&inviteCode=" + this.groupChosen.inviteCode;
         }
     }
     ,mounted(){
