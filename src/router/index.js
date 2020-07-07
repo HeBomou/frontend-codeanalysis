@@ -55,6 +55,15 @@ const routes = [
     }
 
   }, {
+    path: '/invite',
+    name: 'invite',
+    component: () => import("@/views/Invite.vue"),
+    meta: {
+      title: "invite",
+      keepAlive: true
+    }
+
+  }, {
     path: '/project',
     name: 'Project',
     component: () => import("@/views/Project.vue"),

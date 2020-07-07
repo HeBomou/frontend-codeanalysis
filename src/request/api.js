@@ -238,3 +238,11 @@ export const getMessages = (userId, toUserId) => get("/message?senderId=" + user
  * @param {*} group 
  */
 export const postGroup = (group) => post("/group", group);
+
+/**
+ * 添加某个组员到小组
+ * @param {*} groupId 
+ * @param {*} userId 
+ * @param {*} inviteCode 
+ */
+export const postMember = (groupId, userId, inviteCode) => post("/group/" + groupId + "/add/" + userId, {inviteCode: inviteCode});
