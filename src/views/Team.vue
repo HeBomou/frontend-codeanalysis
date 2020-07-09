@@ -170,34 +170,33 @@
                                 <v-list>
                                     <v-list-item
                                         @click="debug()"
-                                        :disabled="item.level==='leader' || user.level==='member'"
-                                        
+                                        :disabled="!hasHigherLevel(user.level, item.level)"
                                     >
                                         <v-list-item-title>移除成员</v-list-item-title>
                                     </v-list-item>
-                                        <v-menu top offset-x>
-                                            <template v-slot:activator="{ on, attrs }">
-                                                <v-list-item
-                                                    v-bind="attrs"
-                                                    v-on="on"
-                                                    :disabled="user.level==='member'"
-                                                >
-                                                    <v-list-item-title>更改权限</v-list-item-title>
-                                                </v-list-item>
-                                            </template>
-
-                                            <v-list
-                                                
+                                    <v-menu top offset-x>
+                                        <template v-slot:activator="{ on, attrs }">
+                                            <v-list-item
+                                                v-bind="attrs"
+                                                v-on="on"
+                                                :disabled="user.level!='leader'"
                                             >
-                                                <v-list-item
-                                                v-for="level in levels"
-                                                :key="level"
-                                                @click="debug1(level)"
-                                                >
-                                                <v-list-item-title>{{level}}</v-list-item-title>
-                                                </v-list-item>
-                                            </v-list>
-                                        </v-menu>
+                                                <v-list-item-title>更改权限</v-list-item-title>
+                                            </v-list-item>
+                                        </template>
+
+                                        <v-list
+                                            
+                                        >
+                                            <v-list-item
+                                            v-for="level in levels"
+                                            :key="level"
+                                            @click="changeLevel(item, level)"
+                                            >
+                                            <v-list-item-title>{{level}}</v-list-item-title>
+                                            </v-list-item>
+                                        </v-list>
+                                    </v-menu>
                                     <v-list-item
                                         @click="debug()"
                                     >
@@ -347,7 +346,7 @@
     
 </template>
 <script>
-import {getAllGroup, getMembers, getNotice, postGroup} from "../request/api";
+import {getAllGroup, getMembers, getNotice, postGroup, putMember} from "../request/api";
 export default {
     data(){
         return {
@@ -359,7 +358,7 @@ export default {
             dialogInvite: false,
             drawer: true,
             groupChosenIndex: 1,//当前选中的组, 为groups列表的index。
-            groupChosen: null,
+            groupChosen: {id: 123, leaderId: 234, name: "group haha", inviteCode: 123123},
             searchProject: 1,//项目列表中正在搜索的项目
             isLoading: true,
             mandatory: true,
@@ -369,9 +368,15 @@ export default {
                 "manager",
                 "member"
             ],
+            levelsTable: [
+                {level: "leader", index: 3},
+                {level: "manager", index: 2},
+                {level: "member", index: 1},
+
+            ],
             teamMember: [
-                {id: 1, username: "leo", level: "1"},
-                {id: 2, username: "yzj", level: "0"}
+                {id: 1, username: "leo", level: "manager"},
+                {id: 2, username: "yzj", level: "leader"}
             ],
             notices: [
                 {title: "标题1", person: "leo", date: "2020-1-1", content: "-孙哥，他们去恰烧烤\n-你说的他们⾸先是谁，去那⾥恰，什么时候去的，我⼀问三不知。就我都没去，你都知道的，我，我不知道你⼀直在那⼉问。这种⼈是不是脑淤⾎啊我发觉，就别⼈不知道的⼀直在那问，那我叫你说你⼜说不归⼀，说不清楚。你⾃⼰是不是语⾔表达能⼒特别差，还是⾃⼰的脑回路有问题嘛。"},
@@ -478,6 +483,24 @@ export default {
             this.inviteLink = window.location.host + "/#/invite?groupId=" + this.groupChosen.id + "&inviteCode=" + this.groupChosen.inviteCode + "&groupName=" + escape(this.groupChosen.name) + "&leader=" + this.user.username;
             this.inviteLink = this.inviteLink.replace(/%/g, '%25');
             
+        },
+        changeLevel(user, level){
+            putMember(this.groupChosen.id, user.id, level).then(res => {
+                res;
+                this.teamMember.find(item => item.id == user.id).level = level;
+            }).catch(err => {
+                console.log(err);
+                this.Alert(err.response.data.errMsg);
+            })
+        },
+        hasHigherLevel(from, to){
+            let index1 = this.getLevelIndex(from);
+            let index2 = this.getLevelIndex(to);
+            return index1 > index2;
+        },
+        getLevelIndex(level){
+            let levelr = this.levelsTable.find(item => item.level == level);
+            return levelr.index;
         }
     }
     ,mounted(){

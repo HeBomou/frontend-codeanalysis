@@ -246,3 +246,11 @@ export const postGroup = (group) => post("/group", group);
  * @param {*} inviteCode 
  */
 export const postMember = (groupId, userId, inviteCode) => post("/group/" + groupId + "/add/" + userId + "?inviteCode=" + inviteCode);
+
+/**
+ * 修改组员权限
+ * @param {*} groupId 
+ * @param {*} userId 
+ * @param {*} level 
+ */
+export const putMember = (groupId, userId, level) => put("/group/" + groupId + "/authority/" + userId + "?level=" + level);
