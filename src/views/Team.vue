@@ -170,7 +170,8 @@
                                 <v-list>
                                     <v-list-item
                                         @click="debug()"
-                                        :disabled="item.level==='leader'"
+                                        :disabled="item.level==='leader' || user.level==='member'"
+                                        
                                     >
                                         <v-list-item-title>移除成员</v-list-item-title>
                                     </v-list-item>
@@ -179,21 +180,21 @@
                                                 <v-list-item
                                                     v-bind="attrs"
                                                     v-on="on"
+                                                    :disabled="user.level==='member'"
                                                 >
                                                     <v-list-item-title>更改权限</v-list-item-title>
                                                 </v-list-item>
                                             </template>
 
-                                            <v-list>
+                                            <v-list
+                                                
+                                            >
                                                 <v-list-item
-                                                    @click="debug()"
+                                                v-for="level in levels"
+                                                :key="level"
+                                                @click="debug1(level)"
                                                 >
-                                                <v-list-item-title>权限1</v-list-item-title>
-                                                </v-list-item>
-                                                <v-list-item
-                                                    @click="debug()"
-                                                >
-                                                <v-list-item-title>权限2</v-list-item-title>
+                                                <v-list-item-title>{{level}}</v-list-item-title>
                                                 </v-list-item>
                                             </v-list>
                                         </v-menu>
@@ -364,6 +365,10 @@ export default {
             mandatory: true,
             newGroupValid: false,//新建小组输入内容是否合法,
             user: {id: 0, username: "leo", level: "manager"},//当前用户在组中的身份
+            levels: [
+                "manager",
+                "member"
+            ],
             teamMember: [
                 {id: 1, username: "leo", level: "1"},
                 {id: 2, username: "yzj", level: "0"}
@@ -403,6 +408,10 @@ export default {
         debug(){
             console.log(this.groupChosenIndex);
         },
+        debug1(haha){
+            console.log(haha);
+        }
+        ,
         logout(){
             this.$store.commit("setUserId", 0);
             this.$router.push('/login');
