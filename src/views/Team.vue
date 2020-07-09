@@ -61,25 +61,16 @@
             </v-card-text>
         </v-card>
     </v-dialog>
-    <v-dialog
-        v-model="dialogJoinGroup"
+        <v-dialog
+        v-model="dialogDeleteGroup"
         width="500">
         <v-card>
-            <v-card-title>加入小组</v-card-title>
+            <v-card-title>删除小组"{{groupTobeDeleted.name}}"?</v-card-title>
             <v-card-text>
-                <v-text-field
-                    class="mr-5 ml-5"
-                    v-model="joinGroupInviteCode"
-                    label="Group Name"
-                    clearable
-                    required
-                    flat
-                    outlined
-                ></v-text-field>
                 <v-btn
                     class="mr-5 ml-5"
                     color="success"
-                    @click="confirmJoinGroup"
+                    @click="deleteGroup(groupTobeDeleted);dialogDeleteGroup=false"
                 >
                 确定
                 </v-btn>
@@ -87,7 +78,7 @@
                 <v-btn
                     class="mr-5 ml-5"
                     color="error"
-                    @click="joinGroupName='';dialogJoinGroup=false;"
+                    @click="dialogDeleteGroup=false"
                 >
                 取消
                 </v-btn>
@@ -103,7 +94,6 @@
             <v-spacer />
             <v-spacer />
             <v-spacer />
-            <v-btn @click="dialogJoinGroup=true" class="mr-5">加入小组</v-btn>
             <v-btn @click="toProject" class="mr-5">我的项目</v-btn>
             <v-btn @click="logout">退出登录</v-btn>
         </v-app-bar>
@@ -126,9 +116,12 @@
                 v-for="(item, i) in groups"
                 :key="i"
                 >
-                <v-list-item-content>
-                    <v-list-item-title v-text="item.name"></v-list-item-title>
-                </v-list-item-content>
+                    <v-list-item-content>
+                        <v-list-item-title v-text="item.name"></v-list-item-title>
+                    </v-list-item-content>
+                    <v-list-item-icon @click="dialogDeleteGroup=true;groupTobeDeleted=item">
+                        <v-icon>mdi-delete</v-icon>
+                    </v-list-item-icon>
                 </v-list-item>
             </v-list-item-group>
         </v-list>
@@ -169,7 +162,7 @@
                                 </template>
                                 <v-list>
                                     <v-list-item
-                                        @click="debug()"
+                                        @click="deleteMember(item)"
                                         :disabled="!hasHigherLevel(user.level, item.level)"
                                     >
                                         <v-list-item-title>移除成员</v-list-item-title>
@@ -346,7 +339,7 @@
     
 </template>
 <script>
-import {getAllGroup, getMembers, getNotice, postGroup, putMember} from "../request/api";
+import {getAllGroup, getMembers, getNotice, postGroup, putMember, API} from "../request/api";
 export default {
     data(){
         return {
@@ -354,8 +347,9 @@ export default {
             errMsg: "",
             dialogErr: false,
             dialogNewGroup: false,
-            dialogJoinGroup: false,
             dialogInvite: false,
+            dialogDeleteGroup: false,
+            groupTobeDeleted:{},
             drawer: true,
             groupChosenIndex: 1,//当前选中的组, 为groups列表的index。
             groupChosen: {id: 123, leaderId: 234, name: "group haha", inviteCode: 123123},
@@ -433,7 +427,7 @@ export default {
         selectGroup(groupId){
             this.groupChosenIndex = this.groups.findIndex(item => item.id === groupId);
             this.groupChosen = this.groups[this.groupChosenIndex];
-            console.log(this.groupChosen);
+            //console.log(this.groupChosen);
             getMembers(groupId).then(res => {
                 //console.log(res);
                 //TODO:更新所有的小组相关信息
@@ -442,7 +436,7 @@ export default {
                 this.user = this.teamMember.find(item => {
                     return item.id == this.userId;
                 });
-                console.log(this.user);
+                //console.log(this.user);
                 //获取小组公告
                 getNotice(this.groupChosen.id).then(res => {
                     this.notices = res.data;
@@ -501,6 +495,21 @@ export default {
         getLevelIndex(level){
             let levelr = this.levelsTable.find(item => item.level == level);
             return levelr.index;
+        },
+        deleteMember(user){
+            API.deleteMember(this.groupChosen.id, user.id).then(res => {
+                console.log(res);
+            }).catch(err => {
+                console.log(err);
+            })
+        },
+        deleteGroup(item){
+            API.deleteGroup(item.id).then(res => {
+                console.log(res);
+                this.getGroups();
+            }).catch(err => {
+                this.Alert(err.response.data.errMsg);
+            })
         }
     }
     ,mounted(){

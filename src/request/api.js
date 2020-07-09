@@ -254,3 +254,18 @@ export const postMember = (groupId, userId, inviteCode) => post("/group/" + grou
  * @param {*} level 
  */
 export const putMember = (groupId, userId, level) => put("/group/" + groupId + "/authority/" + userId + "?level=" + level);
+
+export const API = {
+    /**
+     * 删除组员
+     * @param {*} groupId 
+     * @param {*} userId 
+     */
+    deleteMember: (groupId, userId) => del("/group/" + groupId + "/remove/" + userId),
+
+    /**
+     * 删除小组
+     */
+    deleteGroup: (groupId) => del("/group/" + groupId),
+}
+
