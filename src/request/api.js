@@ -268,6 +268,11 @@ export const API = {
      * 获取小组公告
      * @param {*} groupId 
      */
-    getNotice: (groupId) => get("/group/notice/" + groupId)
+    getNotice: (groupId) => get("/group/notice/" + groupId),
+
+    /**
+     * 添加公告
+     */
+    postNotice: (notice) => post("/group/notice", notice),
 }
 

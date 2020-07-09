@@ -62,7 +62,7 @@
                 </v-card-text>
             </v-card>
         </v-dialog>
-            <v-dialog
+        <v-dialog
             v-model="dialogDeleteGroup"
             width="500">
             <v-card>
@@ -83,6 +83,52 @@
                     >
                     取消
                     </v-btn>
+                </v-card-text>
+            </v-card>
+        </v-dialog>
+        <v-dialog
+            v-model="dialogNewNotice"
+            width="500">
+            <v-card>
+                <v-card-title>新建公告</v-card-title>
+                <v-card-text>
+                    <v-form
+                        v-model="newNoticeValid"
+                        ref="form"
+                    >
+                        <v-text-field
+                            v-model="newNoticeTitle"
+                            :rules="newNoticeRules.newNoticeTitleRules"
+                            label="标题"
+                            clearable
+                            required
+                            flat
+                            outlined
+                        ></v-text-field>
+                        <v-textarea
+                            v-model="newNoticeText"
+                            :rules="newNoticeRules.newNoticeTextRules"
+                            label="公告内容"
+                            required
+                            flat
+                            outlined
+                        ></v-textarea>
+                        <v-btn
+                            class="mr-5 ml-5"
+                            color="success"
+                            :disabled="!newNoticeValid"
+                            @click="confirmNewNotice"
+                        >
+                        确定
+                        </v-btn>
+                        
+                        <v-btn
+                            class="mr-5 ml-5"
+                            color="error"
+                        >
+                        取消
+                        </v-btn>
+                    </v-form>
                 </v-card-text>
             </v-card>
         </v-dialog>
@@ -194,7 +240,7 @@
                                         </v-list>
                                     </v-menu>
                                     <v-list-item
-                                        @click="debug()"
+                                        @click="chatTo(item)"
                                     >
                                         <v-list-item-title>私聊</v-list-item-title>
                                     </v-list-item>
@@ -322,16 +368,22 @@
         <v-tab-item>
             <!-- 小组公告 -->
             
-            <v-list
-
-                
-            >
+            <v-list>
+                <v-list-item>
+                    <v-card style="width:1000%" class="ml-10 mr-10 mt-10" justify="center" align="center" @click="dialogNewNotice=true">
+                        <v-col cols="5"></v-col>
+                        <v-col cols="2">
+                            <v-card-title><v-icon>mdi-plus</v-icon></v-card-title>
+                        </v-col>
+                        <v-col cols="5"></v-col>
+                    </v-card>
+                </v-list-item>
                 <v-list-item
                 v-for="(notice, i) in notices"
                 :key="i"
                 >
                     <v-card style="width:1000%" class="ml-10 mr-10 mt-10">
-                        <v-card-title>{{notice.title}}   <v-spacer />发布者：{{notice.person}}<v-spacer />时间:{{notice.date}} </v-card-title>
+                        <v-card-title>{{notice.title}}   <v-spacer />发布者：{{notice.person}}<v-spacer />时间:{{notice.time}} </v-card-title>
                         <v-card-text><div class="text-wrapper">{{notice.content}}</div></v-card-text>
                     </v-card>
                 </v-list-item>
@@ -354,6 +406,7 @@ export default {
             dialogNewGroup: false,
             dialogInvite: false,
             dialogDeleteGroup: false,
+            dialogNewNotice: false,
             groupTobeDeleted:{},
             drawer: true,
             groupChosenIndex: 1,//当前选中的组, 为groups列表的index。
@@ -363,6 +416,18 @@ export default {
             mandatory: true,
             newGroupValid: false,//新建小组输入内容是否合法,
             user: {id: 0, username: "leo", level: "manager"},//当前用户在组中的身份
+            newNoticeValid: true,
+            newNoticeTitle: "",
+            newNoticeText:"",
+            newNoticeRules:{
+                newNoticeTitleRules:[
+                    v => !!v || 'title is required',
+                    v => (v && v.length <= 10) || 'title must be less than 10 characters',
+                ],
+                newNoticeTextRules:[
+                    v => !!v || 'text is required',
+                ]
+            },
             levels: [
                 "manager",
                 "member"
@@ -378,8 +443,8 @@ export default {
                 {id: 2, username: "yzj", level: "leader"}
             ],
             notices: [
-                {title: "标题1", person: "leo", date: "2020-1-1", content: "-孙哥，他们去恰烧烤\n-你说的他们⾸先是谁，去那⾥恰，什么时候去的，我⼀问三不知。就我都没去，你都知道的，我，我不知道你⼀直在那⼉问。这种⼈是不是脑淤⾎啊我发觉，就别⼈不知道的⼀直在那问，那我叫你说你⼜说不归⼀，说不清楚。你⾃⼰是不是语⾔表达能⼒特别差，还是⾃⼰的脑回路有问题嘛。"},
-                {title: "标题2", person: "yzj", date: "2020-1-1", content: "1111111111111111111111111          "}
+                {title: "标题1", person: "leo", time: "2020-1-1", content: "-孙哥，他们去恰烧烤\n-你说的他们⾸先是谁，去那⾥恰，什么时候去的，我⼀问三不知。就我都没去，你都知道的，我，我不知道你⼀直在那⼉问。这种⼈是不是脑淤⾎啊我发觉，就别⼈不知道的⼀直在那问，那我叫你说你⼜说不归⼀，说不清楚。你⾃⼰是不是语⾔表达能⼒特别差，还是⾃⼰的脑回路有问题嘛。"},
+                {title: "标题2", person: "yzj", time: "2020-1-1", content: "1111111111111111111111111          "},
             ],
             tasks: [
                 {name: "foo", ddl:"2020-1-1", person:"leo"}
@@ -443,11 +508,14 @@ export default {
                 });
                 //console.log(this.user);
                 //获取小组公告
-                // getNotice(this.groupChosen.id).then(res => {
-                //     this.notices = res.data;
-                // }).catch(err => {
-                //     this.Alert(err.response.data.errMsg);
-                // })
+                this.getNotice();
+            }).catch(err => {
+                this.Alert(err.response.data.errMsg);
+            })
+        },
+        getNotice(){
+            API.getNotice(this.groupChosen.id).then(res => {
+                this.notices = res.data;
             }).catch(err => {
                 this.Alert(err.response.data.errMsg);
             })
@@ -515,6 +583,28 @@ export default {
             }).catch(err => {
                 this.Alert(err.response.data.errMsg);
             })
+        },
+        confirmNewNotice(){
+            var myDate = new Date();
+            API.postNotice({
+                id: 0,
+                groupId: this.groupChosen.id,
+                title: this.newNoticeTitle,
+                content: this.newNoticeText,
+                time: myDate.getFullYear() + "-" + (myDate.getMonth() + 1) + "-" + myDate.getDate()
+            }).then(res => {
+                console.log(res);
+                this.getNotice();
+            }).catch(err => {
+                this.Alert(err.response.data.errMsg);
+            })
+        },
+        chatTo(item){
+            let routeUrl = this.$router.resolve({
+                path: "/chat",
+                query: {newContact:item.id}
+            });
+            window.open(routeUrl.href, '_blank');
         }
     }
     ,mounted(){
