@@ -182,7 +182,7 @@
                         </template>
                         <template v-slot:item.id="props">
                             
-                            <v-icon @click="toProject(props.item.id)">mdi-plus</v-icon>
+                            <v-icon @click="toProject(props.item.id)">mdi-search</v-icon>
                         </template>
                         <template v-slot:item.pid="props">
                             <v-btn @click="deleteProject(props.item.id)">删除</v-btn>

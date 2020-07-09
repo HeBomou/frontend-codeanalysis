@@ -70,7 +70,8 @@ export default new Vuex.Store({
       state.adminName = data;
     },
     initProject(state, data) {
-      state.projectId = data.dynamicVo.projectName;
+      state.projectId = data.dynamicVo.id;
+      state.projectName = data.dynamicVo.projectName;
       state.project.vertexMap.clear();
       state.project.edgeMap.clear();
       state.project.connectiveDomainMap.clear();
