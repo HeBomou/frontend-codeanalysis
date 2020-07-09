@@ -214,11 +214,6 @@ export const getAllGroup = (userId) => get("/group/getgroup/" + userId);
  */
 export const getMembers = (groupId) => get("/group/getuser/" + groupId);
 
-/**
- * 获取小组公告
- * @param {*} groupId 
- */
-export const getNotice = (groupId) => get("/group/notice/" + groupId);
 
 /**
  * 获取联系人列表
@@ -267,5 +262,12 @@ export const API = {
      * 删除小组
      */
     deleteGroup: (groupId) => del("/group/" + groupId),
+
+
+    /**
+     * 获取小组公告
+     * @param {*} groupId 
+     */
+    getNotice: (groupId) => get("/group/notice/" + groupId)
 }
 

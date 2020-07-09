@@ -1,90 +1,93 @@
 <template>
 <v-app id="keep">
-    <v-dialog
-        v-model="dialogErr"
-        width="500">
-        <v-card>
-            <v-card-title>{{errMsg}}</v-card-title>
-            <v-card-text>
-                <v-btn color="error" @click="dialogErr=false">确定</v-btn>
-            </v-card-text>
-        </v-card>
-    </v-dialog>
-    <v-dialog
-        v-model="dialogInvite"
-        width="500">
-        <v-card>
-            <v-card-title>请复制以下链接发送到组员</v-card-title>
-            <v-card-text>
-                <p>{{inviteLink}}</p>
-                <v-btn color="error" @click="dialogInvite=false">确定</v-btn>
-            </v-card-text>
-        </v-card>
-    </v-dialog>
-    <v-dialog
-        v-model="dialogNewGroup"
-        width="500">
-        <v-card>
-            <v-card-title>创建小组</v-card-title>
-            <v-card-text>
-                <v-form
-                    v-model="newGroupValid"
-                    ref="form"
-                >
-                    <v-text-field
-                    class="mr-5 ml-5"
-                    v-model="newGroupName"
-                    :rules="newGroupNameRules"
-                    label="Group Name"
-                    clearable
-                    required
-                    flat
-                    outlined
-                ></v-text-field>
-                <v-btn
-                    class="mr-5 ml-5"
-                    color="success"
-                    :disabled="!newGroupValid"
-                    @click="confirmNewGroup"
-                >
-                确定
-                </v-btn>
-                
-                <v-btn
-                    class="mr-5 ml-5"
-                    color="error"
-                    @click="newGroupName='';dialogNewGroup=false;"
-                >
-                取消
-                </v-btn>
-                </v-form>
-            </v-card-text>
-        </v-card>
-    </v-dialog>
+    <div>
         <v-dialog
-        v-model="dialogDeleteGroup"
-        width="500">
-        <v-card>
-            <v-card-title>删除小组"{{groupTobeDeleted.name}}"?</v-card-title>
-            <v-card-text>
-                <v-btn
-                    class="mr-5 ml-5"
-                    color="success"
-                    @click="deleteGroup(groupTobeDeleted);dialogDeleteGroup=false"
-                >
-                确定
-                </v-btn>
-                
-                <v-btn
-                    class="mr-5 ml-5"
-                    color="error"
-                    @click="dialogDeleteGroup=false"
-                >
-                取消
-                </v-btn>
-            </v-card-text>
-        </v-card>
-    </v-dialog>
+            v-model="dialogErr"
+            width="500">
+            <v-card>
+                <v-card-title>{{errMsg}}</v-card-title>
+                <v-card-text>
+                    <v-btn color="error" @click="dialogErr=false">确定</v-btn>
+                </v-card-text>
+            </v-card>
+        </v-dialog>
+        <v-dialog
+            v-model="dialogInvite"
+            width="500">
+            <v-card>
+                <v-card-title>请复制以下链接发送到组员</v-card-title>
+                <v-card-text>
+                    <p>{{inviteLink}}</p>
+                    <v-btn color="error" @click="dialogInvite=false">确定</v-btn>
+                </v-card-text>
+            </v-card>
+        </v-dialog>
+        <v-dialog
+            v-model="dialogNewGroup"
+            width="500">
+            <v-card>
+                <v-card-title>创建小组</v-card-title>
+                <v-card-text>
+                    <v-form
+                        v-model="newGroupValid"
+                        ref="form"
+                    >
+                        <v-text-field
+                        class="mr-5 ml-5"
+                        v-model="newGroupName"
+                        :rules="newGroupNameRules"
+                        label="Group Name"
+                        clearable
+                        required
+                        flat
+                        outlined
+                    ></v-text-field>
+                    <v-btn
+                        class="mr-5 ml-5"
+                        color="success"
+                        :disabled="!newGroupValid"
+                        @click="confirmNewGroup"
+                    >
+                    确定
+                    </v-btn>
+                    
+                    <v-btn
+                        class="mr-5 ml-5"
+                        color="error"
+                        @click="newGroupName='';dialogNewGroup=false;"
+                    >
+                    取消
+                    </v-btn>
+                    </v-form>
+                </v-card-text>
+            </v-card>
+        </v-dialog>
+            <v-dialog
+            v-model="dialogDeleteGroup"
+            width="500">
+            <v-card>
+                <v-card-title>删除小组"{{groupTobeDeleted.name}}"?</v-card-title>
+                <v-card-text>
+                    <v-btn
+                        class="mr-5 ml-5"
+                        color="success"
+                        @click="deleteGroup(groupTobeDeleted);dialogDeleteGroup=false"
+                    >
+                    确定
+                    </v-btn>
+                    
+                    <v-btn
+                        class="mr-5 ml-5"
+                        color="error"
+                        @click="dialogDeleteGroup=false"
+                    >
+                    取消
+                    </v-btn>
+                </v-card-text>
+            </v-card>
+        </v-dialog>
+    </div>
+    
     <v-app-bar
         app
         clipped-left
@@ -320,14 +323,16 @@
             <!-- 小组公告 -->
             
             <v-list
-                v-for="(notice, i) in notices"
-                :key="i"
+
                 
             >
-                <v-list-item>
-                    <v-card style="width:1000%" class="ml-10 mr-10">
+                <v-list-item
+                v-for="(notice, i) in notices"
+                :key="i"
+                >
+                    <v-card style="width:1000%" class="ml-10 mr-10 mt-10">
                         <v-card-title>{{notice.title}}   <v-spacer />发布者：{{notice.person}}<v-spacer />时间:{{notice.date}} </v-card-title>
-                        <v-card-text>{{notice.content}}</v-card-text>
+                        <v-card-text><div class="text-wrapper">{{notice.content}}</div></v-card-text>
                     </v-card>
                 </v-list-item>
             </v-list>
@@ -339,7 +344,7 @@
     
 </template>
 <script>
-import {getAllGroup, getMembers, getNotice, postGroup, putMember, API} from "../request/api";
+import {getAllGroup, getMembers, postGroup, putMember, API} from "../request/api";
 export default {
     data(){
         return {
@@ -438,11 +443,11 @@ export default {
                 });
                 //console.log(this.user);
                 //获取小组公告
-                getNotice(this.groupChosen.id).then(res => {
-                    this.notices = res.data;
-                }).catch(err => {
-                    this.Alert(err.response.data.errMsg);
-                })
+                // getNotice(this.groupChosen.id).then(res => {
+                //     this.notices = res.data;
+                // }).catch(err => {
+                //     this.Alert(err.response.data.errMsg);
+                // })
             }).catch(err => {
                 this.Alert(err.response.data.errMsg);
             })
@@ -521,3 +526,8 @@ export default {
     }
 }
 </script>
+<style scoped>
+.text-wrapper {
+  white-space: pre-wrap;
+}
+</style>
