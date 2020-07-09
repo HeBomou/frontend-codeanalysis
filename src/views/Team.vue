@@ -363,7 +363,7 @@ export default {
             isLoading: true,
             mandatory: true,
             newGroupValid: false,//新建小组输入内容是否合法,
-            user: {},//当前用户在组中的身份
+            user: {id: 0, username: "leo", level: "manager"},//当前用户在组中的身份
             teamMember: [
                 {id: 1, username: "leo", level: "1"},
                 {id: 2, username: "yzj", level: "0"}
@@ -466,7 +466,9 @@ export default {
         },
         setInvite(){
             this.dialogInvite = true;
-            this.inviteLink = window.location.host + "/#/invite?groupId=" + this.groupChosen.id + "&inviteCode=" + this.groupChosen.inviteCode;
+            this.inviteLink = window.location.host + "/#/invite?groupId=" + this.groupChosen.id + "&inviteCode=" + this.groupChosen.inviteCode + "&groupName=" + escape(this.groupChosen.name) + "&leader=" + this.user.username;
+            this.inviteLink = this.inviteLink.replace(/%/g, '%25');
+            
         }
     }
     ,mounted(){
