@@ -1,7 +1,5 @@
 <template>
   <div>
-
-    <a href="inviteLink"/>
   </div>
 </template>
 
@@ -11,8 +9,11 @@
 
     },
     mounted(){
-      console.log(this.$route.params);
-      console.log(this.$route.query.haha);
+      let m = new Map([
+        [1, {id: 1, haha: 2}], [2, {id: 3, haha:4}]
+      ]);
+      //let haha = m.find(i => i.value.haha == 4);
+      console.log(m.get(3));
     }
   }
 </script>

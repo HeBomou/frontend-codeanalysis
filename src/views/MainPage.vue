@@ -591,6 +591,7 @@ export default {
         if (subgraph.threshold == 0) {
           //console.log(subgraph.id);
           this.subgraphId = subgraph.id;
+          this.$store.commit("selectSubgraph", this.subgraphId);
         }
       });
       //设置基本信息
@@ -869,6 +870,8 @@ export default {
       });
       this.subgraphId = sg.id;
 
+      this.$store.commit("selectSubgraph", this.subgraphId);
+
       //重置搜索顶点的所有名称
       this.vertexs = [];
 
@@ -971,6 +974,7 @@ export default {
       })
       .catch(err => {
         this.overlay = false;
+        console.log(err);
         this.Alert(err.response.data.errMsg);
         
       });

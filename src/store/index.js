@@ -15,7 +15,20 @@ export default new Vuex.Store({
         [1, { id: 1, fromId: 1, toId: 1, closeness: 1, anotation: "edge 1" }],
       ]),
       connectiveDomainMap: new Map([
-        [1, { id: 1, anotation: "hello", color: "#8DB6CD", vertexIds: [1], edgeIds: [1] }],
+        [1, { id: 1, anotation: "hello", color: "#8DB6CD", vertexIds: [1], edgeIds: [1], 
+          dynamicVo: {id: 1, name: "haha", vertices:[{
+            "id": 1,
+            "subgraphId": 1,
+            "x": -423.32,
+            "y": -423.32
+        },
+        {
+            "id": 2,
+            "subgraphId": 1,
+            "x": -423.32,
+            "y": -183.32
+        }]} 
+        }],
       ]),
       initGraphTracker: 0,
       connectiveDomainMapColorChangeTracker: 0,
@@ -76,13 +89,17 @@ export default new Vuex.Store({
       state.project.edgeMap.clear();
       state.project.connectiveDomainMap.clear();
       state.project.subgraphMap.clear();
-      // ////console.log("vertex:");
+      //console.log("vertex:");
 
       data.vertices.forEach(vertex => {
-
+        let anotation = "";
+        if(vertex.dynamicVo != null){
+          anotation = vertex.dynamicVo.anotation;
+        }
         state.project.vertexMap.set(vertex.id, {
-          id: vertex.id, functionName: vertex.functionName, sourceCode: vertex.sourceCode, anotation: vertex.dynamicVo.anotation, x: vertex.dynamicVo.x, y: vertex.dynamicVo.y
+          id: vertex.id, functionName: vertex.functionName, sourceCode: vertex.sourceCode, anotation: anotation, x: 0, y: 0
         });
+        
         // ////console.log(vertex);
       });
 
@@ -113,8 +130,8 @@ export default new Vuex.Store({
         state.project.subgraphMap.set(subgraph.id, {
           id: subgraph.id,
           threshold: subgraph.threshold,
-          connectiveDomainIds: domainId
-
+          connectiveDomainIds: domainId,
+          dynamicVo: subgraph.dynamicVo
         });
       });
 
@@ -133,6 +150,13 @@ export default new Vuex.Store({
       state.project.connectiveDomainMap.set(domain.id, domain);
     }, rojectRawData(state, data){
       state.projectRawData = data;
+    }, selectSubgraph(state, subgraphId){
+      //选择某个subgraph，更换点的坐标位置
+      state.project.subgraphMap.get(subgraphId).dynamicVo.vertices.forEach(v => {
+        let vertex = state.project.vertexMap.get(v.id);
+        vertex.x = v.x;
+        vertex.y = v.y;
+      });
     }
   },
   actions: {
