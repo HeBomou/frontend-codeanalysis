@@ -253,7 +253,8 @@ import {
   addSubgraph,
   putConnectiveDomain,
   putConnectiveDomainPosition,
-  delSubgraph
+  delSubgraph,
+  API
 } from "../request/api";
 //import {} from "../request/api";
 //import SearchComponent from '../components/SearchAuto'
@@ -496,8 +497,20 @@ export default {
         .catch(err => {
           this.Alert(err.response.data.errMsg);
         });
+    },updateVertexPos(vertex){
+      this.$store.commit("updateVertexPos", {vertex: vertex, subgraphId:this.subgraphId});
+      API.putVertexPosition(this.projectId, {
+        id: vertex.id,
+        subgraphId: this.subgraphId,
+        x: vertex.x,
+        y: vertex.y
+      }).then(res => {
+        console.log(res);
+      }).catch(err => {
+        this.Alert(err.response.data.errMsg);
+      })
     },
-    //更新顶点，对store和后端进行更新
+    //更新顶点(非位置信息)，对store和后端进行更新
     updateVertex(vertex) {
       this.$store.commit("updateVertex", vertex);
       //console.log("update vertex");
@@ -510,8 +523,6 @@ export default {
       putVertex(this.projectId, vertex.id, {
         id: vertex.id,
         anotation: vertex.anotation,
-        x: vertex.x,
-        y: vertex.y
       })
         .then(res => {
           console.log(res);
@@ -831,7 +842,7 @@ export default {
     //图中的点被移动
     vertexMoved(vertex) {
       //console.log("vertex moved");
-      this.updateVertex(this.$store.state.project.vertexMap.get(vertex.id));
+      this.updateVertexPos(this.$store.state.project.vertexMap.get(vertex.id));
     },
     selectPath(path) {
       //console.log(path);

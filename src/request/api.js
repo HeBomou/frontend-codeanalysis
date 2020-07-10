@@ -274,5 +274,7 @@ export const API = {
      * 添加公告
      */
     postNotice: (notice) => post("/group/notice", notice),
+
+    putVertexPosition: (projectId, vertexPositionDynamicVo) => put("/project/" + projectId + "/subgraph/" + vertexPositionDynamicVo.subgraphId + "/vertex/" + vertexPositionDynamicVo.id + "/position", vertexPositionDynamicVo)
 }
 

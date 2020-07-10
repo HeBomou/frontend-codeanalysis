@@ -15,25 +15,12 @@ export default new Vuex.Store({
         [1, { id: 1, fromId: 1, toId: 1, closeness: 1, anotation: "edge 1" }],
       ]),
       connectiveDomainMap: new Map([
-        [1, { id: 1, anotation: "hello", color: "#8DB6CD", vertexIds: [1], edgeIds: [1], 
-          dynamicVo: {id: 1, name: "haha", vertices:[{
-            "id": 1,
-            "subgraphId": 1,
-            "x": -423.32,
-            "y": -423.32
-        },
-        {
-            "id": 2,
-            "subgraphId": 1,
-            "x": -423.32,
-            "y": -183.32
-        }]} 
-        }],
-      ]),
+        [1, { id: 1, anotation: "hello", color: "#8DB6CD", vertexIds: [1], edgeIds: [1]}
+      ]]),
       initGraphTracker: 0,
       connectiveDomainMapColorChangeTracker: 0,
       subgraphMap: new Map([
-        [1, { id: 1, threshold: 0, name: "Default", connectiveDomainIds: [1] }],
+        [1, { id: 1, threshold: 0, name: "Default", connectiveDomainIds: [1], dynamicVo: {id: 1, name: "Default", vertices: [{id: 1, subgraphId: 1, x: 0, y: 0}]} }],
       ])
     },
     userId: 0,
@@ -67,18 +54,18 @@ export default new Vuex.Store({
       localStorage.projectId = pid;
     }, addSubGraph(state, subgraph) {
       let domainId = [];
-      subgraph.connectiveDomains.forEach(domain => {
-        domainId.push(domain.id);
-        state.project.connectiveDomainMap.set(domain.id, {
-          id: domain.id, anotation: domain.domainDynamicVo.anotation, color: domain.domainDynamicVo.color, vertexIds: domain.vertexIds, edgeIds: domain.edgeIds
-        })
-      })
-      state.project.subgraphMap.set(subgraph.id, {
-        id: subgraph.id,
-        threshold: subgraph.threshold,
-        connectiveDomainIds: domainId
-
-      });
+        subgraph.connectiveDomains.forEach(domain => {
+          domainId.push(domain.id);
+          state.project.connectiveDomainMap.set(domain.id, {
+            id: domain.id, anotation: domain.domainDynamicVo.anotation, color: domain.domainDynamicVo.color, vertexIds: domain.vertexIds, edgeIds: domain.edgeIds
+          });
+        });
+        state.project.subgraphMap.set(subgraph.id, {
+          id: subgraph.id,
+          threshold: subgraph.threshold,
+          connectiveDomainIds: domainId,
+          dynamicVo: subgraph.dynamicVo
+        });
     },setAdminName(state, data){
       state.adminName = data;
     },
@@ -143,7 +130,14 @@ export default new Vuex.Store({
       // ////console.log(state.project.edgeMap);
       Vue.set(state.project, "initGraphTracker", state.project.initGraphTracker + 1);
     }, updateVertex(state, vertex) {
+      //认为xy没有发生变化
       state.project.vertexMap.set(vertex.id, vertex);
+      
+    }, updateVertexPos(state, vertexPos){
+      //只有xy变化
+      let vertex = state.project.subgraphMap.get(vertexPos.subgraphId).dynamicVo.vertices.find(v => v.id == vertexPos.vertex.id);
+      vertex.x = vertexPos.vertex.x;
+      vertex.y = vertexPos.vertex.y;
     }, updateEdge(state, edge) {
       state.project.edgeMap.set(edge.id, edge);
     }, updateDomain(state, domain) {
