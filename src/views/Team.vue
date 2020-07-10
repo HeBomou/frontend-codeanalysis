@@ -370,8 +370,8 @@
             <!-- 小组公告 -->
             
             <v-list>
-                <v-list-item>
-                    <v-card style="width:1000%" class="ml-10 mr-10 mt-10" justify="center" align="center" @click="dialogNewNotice=true">
+                <v-list-item v-if="hasHigherLevel(user.level, 'member')">
+                    <v-card style="width:1000%" class="ml-10 mr-10 mt-10" justify="center" align="center" @click="dialogNewNotice=true"  >
                         <v-col cols="5"></v-col>
                         <v-col cols="2">
                             <v-card-title><v-icon>mdi-plus</v-icon></v-card-title>
@@ -510,8 +510,9 @@ export default {
                 //console.log(this.user);
                 //获取小组公告
                 this.getNotice();
-                this.getTasks();
+                //this.getTasks();
             }).catch(err => {
+                console.log(err);
                 this.Alert(err.response.data.errMsg);
             })
         },
