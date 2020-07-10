@@ -125,6 +125,7 @@
                         <v-btn
                             class="mr-5 ml-5"
                             color="error"
+                            @click="clearNewNotice()"
                         >
                         取消
                         </v-btn>
@@ -603,9 +604,16 @@ export default {
             }).then(res => {
                 console.log(res);
                 this.getNotice();
+                this.clearNewNotice();
             }).catch(err => {
+                this.clearNewNotice();
                 this.Alert(err.response.data.errMsg);
             })
+        },
+        clearNewNotice(){
+            this.newNoticeTitle = "";
+            this.newNoticeText = "";
+            this.dialogNewNotice = false;
         },
         chatTo(item){
             let routeUrl = this.$router.resolve({
