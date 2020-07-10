@@ -275,6 +275,14 @@ export const API = {
      */
     postNotice: (notice) => post("/group/notice", notice),
 
-    putVertexPosition: (projectId, vertexPositionDynamicVo) => put("/project/" + projectId + "/subgraph/" + vertexPositionDynamicVo.subgraphId + "/vertex/" + vertexPositionDynamicVo.id + "/position", vertexPositionDynamicVo)
+    /**
+     * 修改顶点位置
+     */
+    putVertexPosition: (projectId, vertexPositionDynamicVo) => put("/project/" + projectId + "/subgraph/" + vertexPositionDynamicVo.subgraphId + "/vertex/" + vertexPositionDynamicVo.id + "/position", vertexPositionDynamicVo),
+
+    /**
+     * 获取小组所有任务
+     */
+    getAllTask: (groupId) => get("/task/" + groupId),
 }
 

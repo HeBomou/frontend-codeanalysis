@@ -221,7 +221,7 @@
                                             <v-list-item
                                                 v-bind="attrs"
                                                 v-on="on"
-                                                :disabled="user.level!='leader'"
+                                                :disabled="user.level!='leader' || item.level=='leader'"
                                             >
                                                 <v-list-item-title>更改权限</v-list-item-title>
                                             </v-list-item>
@@ -447,7 +447,7 @@ export default {
                 {title: "标题2", person: "yzj", time: "2020-1-1", content: "1111111111111111111111111          "},
             ],
             tasks: [
-                {name: "foo", ddl:"2020-1-1", person:"leo"}
+                {id:1, groupId: 1, name: "foo", info: "草泥马", deadline:"2020-1-1", isFinished: 0}
             ],
             groups: [
                 {id: 123, leaderId: 234, name: "group haha", inviteCode: 123123},
@@ -509,11 +509,19 @@ export default {
                 //console.log(this.user);
                 //获取小组公告
                 this.getNotice();
+                this.getTasks();
             }).catch(err => {
                 this.Alert(err.response.data.errMsg);
             })
         },
-        getNotice(){
+        getTasks(){
+            //获取当前小组所有task
+            API.getTasks(this.groupChosen.id).then(res => {
+                this.tasks = res.data;
+            }).catch(err => {
+                this.Alert(err.response.data.errMsg);
+            })
+        },getNotice(){
             API.getNotice(this.groupChosen.id).then(res => {
                 this.notices = res.data;
             }).catch(err => {
