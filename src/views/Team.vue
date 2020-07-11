@@ -176,6 +176,7 @@
             </v-list-item-group>
         </v-list>
     </v-navigation-drawer>
+    
 
     <v-content>
       <v-container
@@ -312,58 +313,175 @@
         </v-tab-item>
         <v-tab>任务列表</v-tab>
         <v-tab-item>
-            任务列表
-            <v-simple-table>
-                <thead>
-                    <tr>
-                        <th class="text-left">Name</th>
-                        <th class="text-left">DDL</th>
-                        <th class="text-left">执行者</th>
-                        <th class="text-left">其他</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="item in tasks" :key="item.name">
-                        <td>{{ item.name }}</td>
-                        <td>{{ item.ddl }}</td>
-                        <td>{{ item.person }}</td>
-                        <td>
-                            <v-menu offset-y>
-                                <template v-slot:activator="{ on }">
-                                    <v-icon
-                                    v-on="on"
-                                    >
-                                    mdi-plus
-                                    </v-icon>
-                                </template>
-                                <v-list>
-                                    <v-list-item
-                                        @click="debug()"
-                                    >
-                                        <v-list-item-title>
-                                        指定执行者
-                                        </v-list-item-title>
+            <v-container fluid>
+                <v-row>
+                    <v-col cols="8">
+                        <!-- <v-list>
+                            <p>未完成</p>
+                            <v-list-item-group>
+                                <div v-for="item in tasks" :key="item.name" @click="taskChosen=item"  >
+                                    <v-list-item v-if="item.isFinished==0">
+                                    <v-row>
+                                            <v-checkbox v-model="item.isFinished"></v-checkbox>
+                                            <p class="mt-5">{{item.name}}</p>
+                                        </v-row>
                                     </v-list-item>
-                                    <v-list-item
-                                        @click="debug()"
-                                    >
-                                        <v-list-item-title>
-                                        提交
-                                        </v-list-item-title>
+                                </div>
+                            </v-list-item-group>
+                            <p>已完成</p>
+                            <v-list-item-group>
+                                <div v-for="item in tasks" :key="item.name" @click="taskChosen=item"  >
+                                    <v-list-item v-if="item.isFinished==1">
+                                    <v-row>
+                                            <v-checkbox v-model="item.isFinished"></v-checkbox>
+                                            <p class="mt-5">{{item.name}}</p>
+                                        </v-row>
                                     </v-list-item>
-                                    <v-list-item
-                                        @click="debug()"
-                                    >
-                                        <v-list-item-title>
-                                        删除
-                                        </v-list-item-title>
-                                    </v-list-item>
-                                </v-list>
-                            </v-menu>
-                        </td>
-                    </tr>
-                </tbody>
-            </v-simple-table>
+                                </div>
+                            </v-list-item-group>
+                        </v-list> -->
+                        <v-simple-table>
+                            <thead>
+                                <tr>
+                                    <th>任务列表</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="item in tasks" :key="item.name" @click="taskChosen=item" :bgcolor="getColor(item)">
+                                    <td v-if="item.isFinished==0">
+                                        <v-row >
+                                            <v-checkbox v-model="item.isFinished" ></v-checkbox>
+                                            <p class="mt-5">{{item.name}}</p>
+                                        </v-row>
+                                    </td>
+                                    <!-- <td>
+                                        <v-menu offset-y>
+                                            <template v-slot:activator="{ on }">
+                                                <v-icon
+                                                v-on="on"
+                                                >
+                                                mdi-plus
+                                                </v-icon>
+                                            </template>
+                                            <v-list>
+                                                <v-list-item
+                                                    @click="debug()"
+                                                >
+                                                    <v-list-item-title>
+                                                    指定执行者
+                                                    </v-list-item-title>
+                                                </v-list-item>
+                                                <v-list-item
+                                                    @click="debug()"
+                                                >
+                                                    <v-list-item-title>
+                                                    提交
+                                                    </v-list-item-title>
+                                                </v-list-item>
+                                                <v-list-item
+                                                    @click="debug()"
+                                                >
+                                                    <v-list-item-title>
+                                                    删除
+                                                    </v-list-item-title>
+                                                </v-list-item>
+                                            </v-list>
+                                        </v-menu>
+                                    </td> -->
+                                </tr>
+                            </tbody>
+                            <thead>
+                                <tr>
+                                    <th>已完成</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="item in tasks" :key="item.name" @click="taskChosen=item" :bgcolor="getColor(item)">
+                                    <td v-if="item.isFinished!=0">
+                                        <v-row>
+                                            <v-checkbox v-model="item.isFinished">
+
+                                            </v-checkbox>
+                                            <p class="mt-5">{{item.name}}</p>
+                                        </v-row>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </v-simple-table>
+                    </v-col>
+                    <v-col cols="4">
+                        <v-card>
+                            <v-card-actions >
+                                <v-container fluid>
+                                    <v-row>
+                                        <v-checkbox v-model="taskChosen.isFinished"></v-checkbox>
+                                        <v-text-field v-model="taskChosen.name" @change="updateTask()"></v-text-field>
+                                    </v-row>
+                                    <v-row>
+                                        <v-divider class="mb-5"></v-divider>
+                                    </v-row>
+                                    <v-row>
+                                        <v-list style="width: 100%">
+                                            <v-menu top offset-y>
+                                                <template v-slot:activator="{ on, attrs }">
+                                            
+                                                    <v-list-item 
+                                                        @click="debug()"
+                                                        v-bind="attrs"
+                                                        v-on="on"
+                                                    >
+                                                        <v-icon class="mr-3">
+                                                            mdi-clock
+                                                        </v-icon>
+                                                        {{taskChosen.deadline}}
+                                                    </v-list-item>
+                                                </template>
+                                                <v-date-picker  style="width: 100%" v-model="taskChosen.deadline" color="green lighten-1"></v-date-picker>
+
+                                            </v-menu>
+                                            <v-menu top offset-y :close-on-content-click="closeOnContentClick">
+                                                <template v-slot:activator="{ on, attrs }">
+                                                    <v-list-item 
+                                                        
+                                                        v-bind="attrs"
+                                                        v-on="on"
+                                                    >
+                                                        <v-icon class="mr-3">
+                                                            mdi-clock
+                                                        </v-icon>
+                                                        Leo
+                                                    </v-list-item>
+                                                </template>
+                                                <v-list style="width: 100%">
+                                                    <div v-for="user in taskMember" :key="user.id">
+                                                        <v-list-item  style="width: 100%" @click="user.chosen=!user.chosen">
+                                                            <v-checkbox v-on:click="user.chosen=!user.chosen" :label="user.username" v-model="user.chosen" style="width: 100%;"></v-checkbox>
+                                                        </v-list-item>
+                                                    </div>
+                                                    
+                                                </v-list>
+                                            </v-menu>
+                                            
+                                        </v-list>
+                                    </v-row>
+                                    <v-row>
+                                        <v-divider class="mb-5"></v-divider>
+                                    </v-row>
+                                    <v-row>
+                                        <v-textarea
+                                            class="ml-5 mr-5"
+                                            flat
+                                            outlined
+                                            v-model="taskChosen.info"
+                                        ></v-textarea>
+                                    </v-row>
+                                </v-container>
+                            </v-card-actions>
+                        </v-card>
+                    </v-col>
+
+                </v-row>
+            </v-container>
         </v-tab-item>
         <v-tab>小组公告</v-tab>
         <v-tab-item>
@@ -398,6 +516,7 @@
 </template>
 <script>
 import {getAllGroup, getMembers, postGroup, putMember, API} from "../request/api";
+//import { mdiAccountMultiple } from '@mdi/js';
 export default {
     data(){
         return {
@@ -448,7 +567,18 @@ export default {
                 {title: "标题2", person: "yzj", time: "2020-1-1", content: "1111111111111111111111111          "},
             ],
             tasks: [
-                {id:1, groupId: 1, name: "foo", info: "草泥马", deadline:"2020-1-1", isFinished: 0}
+                {id:1, groupId: 1, name: "推翻共产党", info: "草泥马", deadline:"2020-1-1", isFinished: 0},
+                {id:2, groupId: 1, name: "暗杀习近平", info: "肛交致死", deadline:"2020-1-2", isFinished: 1},
+                {id:3, groupId: 1, name: "迎娶彭丽媛", info: "按F进入", deadline:"2020-1-3", isFinished: 0}
+            ],
+            taskChosen: {id:2, groupId: 1, name: "暗杀习近平", info: "肛交致死", deadline:"2020-1-2", isFinished: 1},
+            taskMember: [
+                {id: 1, username: "leo", level: "manager", chosen: 0},
+                {id: 2, username: "yzj", level: "leader", chosen: 1}
+            ],
+            taskChosenExecutor:[//选中任务的所有执行者
+                {id: 1, username: "leo", level: "manager"},
+                {id: 2, username: "yzj", level: "leader"}
             ],
             groups: [
                 {id: 123, leaderId: 234, name: "group haha", inviteCode: 123123},
@@ -464,7 +594,8 @@ export default {
             ],
             newGroupName: "",
             joinGroupInviteCode: "",
-            inviteLink: ""
+            inviteLink: "",
+            closeOnContentClick: false
         }
     }
     ,methods: {
@@ -622,6 +753,16 @@ export default {
                 query: {newContact:item.id}
             });
             window.open(routeUrl.href, '_blank');
+        },
+        getColor(task){
+            if(task.id == this.taskChosen.id){
+                return "#EEEEEE";
+            }else{
+                return;
+            }
+        },
+        updateTask(){
+            
         }
     }
     ,mounted(){
