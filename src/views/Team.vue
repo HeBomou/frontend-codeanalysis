@@ -178,7 +178,7 @@
     </v-navigation-drawer>
     
 
-    <v-content>
+    <v-main>
       <v-container
       >
         <v-tabs>
@@ -347,6 +347,17 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                <tr @click="isAddingTask=true">
+                                    <td>
+                                        <v-row>
+                                            <v-checkbox disabled />
+                                            <v-text-field 
+                                                v-model="newTask.name" 
+                                                @change="pushNewTask()"
+                                                label="new task"/>
+                                        </v-row>
+                                    </td>
+                                </tr>
                                 <tr v-for="item in tasks" :key="item.name" @click="taskChosen=item" :bgcolor="getColor(item)">
                                     <td v-if="item.isFinished==0">
                                         <v-row >
@@ -415,14 +426,14 @@
                                 <v-container fluid>
                                     <v-row>
                                         <v-checkbox v-model="taskChosen.isFinished"></v-checkbox>
-                                        <v-text-field v-model="taskChosen.name" @change="updateTask()"></v-text-field>
+                                        <v-text-field v-model="taskChosen.name" @change="updateTask(taskChosen)"></v-text-field>
                                     </v-row>
                                     <v-row>
                                         <v-divider class="mb-5"></v-divider>
                                     </v-row>
                                     <v-row>
                                         <v-list style="width: 100%">
-                                            <v-menu top offset-y>
+                                            <v-menu top offset-y :close-on-content-click="closeOnContentClick" v-model="menuDate">
                                                 <template v-slot:activator="{ on, attrs }">
                                             
                                                     <v-list-item 
@@ -436,13 +447,17 @@
                                                         {{taskChosen.deadline}}
                                                     </v-list-item>
                                                 </template>
-                                                <v-date-picker  style="width: 100%" v-model="taskChosen.deadline" color="green lighten-1"></v-date-picker>
+                                                <v-date-picker
+                                                    style="width: 100%"
+                                                    v-model="taskChosen.deadline"
+                                                    color="green lighten-1"
+                                                    @change="updateTask(taskChosen);menuDate=false"
+                                                ></v-date-picker>
 
                                             </v-menu>
                                             <v-menu top offset-y :close-on-content-click="closeOnContentClick">
                                                 <template v-slot:activator="{ on, attrs }">
                                                     <v-list-item 
-                                                        
                                                         v-bind="attrs"
                                                         v-on="on"
                                                     >
@@ -473,6 +488,7 @@
                                             flat
                                             outlined
                                             v-model="taskChosen.info"
+                                            @change="updateTask(taskChosen)"
                                         ></v-textarea>
                                     </v-row>
                                 </v-container>
@@ -510,7 +526,7 @@
         </v-tab-item>
     </v-tabs>
       </v-container>
-    </v-content>
+    </v-main>
   </v-app>
     
 </template>
@@ -572,6 +588,7 @@ export default {
                 {id:3, groupId: 1, name: "迎娶彭丽媛", info: "按F进入", deadline:"2020-1-3", isFinished: 0}
             ],
             taskChosen: {id:2, groupId: 1, name: "暗杀习近平", info: "肛交致死", deadline:"2020-1-2", isFinished: 1},
+            newTask: {id: 0, groupId: 0, name: "", info: "", isFinished: 0},
             taskMember: [
                 {id: 1, username: "leo", level: "manager", chosen: 0},
                 {id: 2, username: "yzj", level: "leader", chosen: 1}
@@ -595,7 +612,9 @@ export default {
             newGroupName: "",
             joinGroupInviteCode: "",
             inviteLink: "",
-            closeOnContentClick: false
+            closeOnContentClick: false,
+            isAddingTask: false,//是否正在使用添加的那一个
+            menuDate: false,//date的menu是否打开
         }
     }
     ,methods: {
@@ -641,7 +660,7 @@ export default {
                 //console.log(this.user);
                 //获取小组公告
                 this.getNotice();
-                //this.getTasks();
+                this.getTasks();
             }).catch(err => {
                 console.log(err);
                 this.Alert(err.response.data.errMsg);
@@ -649,9 +668,10 @@ export default {
         },
         getTasks(){
             //获取当前小组所有task
-            API.getTasks(this.groupChosen.id).then(res => {
+            API.getAllTask(this.groupChosen.id).then(res => {
                 this.tasks = res.data;
             }).catch(err => {
+                console.log(err);
                 this.Alert(err.response.data.errMsg);
             })
         },getNotice(){
@@ -761,8 +781,40 @@ export default {
                 return;
             }
         },
-        updateTask(){
-            
+        updateTask(task){
+            // API.putTask(task).then(res => {
+            //     console.log(res);
+            // }).then(err => {
+            //     if(err.response.data.errMsg != undefined){
+            //         this.Alert(err.response.data.errMsg);
+            //     }else {
+            //         console.log(err);
+            //     }
+            // })
+            console.log(task);
+        },
+        addNewTask(){
+            //新建任务
+            var haha = {id: 0};
+            this.taskChosen = haha;
+        },
+        pushNewTask(){
+            //确认给后端
+            API.postTask({
+                id: 0, 
+                groupId: this.groupChosen.id, 
+                name: this.newTask.name, 
+                info: "", 
+                deadline: "", 
+                isFinished: 0
+            }).then(res => {
+                res;
+                this.getTasks();
+            }).catch(err => {
+                this.Alert(err.response.data.errMsg);
+            })
+            var haha = {id: 0};
+            this.newTask = haha;
         }
     }
     ,mounted(){

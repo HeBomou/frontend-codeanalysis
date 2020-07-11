@@ -284,5 +284,27 @@ export const API = {
      * 获取小组所有任务
      */
     getAllTask: (groupId) => get("/task/" + groupId),
+
+    /**
+     * 获取任务的所有执行者
+     * @returns {List<Long>} 执行者的id列表
+     */
+    getAllExecutor: (taskId) => get("/task/executor/" + taskId),
+
+    /**
+     * 更新任务（不包含执行者）
+     */
+    putTask: (taskVo) => put("/task/", {vo: taskVo}),
+
+    /**
+     * 更新执行者
+     * @param {List<Long>} userIds
+     */
+    updateExecutor: (groupId, taskId, userIds) => get("/task/" + groupId + "/" + taskId, userIds), 
+
+    /**
+     * 添加任务
+     */
+    postTask: (taskVo) => post("/task", {vo: taskVo}),
 }
 
