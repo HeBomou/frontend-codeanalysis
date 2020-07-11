@@ -294,7 +294,7 @@ export const API = {
     /**
      * 更新任务（不包含执行者）
      */
-    putTask: (taskVo) => put("/task/", {vo: taskVo}),
+    putTask: (taskVo) => put("/task/", taskVo),
 
     /**
      * 更新执行者
@@ -305,6 +305,6 @@ export const API = {
     /**
      * 添加任务
      */
-    postTask: (taskVo) => post("/task", {vo: taskVo}),
+    postTask: (taskVo) => post("/task", taskVo),
 }
 

@@ -361,7 +361,7 @@
                                 <tr v-for="item in tasks" :key="item.name" @click="taskChosen=item" :bgcolor="getColor(item)">
                                     <td v-if="item.isFinished==0">
                                         <v-row >
-                                            <v-checkbox v-model="item.isFinished" ></v-checkbox>
+                                            <v-checkbox v-model="item.isFinished" @change="updateTask(item)"></v-checkbox>
                                             <p class="mt-5">{{item.name}}</p>
                                         </v-row>
                                     </td>
@@ -410,7 +410,7 @@
                                 <tr v-for="item in tasks" :key="item.name" @click="taskChosen=item" :bgcolor="getColor(item)">
                                     <td v-if="item.isFinished!=0">
                                         <v-row>
-                                            <v-checkbox v-model="item.isFinished">
+                                            <v-checkbox v-model="item.isFinished" @change="updateTask(item)">
 
                                             </v-checkbox>
                                             <p class="mt-5">{{item.name}}</p>
@@ -421,11 +421,11 @@
                         </v-simple-table>
                     </v-col>
                     <v-col cols="4">
-                        <v-card>
+                        <v-card v-if="taskChosen.id!=undefined">
                             <v-card-actions >
                                 <v-container fluid>
                                     <v-row>
-                                        <v-checkbox v-model="taskChosen.isFinished"></v-checkbox>
+                                        <v-checkbox v-model="taskChosen.isFinished" @change="updateTask(taskChosen)"></v-checkbox>
                                         <v-text-field v-model="taskChosen.name" @change="updateTask(taskChosen)"></v-text-field>
                                     </v-row>
                                     <v-row>
@@ -444,7 +444,12 @@
                                                         <v-icon class="mr-3">
                                                             mdi-clock
                                                         </v-icon>
+                                                        <div v-if="taskChosen.deadline!=''">
                                                         {{taskChosen.deadline}}
+                                                        </div>
+                                                        <div v-else>
+                                                            deadLine
+                                                        </div>
                                                     </v-list-item>
                                                 </template>
                                                 <v-date-picker
@@ -470,7 +475,13 @@
                                                 <v-list style="width: 100%">
                                                     <div v-for="user in taskMember" :key="user.id">
                                                         <v-list-item  style="width: 100%" @click="user.chosen=!user.chosen">
-                                                            <v-checkbox v-on:click="user.chosen=!user.chosen" :label="user.username" v-model="user.chosen" style="width: 100%;"></v-checkbox>
+                                                            <v-checkbox 
+                                                                v-on:click="user.chosen=!user.chosen" 
+                                                                :label="user.username" 
+                                                                v-model="user.chosen" 
+                                                                style="width: 100%;"
+                                                                @change="debug"
+                                                            ></v-checkbox>
                                                         </v-list-item>
                                                     </div>
                                                     
@@ -587,7 +598,7 @@ export default {
                 {id:2, groupId: 1, name: "暗杀习近平", info: "肛交致死", deadline:"2020-1-2", isFinished: 1},
                 {id:3, groupId: 1, name: "迎娶彭丽媛", info: "按F进入", deadline:"2020-1-3", isFinished: 0}
             ],
-            taskChosen: {id:2, groupId: 1, name: "暗杀习近平", info: "肛交致死", deadline:"2020-1-2", isFinished: 1},
+            taskChosen: {},
             newTask: {id: 0, groupId: 0, name: "", info: "", isFinished: 0},
             taskMember: [
                 {id: 1, username: "leo", level: "manager", chosen: 0},
@@ -782,16 +793,21 @@ export default {
             }
         },
         updateTask(task){
-            // API.putTask(task).then(res => {
-            //     console.log(res);
-            // }).then(err => {
-            //     if(err.response.data.errMsg != undefined){
-            //         this.Alert(err.response.data.errMsg);
-            //     }else {
-            //         console.log(err);
-            //     }
-            // })
-            console.log(task);
+            if(task.isFinished){
+                task.isFinished = 1;
+            }else{
+                task.isFinished = 0;
+            }
+            API.putTask(task).then(res => {
+                console.log(res);
+            }).then(err => {
+                if(err.response.data.errMsg != undefined){
+                    this.Alert(err.response.data.errMsg);
+                }else {
+                    console.log(err);
+                }
+            })
+            //console.log(task);
         },
         addNewTask(){
             //新建任务
@@ -799,6 +815,9 @@ export default {
             this.taskChosen = haha;
         },
         pushNewTask(){
+            if(this.newTask.name == undefined){
+                return;
+            }
             //确认给后端
             API.postTask({
                 id: 0, 
