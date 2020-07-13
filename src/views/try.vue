@@ -15,7 +15,7 @@
     </template>
     <v-list style="width: 100%">
         <div v-for="user in taskMember" :key="user.id">
-            <v-list-item  style="width: 100%" @click="user.chosen=!user.chosen">
+            <v-list-item  style="width: 100%" @click.native="user.chosen=!user.chosen">
                 <v-list-item-icon v-if="user.chosen">
                     <v-icon>mdi-plus</v-icon>
                 </v-list-item-icon>

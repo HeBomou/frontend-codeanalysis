@@ -476,18 +476,19 @@
                                                 <v-list style="width: 100%">
                                                     <div v-for="user in taskMember" :key="user.id">
                                                         <v-list-item  style="width: 100%" @click="user.chosen=!user.chosen">
-                                                            <v-list-item-icon v-if="user.chosen">
+                                                            <!-- <v-list-item-icon v-if="user.chosen">
                                                                 <v-icon>mdi-plus</v-icon>
                                                             </v-list-item-icon>
                                                             <v-list-item-icon v-else>
                                                                 <v-icon>mdi-mail</v-icon>
-                                                            </v-list-item-icon>
-                                                            <!-- <v-checkbox 
-                                                                :label="user.chosen?'true':'false'" 
+                                                            </v-list-item-icon> -->
+                                                            <v-checkbox 
+                                                                :label="user.username" 
                                                                 v-model="user.chosen" 
                                                                 style="width: 100%;"
+                                                                @click="user.chosen=!user.chosen"
                                                                 @change="updateExecutor(taskChosen)"
-                                                            ></v-checkbox> -->
+                                                            ></v-checkbox>
                                                         </v-list-item>
                                                     </div>
                                                     
@@ -639,10 +640,6 @@ export default {
             this.$router.push("/project");
         },
         debug(){
-            console.log(this.taskMember);
-            this.taskMember.forEach(member => {
-                member.chosen = true;
-            })
             console.log(this.taskMember);
         },
         debug1(haha){
@@ -850,28 +847,30 @@ export default {
         selectTask(task){
             this.taskMember = [];
             this.teamMember.forEach(member => {
-                let m = {};
-                m.id = member.id;
-                m.username = member.username;
+                let m = {
+                id: member.id,
+                username: member.username,
+                chosen: false
+                };
+
                 this.taskMember.push(m);
             })
             this.taskChosen = task;
             API.getAllExecutor(task.id).then(res => {
                 let chosenIds = res.data;
                 this.taskMember.forEach(member => {
-                    // if(chosenIds.length == 0){
-                    //     member.chosen = false;
-                    //     return;
-                    // }
-                    // if(chosenIds.findIndex(id => id == member.id) != -1){
-                    //     console.log(chosenIds.findIndex(id => id == member.id));
-                    //     member.chosen = true;
-                    // }else{
-                    //     console.log(chosenIds.findIndex(id => id == member.id));
-                    //     member.chosen = false;
-                    // }
-                    chosenIds;
-                    member.chosen = true;
+                    if(chosenIds.length == 0){
+                        member.chosen = false;
+                        return;
+                    }
+                    if(chosenIds.findIndex(id => id == member.id) != -1){
+                        console.log(chosenIds.findIndex(id => id == member.id));
+                        member.chosen = true;
+                    }else{
+                        console.log(chosenIds.findIndex(id => id == member.id));
+                        member.chosen = false;
+                        
+                    }
                 });
                 console.log(this.taskMember);
             }).catch(err => {
