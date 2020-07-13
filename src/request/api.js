@@ -300,7 +300,7 @@ export const API = {
      * 更新执行者
      * @param {List<Long>} userIds
      */
-    updateExecutor: (groupId, taskId, userIds) => get("/task/" + groupId + "/" + taskId, userIds), 
+    updateExecutor: (groupId, taskId, userIds) => post("/task/" + groupId + "/" + taskId, userIds), 
 
     /**
      * 添加任务

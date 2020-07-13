@@ -145,6 +145,7 @@
             <v-spacer />
             <v-spacer />
             <v-btn @click="toProject" class="mr-5">我的项目</v-btn>
+            <v-btn @click="debug" class="mr-5">debug</v-btn>
             <v-btn @click="logout">退出登录</v-btn>
         </v-app-bar>
 
@@ -358,7 +359,7 @@
                                         </v-row>
                                     </td>
                                 </tr>
-                                <tr v-for="item in tasks" :key="item.name" @click="taskChosen=item" :bgcolor="getColor(item)">
+                                <tr v-for="item in tasks" :key="item.name" @click="selectTask(item)" :bgcolor="getColor(item)">
                                     <td v-if="item.isFinished==0">
                                         <v-row >
                                             <v-checkbox v-model="item.isFinished" @change="updateTask(item)"></v-checkbox>
@@ -407,7 +408,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="item in tasks" :key="item.name" @click="taskChosen=item" :bgcolor="getColor(item)">
+                                <tr v-for="item in tasks" :key="item.name" @click="selectTask(item)" :bgcolor="getColor(item)">
                                     <td v-if="item.isFinished!=0">
                                         <v-row>
                                             <v-checkbox v-model="item.isFinished" @change="updateTask(item)">
@@ -475,13 +476,18 @@
                                                 <v-list style="width: 100%">
                                                     <div v-for="user in taskMember" :key="user.id">
                                                         <v-list-item  style="width: 100%" @click="user.chosen=!user.chosen">
-                                                            <v-checkbox 
-                                                                v-on:click="user.chosen=!user.chosen" 
-                                                                :label="user.username" 
+                                                            <v-list-item-icon v-if="user.chosen">
+                                                                <v-icon>mdi-plus</v-icon>
+                                                            </v-list-item-icon>
+                                                            <v-list-item-icon v-else>
+                                                                <v-icon>mdi-mail</v-icon>
+                                                            </v-list-item-icon>
+                                                            <!-- <v-checkbox 
+                                                                :label="user.chosen?'true':'false'" 
                                                                 v-model="user.chosen" 
                                                                 style="width: 100%;"
-                                                                @change="debug"
-                                                            ></v-checkbox>
+                                                                @change="updateExecutor(taskChosen)"
+                                                            ></v-checkbox> -->
                                                         </v-list-item>
                                                     </div>
                                                     
@@ -601,12 +607,8 @@ export default {
             taskChosen: {},
             newTask: {id: 0, groupId: 0, name: "", info: "", isFinished: 0},
             taskMember: [
-                {id: 1, username: "leo", level: "manager", chosen: 0},
-                {id: 2, username: "yzj", level: "leader", chosen: 1}
-            ],
-            taskChosenExecutor:[//选中任务的所有执行者
-                {id: 1, username: "leo", level: "manager"},
-                {id: 2, username: "yzj", level: "leader"}
+                {id: 1, username: "leo", level: "manager", chosen: false},
+                {id: 2, username: "yzj", level: "leader", chosen: true}
             ],
             groups: [
                 {id: 123, leaderId: 234, name: "group haha", inviteCode: 123123},
@@ -637,7 +639,11 @@ export default {
             this.$router.push("/project");
         },
         debug(){
-            console.log(this.groupChosenIndex);
+            console.log(this.taskMember);
+            this.taskMember.forEach(member => {
+                member.chosen = true;
+            })
+            console.log(this.taskMember);
         },
         debug1(haha){
             console.log(haha);
@@ -800,19 +806,12 @@ export default {
             }
             API.putTask(task).then(res => {
                 console.log(res);
-            }).then(err => {
-                if(err.response.data.errMsg != undefined){
-                    this.Alert(err.response.data.errMsg);
-                }else {
+            }).catch(err => {
                     console.log(err);
-                }
+                    this.Alert(err.response.data.errMsg);
+
             })
             //console.log(task);
-        },
-        addNewTask(){
-            //新建任务
-            var haha = {id: 0};
-            this.taskChosen = haha;
         },
         pushNewTask(){
             if(this.newTask.name == undefined){
@@ -834,6 +833,54 @@ export default {
             })
             var haha = {id: 0};
             this.newTask = haha;
+        },
+        updateExecutor(task){
+            let ids = [];
+            this.taskMember.forEach(member => {
+                if(member.chosen){
+                    ids.push(member.id);
+                }
+            })
+            API.updateExecutor(this.groupChosen.id, task.id, ids).then(res => {
+                res;
+            }).catch(err => {
+                console.log(err);
+            })
+        },
+        selectTask(task){
+            this.taskMember = [];
+            this.teamMember.forEach(member => {
+                let m = {};
+                m.id = member.id;
+                m.username = member.username;
+                this.taskMember.push(m);
+            })
+            this.taskChosen = task;
+            API.getAllExecutor(task.id).then(res => {
+                let chosenIds = res.data;
+                this.taskMember.forEach(member => {
+                    // if(chosenIds.length == 0){
+                    //     member.chosen = false;
+                    //     return;
+                    // }
+                    // if(chosenIds.findIndex(id => id == member.id) != -1){
+                    //     console.log(chosenIds.findIndex(id => id == member.id));
+                    //     member.chosen = true;
+                    // }else{
+                    //     console.log(chosenIds.findIndex(id => id == member.id));
+                    //     member.chosen = false;
+                    // }
+                    chosenIds;
+                    member.chosen = true;
+                });
+                console.log(this.taskMember);
+            }).catch(err => {
+                if(err.response != undefined){
+                    this.Alert(err.response.data.errMsg);
+                }else {
+                    console.log(err);
+                }
+            })
         }
     }
     ,mounted(){

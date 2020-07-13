@@ -1,40 +1,43 @@
 <template>
-  <div class="text-center">
-    <v-switch v-model="closeOnContentClick" label="Close on content click"></v-switch>
-    <v-menu top :close-on-content-click="closeOnContentClick">
-      <template v-slot:activator="{ on, attrs }">
-        <v-btn
-          color="primary"
-          dark
-          v-bind="attrs"
-          v-on="on"
+<v-container fluid>
+<v-btn @click="debug">debug</v-btn>
+  <v-menu top offset-y :close-on-content-click="closeOnContentClick">
+    <template v-slot:activator="{ on, attrs }">
+        <v-list-item 
+            v-bind="attrs"
+            v-on="on"
         >
-          Dropdown
-        </v-btn>
-      </template>
-
-      <v-list>
-        <v-list-item
-          v-for="(item, index) in items"
-          :key="index"
-        >
-          <v-list-item-title>{{ item.title }}</v-list-item-title>
+            <v-icon class="mr-3">
+                mdi-clock
+            </v-icon>
+            Leo
         </v-list-item>
-      </v-list>
-    </v-menu>
-  </div>
+    </template>
+    <v-list style="width: 100%">
+        <div v-for="user in taskMember" :key="user.id">
+            <v-list-item  style="width: 100%" @click="user.chosen=!user.chosen">
+                <v-list-item-icon v-if="user.chosen">
+                    <v-icon>mdi-plus</v-icon>
+                </v-list-item-icon>
+                <v-list-item-icon v-else>
+                    <v-icon>mdi-mail</v-icon>
+                </v-list-item-icon>
+            </v-list-item>
+        </div>
+        
+    </v-list>
+</v-menu>
+</v-container>
 </template>
 
 <script>
   export default {
    data: () => ({
-      items: [
-        { title: 'Click Me' },
-        { title: 'Click Me' },
-        { title: 'Click Me' },
-        { title: 'Click Me 2' },
+      taskMember: [
+        {id: 1, username: "leo", level: "manager", chosen: false},
+        {id: 2, username: "yzj", level: "leader", chosen: true}
       ],
-      closeOnContentClick: true,
+      closeOnContentClick: false
     }),
     mounted(){
       let m = new Map([
@@ -42,6 +45,13 @@
       ]);
       //let haha = m.find(i => i.value.haha == 4);
       console.log(m.get(3));
+    },
+    methods:{
+      debug(){
+        this.taskMember.forEach(member=>{
+          member.chosen = true;
+        })
+      }
     }
   }
 </script>
