@@ -82,7 +82,7 @@ export const delProject = (id) => del("/project/" + id);
  * @param {string} url 	git仓库的url
  * @param {string} userId 
  */
-export const addProject = (projectName, url, userId) => post("/project?projectName=" + projectName + "&url=" + url + "&userId=" + userId, null);
+export const addProject = (projectName, url, userId) => post("/project?projectName=" + projectName + "&url=" + url + "&userId=" + userId + "&groupId=-1", null);
 
 
 
@@ -306,5 +306,30 @@ export const API = {
      * 添加任务
      */
     postTask: (taskVo) => post("/task", taskVo),
+
+    /**
+     * 创建小组项目
+     */
+    postProject_group: (projectName, url, groupId) => post("/project?projectName=" + projectName + "&url=" + url + "&userId=-1&groupId=" + groupId, null),
+
+    /**
+     * 创建项目
+     */
+    postProject: (projectName, url, userId, groupId) => post("/project?projectName=" + projectName + "&url=" + url + "&userId=" + userId + "&groupId=" + groupId, null),
+
+    /**
+     * 获取所有项目的名称等动态信息，如果传了用户id，就是返回该用户的所有项目，否则返回所有项目
+     * @param {long} userId 
+     */
+    getProjectBasicAttribute_user: (userId) => get("/project?userId=" + userId),
+
+      /**
+     * 获取所有项目的名称等动态信息，如果传了用户id，就是返回该用户的所有项目，否则返回所有项目
+     * @param {long} userId 
+     */
+    getProjectBasicAttribute: () => get("/project"),
+
+    getProjectBasicAttribute_group: (groupId) => get("/project?groupId=" + groupId),
+
 }
 

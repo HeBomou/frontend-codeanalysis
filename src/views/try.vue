@@ -1,58 +1,18 @@
 <template>
-<v-container fluid>
-<v-btn @click="debug">debug</v-btn>
-  <v-menu top offset-y :close-on-content-click="closeOnContentClick">
-    <template v-slot:activator="{ on, attrs }">
-        <v-list-item 
-            v-bind="attrs"
-            v-on="on"
-        >
-            <v-icon class="mr-3">
-                mdi-clock
-            </v-icon>
-            Leo
-        </v-list-item>
-    </template>
-    <v-list style="width: 100%">
-        <div v-for="user in taskMember" :key="user.id">
-            <v-list-item  style="width: 100%" @click.native="user.chosen=!user.chosen">
-                <v-list-item-icon v-if="user.chosen">
-                    <v-icon>mdi-plus</v-icon>
-                </v-list-item-icon>
-                <v-list-item-icon v-else>
-                    <v-icon>mdi-mail</v-icon>
-                </v-list-item-icon>
-            </v-list-item>
-        </div>
-        
-    </v-list>
-</v-menu>
-</v-container>
+<Chile name="123" :haha="cnm"></chile>
 </template>
 
 <script>
+import Chile from "@/components/child";
   export default {
-   data: () => ({
-      taskMember: [
-        {id: 1, username: "leo", level: "manager", chosen: false},
-        {id: 2, username: "yzj", level: "leader", chosen: true}
-      ],
-      closeOnContentClick: false
-    }),
-    mounted(){
-      let m = new Map([
-        [1, {id: 1, haha: 2}], [2, {id: 3, haha:4}]
-      ]);
-      //let haha = m.find(i => i.value.haha == 4);
-      console.log(m.get(3));
-    },
-    methods:{
-      debug(){
-        this.taskMember.forEach(member=>{
-          member.chosen = true;
-        })
-      }
-    }
+   methods:{
+     cnm(num){
+       return num + 1;
+     }
+   },
+   components:{
+     Chile
+   }
   }
 </script>
 <style scoped>

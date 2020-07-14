@@ -256,61 +256,7 @@
         </v-tab-item>
         <v-tab>项目列表</v-tab>
         <v-tab-item>
-            <!-- 项目列表 -->
-            <!-- <v-card>
-                <v-card-title>
-                    项目列表
-                    <v-spacer />
-                    <v-text-field
-                        v-model="searchProject"
-                        append-icon="mdi-magnify"
-                        label="Search"
-                        single-line
-                        hide-details
-                    ></v-text-field>
-                    <v-btn @click="dialog=true" color="success" class="ml-5">添加</v-btn>
-                </v-card-title>
-                <v-card-text>
-                    <v-data-table
-                        :loading="isLoading"
-                        loading-text="Loading... Please wait"
-                        :headers="projectHeaders"
-                        :items="projects"
-                        :search="searchProject"
-                        
-                    >
-                        <template v-slot:item.projectName="props">
-                            <v-edit-dialog
-                            :return-value.sync="props.item.projectName"
-                            large
-                            persistent
-                            @save="saveProjectName(props.item)"
-                            >
-                            <div>{{ props.item.projectName }}</div>
-                            <template v-slot:input>
-                                <div class="mt-4 title">修改项目名</div>
-                            </template>
-                            <template v-slot:input>
-                                <v-text-field
-                                v-model="props.item.projectName"
-                                label="Edit"
-                                single-line
-                                counter
-                                autofocus
-                                ></v-text-field>
-                            </template>
-                            </v-edit-dialog>
-                        </template>
-                        <template v-slot:item.id="props">
-                            
-                            <v-icon @click="toProject(props.item.id)">mdi-plus</v-icon>
-                        </template>
-                        <template v-slot:item.pid="props">
-                            <v-btn @click="deleteProject(props.item.id)">删除</v-btn>
-                        </template>
-                    </v-data-table>
-                </v-card-text>
-            </v-card> -->
+           <Project :entityId="groupChosen.id" :getProjectBasicAttribute="func1" :postProject="func2"></Project>
         </v-tab-item>
         <v-tab>任务列表</v-tab>
         <v-tab-item>
@@ -550,10 +496,15 @@
 </template>
 <script>
 import {getAllGroup, getMembers, postGroup, putMember, API} from "../request/api";
-//import { mdiAccountMultiple } from '@mdi/js';
+import Project from "../components/Project"
 export default {
+    components:{
+        Project
+    },
     data(){
         return {
+            func1: API.getProjectBasicAttribute_group,
+            func2: API.postProject_group,
             userId: 0,
             errMsg: "",
             dialogErr: false,
