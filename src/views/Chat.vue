@@ -34,12 +34,7 @@
             </v-responsive>
           </v-col>
           <v-col cols="3" style="max-width: 100%;" class="flex-grow-1 flew-shrink-0">
-            <v-responsive
-              v-if="activeChat"
-              id="chat-block"
-              class="overflow-y-auto fill-height"
-              height="650"
-            >
+            <v-responsive v-if="activeChat" class="overflow-y-auto fill-height" height="650">
               <v-card flat class="d-flex flex-column fill-height">
                 <v-card-title>{{people[curPersonIndex].name}}</v-card-title>
                 <v-divider class="my-0"></v-divider>
@@ -193,8 +188,6 @@ export default {
             text: msgRawObj.content
           });
         });
-        let chatBlock = document.getElementById("chat-block");
-        chatBlock.scrollTop = chatBlock.scrollHeight;
       });
     },
     sendMessage() {
@@ -202,7 +195,7 @@ export default {
       this.socket.send(
         "m" + this.people[this.curPersonIndex].id + "," + this.inputText
       );
-      console.log("Try to send msg: ", this.inputText);
+      // console.log("Try to send msg: ", this.inputText);
       this.inputText = "";
     }
   }
