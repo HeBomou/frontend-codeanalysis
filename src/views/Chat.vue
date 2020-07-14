@@ -88,11 +88,11 @@ export default {
       activeChat: false,
       curPersonIndex: 0,
       messages: [
-        { id: 1, me: false, time: "2020-06-29 20:20", text: "cnm" },
-        { id: 2, me: true, time: "2020-06-29 20:21", text: "cnm2" },
-        { id: 3, me: false, time: "2020-06-29 20:32", text: "cnm3" },
-        { id: 4, me: true, time: "2020-06-29 20:34", text: "cnm4" },
-        { id: 5, me: false, time: "2020-06-29 20:51", text: "cnm5" }
+        { id: 1, me: false, time: "2020-06-29 20:20:55", text: "cnm" },
+        { id: 2, me: true, time: "2020-06-29 20:21:33", text: "cnm2" },
+        { id: 3, me: false, time: "2020-06-29 20:32:02", text: "cnm3" },
+        { id: 4, me: true, time: "2020-06-29 20:34:22", text: "cnm4" },
+        { id: 5, me: false, time: "2020-06-29 20:51:10", text: "cnm5" }
       ],
       inputText: ""
     };
