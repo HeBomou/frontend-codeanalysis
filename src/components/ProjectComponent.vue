@@ -162,12 +162,8 @@
 <script>
 import {delProject, putProject} from "../request/api";
 export default {
-    name: 'Project',
+    name: 'ProjectComponent',
     props:{
-        //小组或者用户id，通过不同得接口体现区别
-        entityId:{
-            required: true
-        },
         //获得某实体得所有项目得基本信息
         getProjectBasicAttribute: {
             required: true,
@@ -181,6 +177,7 @@ export default {
 
     },
     data: () => ({
+        entityId: 0,
         errMsg: "",
         dialogErr: false,
         addProjectConfirmPressed: false,//转菊花判断
@@ -215,7 +212,8 @@ export default {
         ]
     }),methods:{
         //获取所有得项目相关信息
-        setProjects(){
+        setProjects(id){
+            this.entityId = id;
             this.getProjectBasicAttribute(this.entityId).then(res => {
                 this.projects = res.data;
                 this.projects.forEach(p => {
@@ -295,8 +293,10 @@ export default {
             });
 
         },
+        haha(){
+            console.log("haha");
+        }
     },mounted(){
-        this.setProjects();
     }
     
 }

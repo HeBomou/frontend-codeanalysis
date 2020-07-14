@@ -183,6 +183,10 @@
       <v-container
       >
         <v-tabs>
+        <v-tab>项目列表</v-tab>
+        <v-tab-item>
+           <ProjectComponent ref="ProjectComponentTeam" :getProjectBasicAttribute="func1" :postProject="func2"></ProjectComponent>
+        </v-tab-item>
         <v-tab>成员列表</v-tab>
         <v-tab-item>
             <!-- 成员列表 -->
@@ -254,10 +258,7 @@
                 </tbody>
             </v-simple-table>
         </v-tab-item>
-        <v-tab>项目列表</v-tab>
-        <v-tab-item>
-           <Project :entityId="groupChosen.id" :getProjectBasicAttribute="func1" :postProject="func2"></Project>
-        </v-tab-item>
+
         <v-tab>任务列表</v-tab>
         <v-tab-item>
             <v-container fluid>
@@ -496,10 +497,10 @@
 </template>
 <script>
 import {getAllGroup, getMembers, postGroup, putMember, API} from "../request/api";
-import Project from "../components/Project"
+import ProjectComponent from "../components/ProjectComponent"
 export default {
     components:{
-        Project
+        ProjectComponent
     },
     data(){
         return {
@@ -613,6 +614,9 @@ export default {
         selectGroup(groupId){
             this.groupChosenIndex = this.groups.findIndex(item => item.id === groupId);
             this.groupChosen = this.groups[this.groupChosenIndex];
+            //this.$refs.ProjectComponentTeam.setProjects();
+            this.$refs.ProjectComponentTeam.setProjects(this.groupChosen.id);
+
             //console.log(this.groupChosen);
             getMembers(groupId).then(res => {
                 //console.log(res);
@@ -654,7 +658,9 @@ export default {
                 if(this.groups.length == 0){
                     return;
                 }
-                this.selectGroup(this.groups[this.groups.length - 1].id);//由于考虑到新的组在最后，所以获取小组后默认选择最后一个
+                this.$nextTick(() => {
+                    this.selectGroup(this.groups[this.groups.length - 1].id);//由于考虑到新的组在最后，所以获取小组后默认选择最后一个
+                })
             }).catch(err => this.Alert(err));
         },
         confirmNewGroup(){
@@ -667,9 +673,6 @@ export default {
             }).catch(err => {
                 this.Alert(err.response.data.errMsg);
             })
-        },
-        confirmJoinGroup(){
-
         },
         setInvite(){
             this.dialogInvite = true;

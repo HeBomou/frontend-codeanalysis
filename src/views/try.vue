@@ -1,29 +1,35 @@
 <template>
-<Chile name="123" :haha="cnm"></chile>
+  <div id="app">
+    <h2>父组件</h2>
+
+    <!-- 注册子组件引用信息 -->
+    <Child ref="child"></Child>
+
+    <v-btn @click="setChildMessage">修改子组件数据</v-btn>
+
+    <v-btn @click="callChildMessage">调用子组件方法</v-btn>
+
+  </div>
 </template>
 
 <script>
-import Chile from "@/components/child";
-  export default {
-   methods:{
-     cnm(num){
-       return num + 1;
-     }
-   },
-   components:{
-     Chile
-   }
-  }
-</script>
-<style scoped>
-    .form-container {
-        /*background-color: white;*/
-        position: absolute;
-        left: 0;
-        margin-left: calc((100% - 317px) / 2);/* 里面的大小应该与这个表单的宽度相同，可以让他处于中间 */
-        top: 0;
-        margin-top: 40px;
-        /*margin-top: calc( (100% - 600px) / 2);*/
-    }
+import Child from "@/components/child.vue";
 
-</style>
+export default {
+  name: "app",
+
+  components: {
+    Child
+  },
+
+  methods: {
+    setChildMessage() {
+      this.$refs.child.message = "haha";
+    },
+
+    callChildMessage(){
+      this.$refs.child.setMessage("123");
+    }
+  }
+};
+</script>

@@ -1,25 +1,27 @@
 <template>
     <div>
-        <h1>child</h1>
-        <h2>{{name}}</h2>
-        <v-btn @click="cnm"></v-btn>
+        <h2>子组件</h2>
+        
+        <p>{{message}}</p>
+        
     </div>
 </template>
+
 <script>
 export default {
-    props:{
-        name:{
-            type:String,
-            required:true
-        },
-        haha:{
-            required:true
+    name: "child",
+    
+    // 子组件属性
+    data(){
+        return {
+            message: "",
         }
     },
+
+    // 子组件方法
     methods:{
-        cnm(){
-            console.log(this.haha(1));
-            this.$router.push("/login");
+        setMessage(msg){
+            this.message = msg;
         }
     }
 }

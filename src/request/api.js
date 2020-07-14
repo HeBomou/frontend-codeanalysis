@@ -310,6 +310,11 @@ export const API = {
     /**
      * 创建小组项目
      */
+    postProject_user: (projectName, url, userId) => post("/project?projectName=" + projectName + "&url=" + url + "&userId=" + userId + "&groupId=-1", null),
+
+    /**
+     * 创建小组项目
+     */
     postProject_group: (projectName, url, groupId) => post("/project?projectName=" + projectName + "&url=" + url + "&userId=-1&groupId=" + groupId, null),
 
     /**
