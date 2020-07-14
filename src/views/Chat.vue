@@ -34,7 +34,12 @@
             </v-responsive>
           </v-col>
           <v-col cols="3" style="max-width: 100%;" class="flex-grow-1 flew-shrink-0">
-            <v-responsive v-if="activeChat" class="overflow-y-auto fill-height" height="650">
+            <v-responsive
+              v-if="activeChat"
+              id="chat-block"
+              class="overflow-y-auto fill-height"
+              height="650"
+            >
               <v-card flat class="d-flex flex-column fill-height">
                 <v-card-title>{{people[curPersonIndex].name}}</v-card-title>
                 <v-divider class="my-0"></v-divider>
@@ -162,12 +167,11 @@ export default {
         )
           this.messages.push(msgObj);
         // console.log("WS: 收到消息 ", msgObj);
-      } else if (msg.data[0] == 'r') {
+      } else if (msg.data[0] == "r") {
         let personId = parseInt(msg.data.substr(2));
-        let read = msg.data[1] == '1';
+        let read = msg.data[1] == "1";
         for (let i = 0; i < this.people.length; i++)
-          if (this.people[i].id == personId)
-            this.people[i].read = read;
+          if (this.people[i].id == personId) this.people[i].read = read;
       }
     },
     changePerson(index) {
@@ -179,7 +183,7 @@ export default {
       console.log("update read", this.people[index]);
       // 获取用户聊天记录
       getMessages(this.$store.getters.userId, curPersonId).then(res => {
-        console.log(res);
+        // console.log(res);
         this.messages = [];
         res.data.forEach(msgRawObj => {
           this.messages.push({
@@ -189,6 +193,8 @@ export default {
             text: msgRawObj.content
           });
         });
+        let chatBlock = document.getElementById("chat-block");
+        chatBlock.scrollTop = chatBlock.scrollHeight;
       });
     },
     sendMessage() {
