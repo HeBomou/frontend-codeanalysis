@@ -336,5 +336,7 @@ export const API = {
 
     getProjectBasicAttribute_group: (groupId) => get("/project?groupId=" + groupId),
 
+    getContactNew: (userId) => get("/contact/" + userId + "/new")
+
 }
 

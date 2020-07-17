@@ -10,7 +10,10 @@
             <v-spacer />
             <v-spacer />
             <v-btn @click="toTeam" class="mr-5">我的小组</v-btn>
-            <v-btn @click="debug" class="mr-5">debug</v-btn>
+            <v-btn @click="debug" class="mr-5">
+                <div v-if="haveNewChat">有新消息</div>
+                <div v-else>聊天</div>
+            </v-btn>
             <v-btn @click="logout">退出登录</v-btn>
         </v-app-bar>
     <v-content>

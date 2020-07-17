@@ -145,7 +145,10 @@
             <v-spacer />
             <v-spacer />
             <v-btn @click="toProject" class="mr-5">我的项目</v-btn>
-            <v-btn @click="debug" class="mr-5">debug</v-btn>
+            <v-btn @click="debug" class="mr-5">
+                <div v-if="haveNewChat">有新消息</div>
+                <div v-else>聊天</div>
+            </v-btn>
             <v-btn @click="logout">退出登录</v-btn>
         </v-app-bar>
 
@@ -264,30 +267,6 @@
             <v-container fluid>
                 <v-row>
                     <v-col cols="8">
-                        <!-- <v-list>
-                            <p>未完成</p>
-                            <v-list-item-group>
-                                <div v-for="item in tasks" :key="item.name" @click="taskChosen=item"  >
-                                    <v-list-item v-if="item.isFinished==0">
-                                    <v-row>
-                                            <v-checkbox v-model="item.isFinished"></v-checkbox>
-                                            <p class="mt-5">{{item.name}}</p>
-                                        </v-row>
-                                    </v-list-item>
-                                </div>
-                            </v-list-item-group>
-                            <p>已完成</p>
-                            <v-list-item-group>
-                                <div v-for="item in tasks" :key="item.name" @click="taskChosen=item"  >
-                                    <v-list-item v-if="item.isFinished==1">
-                                    <v-row>
-                                            <v-checkbox v-model="item.isFinished"></v-checkbox>
-                                            <p class="mt-5">{{item.name}}</p>
-                                        </v-row>
-                                    </v-list-item>
-                                </div>
-                            </v-list-item-group>
-                        </v-list> -->
                         <v-simple-table>
                             <thead>
                                 <tr>
@@ -295,7 +274,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr @click="isAddingTask=true">
+                                <tr @click="isAddingTask=true" v-if="hasHigherLevel(user.level, 'member')">
                                     <td>
                                         <v-row>
                                             <v-checkbox disabled />
@@ -309,7 +288,11 @@
                                 <tr v-for="item in tasks" :key="item.name" @click="selectTask(item)" :bgcolor="getColor(item)">
                                     <td v-if="item.isFinished==0">
                                         <v-row >
-                                            <v-checkbox v-model="item.isFinished" @change="updateTask(item)"></v-checkbox>
+                                            <v-checkbox 
+                                                v-model="item.isFinished" 
+                                                @change="updateTask(item)" 
+                                                
+                                            ></v-checkbox>
                                             <p class="mt-5">{{item.name}}</p>
                                         </v-row>
                                     </td>
@@ -358,8 +341,10 @@
                                 <tr v-for="item in tasks" :key="item.name" @click="selectTask(item)" :bgcolor="getColor(item)">
                                     <td v-if="item.isFinished!=0">
                                         <v-row>
-                                            <v-checkbox v-model="item.isFinished" @change="updateTask(item)">
-
+                                            <v-checkbox 
+                                               
+                                                v-model="item.isFinished" 
+                                                @change="updateTask(item)">
                                             </v-checkbox>
                                             <p class="mt-5">{{item.name}}</p>
                                         </v-row>
@@ -374,7 +359,8 @@
                                 <v-container fluid>
                                     <v-row>
                                         <v-checkbox v-model="taskChosen.isFinished" @change="updateTask(taskChosen)"></v-checkbox>
-                                        <v-text-field v-model="taskChosen.name" @change="updateTask(taskChosen)"></v-text-field>
+                                        <v-text-field v-if="hasHigherLevel(user.level, 'member')" v-model="taskChosen.name" @change="updateTask(taskChosen)"></v-text-field>
+                                        <p class="mt-5" v-else>{{taskChosen.name}}</p>
                                     </v-row>
                                     <v-row>
                                         <v-divider class="mb-5"></v-divider>
@@ -405,6 +391,7 @@
                                                     v-model="taskChosen.deadline"
                                                     color="green lighten-1"
                                                     @change="updateTask(taskChosen);menuDate=false"
+                                                    :disabled="!hasHigherLevel(user.level, 'member')"
                                                 ></v-date-picker>
 
                                             </v-menu>
@@ -417,26 +404,34 @@
                                                         <v-icon class="mr-3">
                                                             mdi-clock
                                                         </v-icon>
-                                                        Leo
+                                                        执行者
                                                     </v-list-item>
                                                 </template>
                                                 <v-list style="width: 100%">
-                                                    <div v-for="user in taskMember" :key="user.id">
-                                                        <v-list-item  style="width: 100%" @click="user.chosen=!user.chosen">
-                                                            <!-- <v-list-item-icon v-if="user.chosen">
-                                                                <v-icon>mdi-plus</v-icon>
-                                                            </v-list-item-icon>
-                                                            <v-list-item-icon v-else>
-                                                                <v-icon>mdi-mail</v-icon>
-                                                            </v-list-item-icon> -->
-                                                            <v-checkbox 
-                                                                :label="user.username" 
-                                                                v-model="user.chosen" 
-                                                                style="width: 100%;"
-                                                                @click="user.chosen=!user.chosen"
-                                                                @change="updateExecutor(taskChosen)"
-                                                            ></v-checkbox>
-                                                        </v-list-item>
+                                                    <div v-if="hasHigherLevel(user.level, 'member')">
+                                                        <div v-for="user in taskMember" :key="user.id">
+                                                            <v-list-item  style="width: 100%" @click="user.chosen=!user.chosen">
+                                                                <v-checkbox 
+                                                                    :label="user.username" 
+                                                                    v-model="user.chosen" 
+                                                                    style="width: 100%;"
+                                                                    @click="user.chosen=!user.chosen"
+                                                                    @change="updateExecutor(taskChosen)"
+                                                                ></v-checkbox>
+                                                            </v-list-item>
+                                                        </div>
+                                                    </div>
+                                                    <div v-else>
+                                                        <div v-for="user in taskMember" :key="user.id">
+                                                            <v-list-item  style="width: 100%">
+                                                                <v-checkbox 
+                                                                    :label="user.username" 
+                                                                    v-model="user.chosen" 
+                                                                    style="width: 100%;"
+                                                                    disabled
+                                                                ></v-checkbox>
+                                                            </v-list-item>
+                                                        </div>
                                                     </div>
                                                     
                                                 </v-list>
@@ -448,13 +443,18 @@
                                         <v-divider class="mb-5"></v-divider>
                                     </v-row>
                                     <v-row>
+                                        
                                         <v-textarea
                                             class="ml-5 mr-5"
                                             flat
                                             outlined
                                             v-model="taskChosen.info"
                                             @change="updateTask(taskChosen)"
+                                            v-if="hasHigherLevel(user.level, 'member')"
                                         ></v-textarea>
+                                        <v-card-text v-else>
+                                        <div class="text-wrapper">{{taskChosen.info}}</div>
+                                        </v-card-text>
                                     </v-row>
                                 </v-container>
                             </v-card-actions>
@@ -504,6 +504,7 @@ export default {
     },
     data(){
         return {
+            haveNewChat: false,
             func1: API.getProjectBasicAttribute_group,
             func2: API.postProject_group,
             userId: 0,
@@ -626,7 +627,6 @@ export default {
                 this.user = this.teamMember.find(item => {
                     return item.id == this.userId;
                 });
-                //console.log(this.user);
                 //获取小组公告
                 this.getNotice();
                 this.getTasks();
@@ -658,9 +658,9 @@ export default {
                 if(this.groups.length == 0){
                     return;
                 }
-                this.$nextTick(() => {
+                //this.$nextTick(() => {
                     this.selectGroup(this.groups[this.groups.length - 1].id);//由于考虑到新的组在最后，所以获取小组后默认选择最后一个
-                })
+                //})
             }).catch(err => this.Alert(err));
         },
         confirmNewGroup(){
@@ -690,6 +690,10 @@ export default {
             })
         },
         hasHigherLevel(from, to){
+            if(from == undefined){
+                console.log("cnm");
+                console.log(this.user);
+            }
             let index1 = this.getLevelIndex(from);
             let index2 = this.getLevelIndex(to);
             return index1 > index2;
@@ -826,15 +830,35 @@ export default {
                         
                     }
                 });
+                console.log("taskMember");
                 console.log(this.taskMember);
             }).catch(err => {
-                if(err.response != undefined){
+                if(typeof(err.response) != undefined){
                     this.Alert(err.response.data.errMsg);
                 }else {
                     console.log(err);
                 }
             })
-        }
+        },
+        // isExecutor(user){
+        //     if(user.id == 0){
+        //         return true;
+        //     }
+        //     console.log(user);
+        //     console.log(this.taskMember);
+        //     if(typeof(this.taskMember.find(mem => mem.id == user.id).chosen) == undefined){
+        //         console.log("haha");
+        //         console.log(this.taskMember.find(mem => mem.id == user.id));
+        //     }
+        //     if(this.taskMember.find(mem => mem.id == user.id).chosen){
+        //         //console.log("isExe true");
+        //         return true;
+        //     }else{
+        //         //console.log("isExe false");
+
+        //         return false;
+        //     }
+        // }
     }
     ,mounted(){
         this.userId = this.$store.getters.userId;
