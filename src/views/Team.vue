@@ -170,12 +170,12 @@
             <v-spacer />
             <v-spacer />
             <v-spacer />
-            <v-btn @click="toProject" class="mr-5">我的项目</v-btn>
-            <v-btn @click="toChat()" class="mr-5">
+            <v-btn @click="toProject" class="mr-5 white--text" elevation="0" color="#5A7797" ><i class="material-icons mr-2">insights</i>我的项目</v-btn>
+            <v-btn @click="toChat()" class="mr-5 white--text" elevation="0" color="#5A7797"><i class="material-icons mr-2">sms</i>
                 <div v-if="haveNewChat">有新消息!</div>
                 <div v-else>聊天</div>
             </v-btn>
-            <v-btn @click="logout">退出登录</v-btn>
+            <v-btn @click="logout" elevation="0" color="#5A7797" class="mr-5 white--text"><i class="material-icons mr-2">login</i>退出登录</v-btn>
         </v-app-bar>
 
     <v-navigation-drawer
@@ -221,11 +221,11 @@
       <v-container
       >
         <v-tabs>
-        <v-tab>项目列表</v-tab>
+        <v-tab><i class="material-icons mr-2">insights</i>项目列表</v-tab>
         <v-tab-item>
            <ProjectComponent ref="ProjectComponentTeam" :getProjectBasicAttribute="func1" :postProject="func2"></ProjectComponent>
         </v-tab-item>
-        <v-tab>成员列表</v-tab>
+        <v-tab><i class="material-icons mr-2">group</i>成员列表</v-tab>
         <v-tab-item>
             <!-- 成员列表 -->
             <v-simple-table>
@@ -297,7 +297,7 @@
             </v-simple-table>
         </v-tab-item>
 
-        <v-tab>任务列表</v-tab>
+        <v-tab><i class="material-icons mr-2">rule</i>任务列表</v-tab>
         <v-tab-item>
             <v-container fluid>
                 <v-row>
@@ -499,7 +499,7 @@
                 </v-row>
             </v-container>
         </v-tab-item>
-        <v-tab>小组公告</v-tab>
+        <v-tab><i class="material-icons mr-2">star_rate</i>小组公告</v-tab>
         <v-tab-item>
             <!-- 小组公告 -->
             
