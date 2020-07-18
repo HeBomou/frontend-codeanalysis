@@ -34,11 +34,11 @@
             </v-responsive>
           </v-col>
           <v-col cols="3" style="max-width: 100%;" class="flex-grow-1 flew-shrink-0">
-            <v-responsive v-if="activeChat" class="overflow-y-auto fill-height" height="650">
+            <v-responsive v-if="activeChat" class="fill-height" height="650">
               <v-card flat class="d-flex flex-column fill-height">
                 <v-card-title>{{people[curPersonIndex].name}}</v-card-title>
                 <v-divider class="my-0"></v-divider>
-                <v-card-text class="flex-grow-1 overflow-y-auto">
+                <v-card-text id="message-list" class="flex-grow-1 overflow-y-auto">
                   <template v-for="item in messages">
                     <div :key="item.id" :class="{'d-flex flex-row-reverse': item.me}">
                       <v-chip
@@ -188,6 +188,10 @@ export default {
             text: msgRawObj.content
           });
         });
+      });
+      this.$nextTick(() => {
+        var chatList = this.$el.querySelector(".chat-list");
+        chatList.scrollTop = chatList.scrollHeight;
       });
     },
     sendMessage() {
