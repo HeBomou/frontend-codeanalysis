@@ -157,7 +157,7 @@
                         </v-btn>
                     </template>
                     <template v-slot:item.pid="props">
-                        <v-btn @click="deleteProject(props.item.id)">删除</v-btn>
+                        <v-btn @click="deleteProject(props.item.id)" fab height="30" width="30" elevation="2"><i class="material-icons">clear</i></v-btn>
                     </template>
                 </v-data-table>
             </v-card-text>
