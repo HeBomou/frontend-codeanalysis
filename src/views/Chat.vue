@@ -159,8 +159,14 @@ export default {
         if (
           msgRawObj.senderId == curPersonId ||
           msgRawObj.receiverId == curPersonId
-        )
+        ) {
           this.messages.push(msgObj);
+          this.$nextTick(() => {
+            var chatList = this.$el.querySelector("#message-list");
+            console.log(chatList);
+            chatList.scrollTop = chatList.scrollHeight;
+          });
+        }
         // console.log("WS: 收到消息 ", msgObj);
       } else if (msg.data[0] == "r") {
         let personId = parseInt(msg.data.substr(2));
@@ -188,10 +194,11 @@ export default {
             text: msgRawObj.content
           });
         });
-      });
-      this.$nextTick(() => {
-        var chatList = this.$el.querySelector(".chat-list");
-        chatList.scrollTop = chatList.scrollHeight;
+        this.$nextTick(() => {
+          var chatList = this.$el.querySelector("#message-list");
+          console.log(chatList);
+          chatList.scrollTop = chatList.scrollHeight;
+        });
       });
     },
     sendMessage() {
