@@ -1,5 +1,7 @@
 <template>
     <div>
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
         <v-dialog
         v-model="dialogErr"
         width="500">
@@ -149,10 +151,13 @@
                     </template>
                     <template v-slot:item.id="props">
                         
-                        <v-icon @click="toProject(props.item.id)">mdi-plus</v-icon>
+                        <!-- <v-icon @click="toProject(props.item.id)">mdi-plus</v-icon> -->
+                        <v-btn fab height="30" width="30" elevation="2">
+                            <i @click="toProject(props.item.id)" class="material-icons">search</i>
+                        </v-btn>
                     </template>
                     <template v-slot:item.pid="props">
-                        <v-btn @click="deleteProject(props.item.id)">删除</v-btn>
+                        <v-btn @click="deleteProject(props.item.id)" fab height="30" width="30" elevation="2"><i class="material-icons">clear</i></v-btn>
                     </template>
                 </v-data-table>
             </v-card-text>
@@ -214,6 +219,8 @@ export default {
         //获取所有得项目相关信息
         setProjects(id){
             this.entityId = id;
+            console.log("setProjects");
+            console.log(this.entityId);
             this.getProjectBasicAttribute(this.entityId).then(res => {
                 this.projects = res.data;
                 this.projects.forEach(p => {
@@ -233,12 +240,14 @@ export default {
         },
         //添加一个项目
         addProject(){
+            console.log("addProject");
+            console.log(this.entityId);
             this.addProjectConfirmPressed = true;
             this.postProject(this.projectName, this.projectUrl, this.entityId).then(res => {
                 console.log(res);
 
                 this.dialog = false;
-                this.setProjects();
+                this.setProjects(this.entityId);
                 this.projectName = "";
                 this.projectUrl = "";
                 this.addProjectConfirmPressed = false;

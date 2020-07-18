@@ -1,7 +1,7 @@
 <template>
   <v-app id="dependency">
-    <v-app-bar app clipped-left color="amber">
-      <span class="title ml-3 mr-5">我的消息</span>
+    <v-app-bar app clipped-left color="#5A7797">
+      <span class="title ml-3 mr-5 white--text">我的消息</span>
       <!-- <v-spacer /> -->
     </v-app-bar>
     <v-content>
@@ -24,7 +24,7 @@
                         <v-list-item-title v-text="item.name"></v-list-item-title>
                       </v-list-item-content>
                       <v-list-item-icon>
-                        <v-icon :color="item.read?'grey':'amber'">mdi-chat</v-icon>
+                        <v-icon :color="item.read?'grey':'#5A7797'">mdi-chat</v-icon>
                       </v-list-item-icon>
                     </v-list-item>
                     <v-divider :key="`divider-${item.id}`" class="my-0"></v-divider>
