@@ -88,11 +88,11 @@ export default {
       activeChat: false,
       curPersonIndex: 0,
       messages: [
-        { id: 1, me: false, time: "2020-06-29 20:20", text: "cnm" },
-        { id: 2, me: true, time: "2020-06-29 20:21", text: "cnm2" },
-        { id: 3, me: false, time: "2020-06-29 20:32", text: "cnm3" },
-        { id: 4, me: true, time: "2020-06-29 20:34", text: "cnm4" },
-        { id: 5, me: false, time: "2020-06-29 20:51", text: "cnm5" }
+        { id: 1, me: false, time: "2020-06-29 20:20:55", text: "cnm" },
+        { id: 2, me: true, time: "2020-06-29 20:21:33", text: "cnm2" },
+        { id: 3, me: false, time: "2020-06-29 20:32:02", text: "cnm3" },
+        { id: 4, me: true, time: "2020-06-29 20:34:22", text: "cnm4" },
+        { id: 5, me: false, time: "2020-06-29 20:51:10", text: "cnm5" }
       ],
       inputText: ""
     };
@@ -162,12 +162,11 @@ export default {
         )
           this.messages.push(msgObj);
         // console.log("WS: 收到消息 ", msgObj);
-      } else if (msg.data[0] == 'r') {
+      } else if (msg.data[0] == "r") {
         let personId = parseInt(msg.data.substr(2));
-        let read = msg.data[1] == '1';
+        let read = msg.data[1] == "1";
         for (let i = 0; i < this.people.length; i++)
-          if (this.people[i].id == personId)
-            this.people[i].read = read;
+          if (this.people[i].id == personId) this.people[i].read = read;
       }
     },
     changePerson(index) {
@@ -179,7 +178,7 @@ export default {
       console.log("update read", this.people[index]);
       // 获取用户聊天记录
       getMessages(this.$store.getters.userId, curPersonId).then(res => {
-        console.log(res);
+        // console.log(res);
         this.messages = [];
         res.data.forEach(msgRawObj => {
           this.messages.push({
@@ -196,7 +195,7 @@ export default {
       this.socket.send(
         "m" + this.people[this.curPersonIndex].id + "," + this.inputText
       );
-      console.log("Try to send msg: ", this.inputText);
+      // console.log("Try to send msg: ", this.inputText);
       this.inputText = "";
     }
   }
