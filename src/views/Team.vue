@@ -254,7 +254,7 @@
                                     mdi-plus
                                     </v-icon> -->
                                     <v-btn fab height="30" width="30" elevation="2" v-on="on">
-                                        <i class="material-icons">menu</i>
+                                        <i class="material-icons">more_vert</i>
                                     </v-btn>
                                 </template>
                                 <v-list>
@@ -414,7 +414,7 @@
                                                         v-on="on"
                                                     >
                                                         <v-icon class="mr-3">
-                                                            mdi-clock
+                                                            mdi-alarm
                                                         </v-icon>
                                                         <div v-if="taskChosen.deadline!=''">
                                                         {{taskChosen.deadline}}
