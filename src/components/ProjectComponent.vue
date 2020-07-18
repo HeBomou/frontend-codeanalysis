@@ -1,5 +1,7 @@
 <template>
     <div>
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
         <v-dialog
         v-model="dialogErr"
         width="500">
@@ -149,7 +151,8 @@
                     </template>
                     <template v-slot:item.id="props">
                         
-                        <v-icon @click="toProject(props.item.id)">mdi-plus</v-icon>
+                        <!-- <v-icon @click="toProject(props.item.id)">mdi-plus</v-icon> -->
+                        <i @click="toProject(props.item.id)" class="material-icons">search</i>
                     </template>
                     <template v-slot:item.pid="props">
                         <v-btn @click="deleteProject(props.item.id)">删除</v-btn>

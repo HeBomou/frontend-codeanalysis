@@ -164,9 +164,9 @@
     <v-app-bar
         app
         clipped-left
-        color="amber"
+        color="#FF4081"
         >
-            <span class="title ml-3 mr-5">我的小组</span>
+            <span class="title ml-3 mr-5 white--text" >我的小组</span>
             <v-spacer />
             <v-spacer />
             <v-spacer />
@@ -424,7 +424,7 @@
                                                 <v-date-picker
                                                     style="width: 100%"
                                                     v-model="taskChosen.deadline"
-                                                    color="green lighten-1"
+                                                    color="#FF4081"
                                                     @change="updateTask(taskChosen);menuDate=false"
                                                     :disabled="!hasHigherLevel(user.level, 'member')"
                                                 ></v-date-picker>

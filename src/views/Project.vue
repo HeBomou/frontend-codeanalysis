@@ -35,6 +35,7 @@ export default {
        userId: 0,
        func1: API.getProjectBasicAttribute_user,
        func2: API.postProject_user,
+       haveNewChat: false
     }),methods:{
        
         logout(){
