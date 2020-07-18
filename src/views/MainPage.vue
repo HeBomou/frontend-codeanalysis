@@ -922,6 +922,7 @@ export default {
       if (this.thresholdSelected == 0) {
         this.dialogDeleteSubgraph = false;
         this.Alert("不能删除紧密度域值为0的子图");
+        return;
       }
       delSubgraph(this.projectId, this.subgraphId)
         .then(res => {

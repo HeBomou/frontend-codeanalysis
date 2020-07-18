@@ -518,7 +518,7 @@
                 :key="i"
                 >
                     <v-card style="width:1000%" class="ml-10 mr-10 mt-10">
-                        <v-card-title>{{notice.title}}   <v-spacer />发布者：{{notice.person}}<v-spacer />时间:{{notice.time}} </v-card-title>
+                        <v-card-title>{{notice.title}} <v-spacer />时间:{{notice.time}} </v-card-title>
                         <v-card-text><div class="text-wrapper">{{notice.content}}</div></v-card-text>
                     </v-card>
                 </v-list-item>
