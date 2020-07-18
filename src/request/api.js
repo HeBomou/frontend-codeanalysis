@@ -336,7 +336,12 @@ export const API = {
 
     getProjectBasicAttribute_group: (groupId) => get("/project?groupId=" + groupId),
 
-    getContactNew: (userId) => get("/contact/" + userId + "/new")
+    /**
+     * 有新消息则返回true
+     */
+    getContactNew: (userId) => get("/contact/" + userId + "/new"),
+
+   
 
 }
 

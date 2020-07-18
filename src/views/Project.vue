@@ -10,7 +10,7 @@
             <v-spacer />
             <v-spacer />
             <v-btn @click="toTeam" class="mr-5">我的小组</v-btn>
-            <v-btn @click="debug" class="mr-5">
+            <v-btn @click="toChat()" class="mr-5">
                 <div v-if="haveNewChat">有新消息</div>
                 <div v-else>聊天</div>
             </v-btn>
@@ -46,6 +46,9 @@ export default {
         },
         debug(){
             this.$refs.ProjectComponent.haha();
+        },
+        toChat(){
+            this.$router.push("/chat")
         }
 
         
@@ -55,6 +58,16 @@ export default {
         if(this.userId == 0){
             this.$router.push('/login');
         }
+        API.getContactNew(this.userId).then(res => {
+            //console.log(res.data);
+            this.haveNewChat = res.data;
+        }).catch(err => {
+            if(typeof(err.response) != undefined){
+                this.Alert(err.response.data.errMsg);
+            }else {
+                console.log(err);
+            }
+        })
         this.$nextTick(() => {
             this.$refs.ProjectComponent.setProjects(this.userId);
             //console.log(this.$refs);

@@ -1,5 +1,7 @@
 <template>
 <v-app id="keep">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
     <div>
         <v-dialog
             v-model="dialogErr"
@@ -86,6 +88,30 @@
                 </v-card-text>
             </v-card>
         </v-dialog>
+         <v-dialog
+            v-model="dialogOutGroup"
+            width="500">
+            <v-card>
+                <v-card-title>退出小组"{{groupTobeDeleted.name}}"?</v-card-title>
+                <v-card-text>
+                    <v-btn
+                        class="mr-5 ml-5"
+                        color="success"
+                        @click="outGroup(groupTobeDeleted);dialogOutGroup=false"
+                    >
+                    确定
+                    </v-btn>
+                
+                    <v-btn
+                        class="mr-5 ml-5"
+                        color="error"
+                        @click="dialogOutGroup=false"
+                    >
+                    取消
+                    </v-btn>
+                </v-card-text>
+            </v-card>
+        </v-dialog>
         <v-dialog
             v-model="dialogNewNotice"
             width="500">
@@ -145,8 +171,8 @@
             <v-spacer />
             <v-spacer />
             <v-btn @click="toProject" class="mr-5">我的项目</v-btn>
-            <v-btn @click="debug" class="mr-5">
-                <div v-if="haveNewChat">有新消息</div>
+            <v-btn @click="toChat()" class="mr-5">
+                <div v-if="haveNewChat">有新消息!</div>
                 <div v-else>聊天</div>
             </v-btn>
             <v-btn @click="logout">退出登录</v-btn>
@@ -173,8 +199,17 @@
                     <v-list-item-content>
                         <v-list-item-title v-text="item.name"></v-list-item-title>
                     </v-list-item-content>
-                    <v-list-item-icon @click="dialogDeleteGroup=true;groupTobeDeleted=item">
-                        <v-icon>mdi-delete</v-icon>
+                    <v-list-item-icon 
+                        @click="dialogDeleteGroup=true;groupTobeDeleted=item"
+                        v-if="user.level == 'leader'"
+                    >
+                        <i class="material-icons">clear</i>
+                    </v-list-item-icon>
+                    <v-list-item-icon 
+                        @click="dialogOutGroup=true;groupTobeDeleted=item"
+                        v-else
+                    >
+                        <i class="material-icons">clear</i>
                     </v-list-item-icon>
                 </v-list-item>
             </v-list-item-group>
@@ -402,7 +437,7 @@
                                                         v-on="on"
                                                     >
                                                         <v-icon class="mr-3">
-                                                            mdi-clock
+                                                            mdi-account
                                                         </v-icon>
                                                         执行者
                                                     </v-list-item>
@@ -513,6 +548,7 @@ export default {
             dialogNewGroup: false,
             dialogInvite: false,
             dialogDeleteGroup: false,
+            dialogOutGroup: false,
             dialogNewNotice: false,
             groupTobeDeleted:{},
             drawer: true,
@@ -585,6 +621,15 @@ export default {
         }
     }
     ,methods: {
+        clearData(){
+            this.teamMember = [];
+            this.notices = [];
+            this.tasks = [];
+            this.taskChosen = {};
+            this.newTask = {};
+            this.taskMember = [];
+            this.groups = [];
+        },
         Alert(msg){
             this.errMsg = msg;
             this.dialogErr = true;
@@ -652,6 +697,7 @@ export default {
         },
         //获取所有小组
         getGroups(){
+            this.clearData();
             getAllGroup(this.userId).then(res => {
                 console.log(res);
                 this.groups = res.data;
@@ -840,6 +886,21 @@ export default {
                 }
             })
         },
+        toChat(){
+            this.$router.push("/chat")
+        },
+        outGroup(group){
+            API.deleteMember(group.id, this.user.id).then(res => {
+                console.log(res);
+                this.getGroups();
+            }).catch(err => {
+                if(typeof(err.response) != undefined){
+                    this.Alert(err.response.data.errMsg);
+                }else {
+                    console.log(err);
+                }
+            })
+        }
         // isExecutor(user){
         //     if(user.id == 0){
         //         return true;
@@ -865,6 +926,16 @@ export default {
         if(this.userId == 0){
             this.$router.push('/login');
         }
+        API.getContactNew(this.userId).then(res => {
+            //console.log(res.data);
+            this.haveNewChat = res.data;
+        }).catch(err => {
+            if(typeof(err.response) != undefined){
+                this.Alert(err.response.data.errMsg);
+            }else {
+                console.log(err);
+            }
+        })
         this.getGroups();
     }
 }

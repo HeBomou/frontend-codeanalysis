@@ -214,6 +214,8 @@ export default {
         //获取所有得项目相关信息
         setProjects(id){
             this.entityId = id;
+            console.log("setProjects");
+            console.log(this.entityId);
             this.getProjectBasicAttribute(this.entityId).then(res => {
                 this.projects = res.data;
                 this.projects.forEach(p => {
@@ -233,12 +235,14 @@ export default {
         },
         //添加一个项目
         addProject(){
+            console.log("addProject");
+            console.log(this.entityId);
             this.addProjectConfirmPressed = true;
             this.postProject(this.projectName, this.projectUrl, this.entityId).then(res => {
                 console.log(res);
 
                 this.dialog = false;
-                this.setProjects();
+                this.setProjects(this.entityId);
                 this.projectName = "";
                 this.projectUrl = "";
                 this.addProjectConfirmPressed = false;
