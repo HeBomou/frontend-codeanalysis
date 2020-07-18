@@ -7,8 +7,6 @@
 </template>
 
 <script>
-import Child from "@/components/child.vue";
-
 export default {
   name: "app",
 

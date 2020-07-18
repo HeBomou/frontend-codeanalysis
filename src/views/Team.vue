@@ -164,7 +164,7 @@
     <v-app-bar
         app
         clipped-left
-        color="#FF4081"
+        color="#5A7797"
         >
             <span class="title ml-3 mr-5 white--text" >我的小组</span>
             <v-spacer />
