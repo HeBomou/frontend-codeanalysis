@@ -1,6 +1,6 @@
 <template>
   <v-app id="dependency">
-    <v-app-bar app clipped-left color="amber">
+    <v-app-bar app clipped-left color="#5A7797">
       <span class="title ml-3 mr-5">我的消息</span>
       <!-- <v-spacer /> -->
     </v-app-bar>
