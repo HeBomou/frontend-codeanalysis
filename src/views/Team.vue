@@ -248,11 +248,14 @@
                         <td>
                             <v-menu offset-y>
                                 <template v-slot:activator="{ on }">
-                                    <v-icon
+                                    <!-- <v-icon
                                     v-on="on"
                                     >
                                     mdi-plus
-                                    </v-icon>
+                                    </v-icon> -->
+                                    <v-btn fab height="30" width="30" elevation="2" v-on="on">
+                                        <i class="material-icons">menu</i>
+                                    </v-btn>
                                 </template>
                                 <v-list>
                                     <v-list-item
