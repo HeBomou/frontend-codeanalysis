@@ -242,7 +242,7 @@
                         <td><v-icon @click="setInvite">mdi-plus</v-icon></td>
                         <td></td>
                     </tr>
-                    <tr v-for="item in teamMember" :key="item.name">
+                    <tr v-for="item in teamMember" :key="item.id">
                         <td>{{ item.username }}</td>
                         <td>{{ item.level }}</td>
                         <td>
@@ -320,7 +320,7 @@
                                         </v-row>
                                     </td>
                                 </tr>
-                                <tr v-for="item in tasks" :key="item.name" @click="selectTask(item)" :bgcolor="getColor(item)">
+                                <tr v-for="item in tasks" :key="item.id" @click="selectTask(item)" :bgcolor="getColor(item)">
                                     <td v-if="item.isFinished==0">
                                         <v-row >
                                             <v-checkbox 
@@ -373,7 +373,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="item in tasks" :key="item.name" @click="selectTask(item)" :bgcolor="getColor(item)">
+                                <tr v-for="item in tasks" :key="item.id" @click="selectTask(item)" :bgcolor="getColor(item)">
                                     <td v-if="item.isFinished!=0">
                                         <v-row>
                                             <v-checkbox 
