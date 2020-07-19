@@ -1,69 +1,74 @@
 <template>
   <v-app id="dependency">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
     <v-overlay :value="overlay">
       <v-progress-circular indeterminate></v-progress-circular>
     </v-overlay>
-    <v-dialog v-model="SourceCodedialog" width="70%">
-      <v-card>
-        <v-card-title>{{this.vertexSelected == undefined ? "" : this.vertexSelected.functionName}}</v-card-title>
-        <v-card-text>
-          <div id="codeView" v-highlight>
-            <pre><code v-html="src" style="width: 100%"></code></pre>
-          </div>
-        </v-card-text>
-      </v-card>
-    </v-dialog>
-    <v-dialog v-model="dialogDeleteSubgraph" width="500px">
-      <v-card>
-        <v-card-title>删除子图</v-card-title>
-        <v-card-text color="red">子图被删除后无法恢复，且所有标注都会被删除！</v-card-text>
-        <v-card-actions>
-          <v-spacer />
-          <v-btn color="success" @click="deleteSubgraphConfirmed()">确定</v-btn>
+    <div>
+      <v-dialog v-model="SourceCodedialog" width="70%">
+        <v-card>
+          <v-card-title>{{this.vertexSelected == undefined ? "" : this.vertexSelected.functionName}}</v-card-title>
+          <v-card-text>
+            <div id="codeView" v-highlight>
+              <pre><code v-html="src" style="width: 100%"></code></pre>
+            </div>
+          </v-card-text>
+        </v-card>
+      </v-dialog>
+      <v-dialog v-model="dialogDeleteSubgraph" width="500px">
+        <v-card>
+          <v-card-title>删除子图</v-card-title>
+          <v-card-text color="red">子图被删除后无法恢复，且所有标注都会被删除！</v-card-text>
+          <v-card-actions>
+            <v-spacer />
+            <v-btn color="success" @click="deleteSubgraphConfirmed()">确定</v-btn>
 
-          <v-btn color="error" @click="dialogDeleteSubgraph=false;">取消</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-    <v-dialog v-model="dialogErr" width="500">
-      <v-card justify="center">
-        <v-card-title>{{errMsg}}</v-card-title>
-        <v-card-text>
-          <v-btn color="error" @click="dialogConfirm">确定</v-btn>
-        </v-card-text>
-      </v-card>
-    </v-dialog>
-    <v-dialog v-model="dialogThreshold" width="500">
-      <v-card justify="center">
-        <v-card-title>添加紧密度域值</v-card-title>
-        <v-card-text>
-          <v-form v-model="newThresholdValid">
-            <v-text-field
-              class="mr-5 ml-5"
-              v-model="newThreshold"
-              :rules="isThreholdRules"
-              label="紧密度域值"
-              required
-              flat
-              outlined
-              rounded
-            ></v-text-field>
-            <v-text-field
-              class="mr-5 ml-5"
-              v-model="newThresholdName"
-              :rules="isThreholdNameRules"
-              label="新子图名称"
-              required
-              flat
-              outlined
-              rounded
-            ></v-text-field>
-            <v-btn color="success" @click="addThreshold()" :disabled="!newThresholdValid">确定</v-btn>
-          </v-form>
-        </v-card-text>
-      </v-card>
-    </v-dialog>
-    <v-app-bar app clipped-left color="amber">
+            <v-btn color="error" @click="dialogDeleteSubgraph=false;">取消</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+      <v-dialog v-model="dialogErr" width="500">
+        <v-card justify="center">
+          <v-card-title>{{errMsg}}</v-card-title>
+          <v-card-text>
+            <v-btn color="error" @click="dialogConfirm">确定</v-btn>
+          </v-card-text>
+        </v-card>
+      </v-dialog>
+      <v-dialog v-model="dialogThreshold" width="500">
+        <v-card justify="center">
+          <v-card-title>添加紧密度域值</v-card-title>
+          <v-card-text>
+            <v-form v-model="newThresholdValid">
+              <v-text-field
+                class="mr-5 ml-5"
+                v-model="newThreshold"
+                :rules="isThreholdRules"
+                label="紧密度域值"
+                required
+                flat
+                outlined
+                rounded
+              ></v-text-field>
+              <v-text-field
+                class="mr-5 ml-5"
+                v-model="newThresholdName"
+                :rules="isThreholdNameRules"
+                label="新子图名称"
+                required
+                flat
+                outlined
+                rounded
+              ></v-text-field>
+              <v-btn color="success" @click="addThreshold()" :disabled="!newThresholdValid">确定</v-btn>
+            </v-form>
+          </v-card-text>
+        </v-card>
+      </v-dialog>
+    </div>
+    
+    <v-app-bar app clipped-left color="#5A7797" class="white--text">
       <span class="title ml-3 mr-5">
         项目名:&nbsp;
         <span class="font-weight-light">{{projectName}}</span>
@@ -80,11 +85,11 @@
       <v-spacer />
       <v-spacer />
 
-      <v-btn class="mr-4" @click="toProject()">切换项目</v-btn>
+      <v-btn @click="toProject" class="mr-5 white--text" elevation="0" color="#5A7797" ><i class="material-icons mr-2">insights</i>我的项目</v-btn>
 
-      <v-btn @click="logout()">退出登录</v-btn>
+      <v-btn @click="logout" elevation="0" color="#5A7797" class="mr-5 white--text"><i class="material-icons mr-2">login</i>退出登录</v-btn>
     </v-app-bar>
-    <v-content>
+    <v-content >
       <v-container fluid>
         <v-row>
           <v-col cols="10">
@@ -113,7 +118,7 @@
                   </v-card-text>
                   <v-card-actions>
                     <v-row justify="center">
-                      <v-btn @click="dialogDeleteSubgraph=true">删除子图</v-btn>
+                      <v-btn outlined color="#5A7797" elevation="0" @click="dialogDeleteSubgraph=true">删除子图</v-btn>
                     </v-row>
                   </v-card-actions>
                 </v-card>
@@ -141,7 +146,7 @@
               <v-card-title style="height: 20%">
                 dependency
                 <v-spacer />
-                <v-btn @click="centerTracker+=1">移动到当前选中对象</v-btn>
+                <v-btn outlined color="#5A7797" elevation="0" @click="centerTracker+=1">移动到当前选中对象</v-btn>
               </v-card-title>
               <v-card-text style="height: 80%">
                 <DepGraph
@@ -165,10 +170,10 @@
                       justify="center"
                 >-->
 
-                <v-btn class="mr-5" @click="checkDomain">查看所在连通域</v-btn>
-                <v-btn class="mr-5" v-if="selectType==1" @click="SourceCodedialog=true">查看源代码</v-btn>
-                <v-btn class="mr-5" @click="setAsStart" v-if="selectType==1">设置为起点</v-btn>
-                <v-btn class="mr-5" @click="setAsEnd" v-if="selectType==1">设置为终点</v-btn>
+                <v-btn outlined color="#5A7797" elevation="0" class="mr-5" @click="checkDomain">查看所在连通域</v-btn>
+                <v-btn outlined color="#5A7797" elevation="0" class="mr-5" v-if="selectType==1" @click="SourceCodedialog=true">查看源代码</v-btn>
+                <v-btn outlined color="#5A7797" elevation="0" class="mr-5" @click="setAsStart" v-if="selectType==1">设置为起点</v-btn>
+                <v-btn outlined color="#5A7797" elevation="0" class="mr-5" @click="setAsEnd" v-if="selectType==1">设置为终点</v-btn>
 
                 <!-- </v-form> -->
               </v-card-text>
@@ -209,7 +214,7 @@
               <v-card-title>标注</v-card-title>
               <v-card-text>
                 <v-textarea v-model="tag" auto-grow outlined></v-textarea>
-                <v-btn @click="saveTag">保存</v-btn>
+                <v-btn outlined color="#5A7797" elevation="0" @click="saveTag">保存</v-btn>
               </v-card-text>
             </v-card>
             <v-card class="mt-5">
@@ -219,7 +224,7 @@
                 <v-autocomplete @update-items="updateItems" v-model="startVertex" :items="vertexs"></v-autocomplete>
                 <v-list-item-title>终点</v-list-item-title>
                 <v-autocomplete @update-items="updateItems" v-model="endVertex" :items="vertexs"></v-autocomplete>
-                <v-btn @click="searchPath">搜索</v-btn>
+                <v-btn outlined color="#5A7797" elevation="0" @click="searchPath">搜索</v-btn>
               </v-card-text>
             </v-card>
 
