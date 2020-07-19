@@ -428,7 +428,7 @@
                                                 <v-date-picker
                                                     style="width: 100%"
                                                     v-model="taskChosen.deadline"
-                                                    color="#FF4081"
+                                                    color="#5A7797"
                                                     @change="updateTask(taskChosen);menuDate=false"
                                                     :disabled="!hasHigherLevel(user.level, 'member')"
                                                 ></v-date-picker>
