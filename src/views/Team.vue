@@ -5,19 +5,11 @@
     <div>
         <v-snackbar
         v-model="snackbar"
+        timeout="1000"
+        top
         >
         {{ snackbarText }}
 
-        <template v-slot:action="{ attrs }">
-            <v-btn
-            color="pink"
-            text
-            v-bind="attrs"
-            @click="snackbar = false"
-            >
-            Close
-            </v-btn>
-        </template>
         </v-snackbar>
         <v-dialog
             v-model="dialogErr"
