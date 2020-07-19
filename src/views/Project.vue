@@ -10,6 +10,7 @@
             <v-spacer />
             <v-spacer />
             <v-spacer />
+            <v-btn @click="refresh()" class="mr-5 white--text" elevation="0" color="#5A7797" ><i class="material-icons mr-2">refresh</i>刷新</v-btn>
             <v-btn @click="toTeam" class="mr-5 white--text" elevation="0" color="#5A7797"><i class="material-icons mr-2">group</i>我的小组</v-btn>
             <v-btn @click="toChat()" class="mr-5 white--text" elevation="0" color="#5A7797"><i class="material-icons mr-2">sms</i>
                 <div v-if="haveNewChat">有新消息</div>
@@ -50,7 +51,27 @@ export default {
             this.$refs.ProjectComponent.haha();
         },
         toChat(){
-            this.$router.push("/chat")
+            let routeUrl = this.$router.resolve({
+                path: "/chat",
+            });
+            window.open(routeUrl.href, '_blank');
+        },
+        refresh(){
+            API.getContactNew(this.userId).then(res => {
+                //console.log(res.data);
+                this.haveNewChat = res.data;
+            }).catch(err => {
+                if(typeof(err.response) != undefined){
+                    this.Alert(err.response.data.errMsg);
+                }else {
+                    console.log(err);
+                }
+            })
+            this.$nextTick(() => {
+                this.$refs.ProjectComponent.setProjects(this.userId);
+                //console.log(this.$refs);
+
+            })
         }
 
         
@@ -60,22 +81,7 @@ export default {
         if(this.userId == 0){
             this.$router.push('/login');
         }
-        API.getContactNew(this.userId).then(res => {
-            //console.log(res.data);
-            this.haveNewChat = res.data;
-        }).catch(err => {
-            if(typeof(err.response) != undefined){
-                this.Alert(err.response.data.errMsg);
-            }else {
-                console.log(err);
-            }
-        })
-        this.$nextTick(() => {
-            this.$refs.ProjectComponent.setProjects(this.userId);
-            //console.log(this.$refs);
-
-        })
-
+        this.refresh();
     }
     
 }

@@ -218,6 +218,7 @@ export default {
     }),methods:{
         //获取所有得项目相关信息
         setProjects(id){
+            this.isLoading = true;
             this.entityId = id;
             console.log("setProjects");
             console.log(this.entityId);

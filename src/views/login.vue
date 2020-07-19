@@ -187,15 +187,6 @@
           {
               src: require("@/assets/images/login/2.jpg"),
           },
-          {
-              src: require("@/assets/images/login/3.jpg"),
-          },
-          {
-              src: require("@/assets/images/login/4.jpg"),
-          },
-          {
-              src: require("@/assets/images/login/5.jpg"),
-          }
         ],
         loginPressed: false,//用于更改login按钮为转菊花
         signUpPressed: false,//用于更改signup按钮为转菊花

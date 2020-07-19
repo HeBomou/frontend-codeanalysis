@@ -171,20 +171,11 @@
         dialog: false,
         imageUrls: [
           {
-              src: require("@/assets/images/login/1.jpg"),
-          },
-          {
-              src: require("@/assets/images/login/2.jpg"),
-          },
-          {
               src: require("@/assets/images/login/3.jpg"),
           },
           {
               src: require("@/assets/images/login/4.jpg"),
           },
-          {
-              src: require("@/assets/images/login/5.jpg"),
-          }
         ],
         is_signup: 0,//是否是注册
         userName: "",

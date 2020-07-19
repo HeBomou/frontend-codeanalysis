@@ -55,15 +55,6 @@ export default {
             userId: 0,
             imageUrls: [
                 {
-                    src: require("@/assets/images/login/1.jpg"),
-                },
-                {
-                    src: require("@/assets/images/login/2.jpg"),
-                },
-                {
-                    src: require("@/assets/images/login/3.jpg"),
-                },
-                {
                     src: require("@/assets/images/login/4.jpg"),
                 },
                 {
