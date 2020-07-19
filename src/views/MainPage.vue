@@ -257,7 +257,6 @@ import {
   getOriginalGraphPath,
   addSubgraph,
   putConnectiveDomain,
-  putConnectiveDomainPosition,
   delSubgraph,
   API
 } from "../request/api";
@@ -457,8 +456,9 @@ export default {
     },
     depGraphDomainMoved(domain) {
       //console.log("domain moved");
-      putConnectiveDomainPosition(
+      API.putConnectiveDomainPosition(
         this.projectId,
+        this.subgraphId,
         domain.id,
         domain.dx,
         domain.dy

@@ -193,14 +193,14 @@ export const addAdmin = (username, pwd, inviteCode) => post("/admin", { id: null
  */
 export const putProject = (projectId, projectName) => put("/project/" + projectId + "/dynamic", { id: projectId, projectName: projectName });
 
-/**
- * 移动连通域
- * @param {*} projectId 
- * @param {*} domainId 
- * @param {*} dx 
- * @param {*} dy 
- */
-export const putConnectiveDomainPosition = (projectId, domainId, dx, dy) => put("/project/" + projectId + "/connectiveDomain/" + domainId + "/position?relativeX=" + dx + "&relativeY=" + dy);
+// /**
+//  * 移动连通域
+//  * @param {*} projectId 
+//  * @param {*} domainId 
+//  * @param {*} dx 
+//  * @param {*} dy 
+//  */
+// export const putConnectiveDomainPosition = (projectId, domainId, dx, dy) => put("/project/" + projectId + "/connectiveDomain/" + domainId + "/position?relativeX=" + dx + "&relativeY=" + dy);
 
 /**
  * 获得所有小组信息，传回列表
@@ -344,7 +344,9 @@ export const API = {
     /**
      * 获得某人的task
      */
-    getTask: (userId, groupId) => get("/task/"+ groupId + "/user/" + userId)
+    getTask: (userId, groupId) => get("/task/"+ groupId + "/user/" + userId),
+
+    putConnectiveDomainPosition: (projectId, subgraphId, connectiveDomainId, dx, dy) => put("/project/" + projectId + "/subgraph/" + subgraphId + "/connectiveDomain/" + connectiveDomainId + "/position?relativeX=" + dx + "&relativeY=" + dy)
 
    
 
