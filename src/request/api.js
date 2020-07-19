@@ -341,6 +341,11 @@ export const API = {
      */
     getContactNew: (userId) => get("/contact/" + userId + "/new"),
 
+    /**
+     * 获得某人的task
+     */
+    getTask: (userId, groupId) => get("/task/"+ groupId + "/user/" + userId)
+
    
 
 }

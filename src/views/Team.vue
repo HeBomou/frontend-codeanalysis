@@ -172,9 +172,12 @@
             <v-spacer />
             <v-btn @click="refresh()" class="mr-5 white--text" elevation="0" color="#5A7797" ><i class="material-icons mr-2">refresh</i>刷新</v-btn>
             <v-btn @click="toProject" class="mr-5 white--text" elevation="0" color="#5A7797" ><i class="material-icons mr-2">insights</i>我的项目</v-btn>
-            <v-btn @click="toChat()" class="mr-5 white--text" elevation="0" color="#5A7797"><i class="material-icons mr-2">sms</i>
-                <div v-if="haveNewChat">有新消息!</div>
-                <div v-else>聊天</div>
+            
+            <v-btn v-if="haveNewChat" @click="toChat()" class="mr-5 white--text amber" elevation="0" color="#5A7797"><i class="material-icons mr-2">sms</i>
+                有新消息!
+            </v-btn>
+            <v-btn v-else @click="toChat()" class="mr-5 white--text" elevation="0" color="#5A7797"><i class="material-icons mr-2">sms</i>
+                聊天
             </v-btn>
             <v-btn @click="logout" elevation="0" color="#5A7797" class="mr-5 white--text"><i class="material-icons mr-2">login</i>退出登录</v-btn>
         </v-app-bar>
@@ -300,6 +303,8 @@
                 </tbody>
             </v-simple-table>
         </v-tab-item>
+       
+                            
 
         <v-tab><i class="material-icons mr-2">rule</i>任务列表</v-tab>
         <v-tab-item>
@@ -307,6 +312,7 @@
                 <v-row>
                     <v-col cols="8">
                         <v-simple-table>
+                            
                             <thead>
                                 <tr>
                                     <th>任务列表</th>
@@ -335,40 +341,24 @@
                                             <p class="mt-5">{{item.name}}</p>
                                         </v-row>
                                     </td>
-                                    <!-- <td>
-                                        <v-menu offset-y>
-                                            <template v-slot:activator="{ on }">
-                                                <v-icon
-                                                v-on="on"
-                                                >
-                                                mdi-plus
-                                                </v-icon>
-                                            </template>
-                                            <v-list>
-                                                <v-list-item
-                                                    @click="debug()"
-                                                >
-                                                    <v-list-item-title>
-                                                    指定执行者
-                                                    </v-list-item-title>
-                                                </v-list-item>
-                                                <v-list-item
-                                                    @click="debug()"
-                                                >
-                                                    <v-list-item-title>
-                                                    提交
-                                                    </v-list-item-title>
-                                                </v-list-item>
-                                                <v-list-item
-                                                    @click="debug()"
-                                                >
-                                                    <v-list-item-title>
-                                                    删除
-                                                    </v-list-item-title>
-                                                </v-list-item>
-                                            </v-list>
-                                        </v-menu>
-                                    </td> -->
+                                </tr>
+                            </tbody>
+                            <thead>
+                                <tr>
+                                    <th>我的任务</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="item in tasks" :key="item.id" @click="selectTask(item)" :bgcolor="getColor(item)">
+                                    <td v-if="isMineTask(item)">
+                                        <v-row >
+                                            <v-checkbox 
+                                                v-model="item.isFinished" 
+                                                @change="updateTask(item)" 
+                                            ></v-checkbox>
+                                            <p class="mt-5">{{item.name}}</p>
+                                        </v-row>
+                                    </td>
                                 </tr>
                             </tbody>
                             <thead>
@@ -522,7 +512,7 @@
                 :key="i"
                 >
                     <v-card style="width:1000%" class="ml-10 mr-10 mt-10">
-                        <v-card-title>{{notice.title}} <v-spacer />时间:{{notice.time}} </v-card-title>
+                        <v-card-title>{{notice.title}} <v-spacer />{{notice.time}} </v-card-title>
                         <v-card-text><div class="text-wrapper">{{notice.content}}</div></v-card-text>
                     </v-card>
                 </v-list-item>
@@ -612,6 +602,7 @@ export default {
 
 
             ],
+            mineTask: [],
             newGroupNameRules:[
                 v => !!v || 'Name is required',
                 v => (v && v.length <= 10) || 'Name must be less than 10 characters',
@@ -682,7 +673,26 @@ export default {
             }).catch(err => {
                 console.log(err);
                 this.Alert(err.response.data.errMsg);
+            });
+            this.getMineTask(groupId);
+        },
+        getMineTask(groupId){
+            API.getTask(this.userId, groupId).then(res => {
+                res;
+                console.log(res);
+                this.mineTask = res.data;
+
+            }).catch(err => {
+                if(typeof(err.response) != undefined){
+                    this.Alert(err.response.data.errMsg);
+                }else {
+                    console.log(err);
+                }
             })
+        },
+        isMineTask(task){
+            //判断是否是当前用户的task
+            return this.mineTask.findIndex(t => t.id == task.id) != -1;
         },
         getTasks(){
             //获取当前小组所有task
@@ -848,6 +858,7 @@ export default {
             })
             API.updateExecutor(this.groupChosen.id, task.id, ids).then(res => {
                 res;
+                this.getMineTask(this.groupChosen.id);
             }).catch(err => {
                 console.log(err);
             })
