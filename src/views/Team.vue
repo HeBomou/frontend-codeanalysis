@@ -8,6 +8,7 @@
         timeout="1000"
         top
         color="#5A7797"
+        rounded="pill"
         >
         {{ snackbarText }}
 
