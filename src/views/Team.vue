@@ -173,10 +173,10 @@
             <v-btn @click="refresh()" class="mr-5 white--text" elevation="0" color="#5A7797" ><i class="material-icons mr-2">refresh</i>刷新</v-btn>
             <v-btn @click="toProject" class="mr-5 white--text" elevation="0" color="#5A7797" ><i class="material-icons mr-2">insights</i>我的项目</v-btn>
             
-            <v-btn v-if="haveNewChat" @click="toChat()" class="mr-5 white--text amber" elevation="0" color="#5A7797"><i class="material-icons mr-2">sms</i>
+            <v-btn v-if="haveNewChat" @click="toChat();haveNewChat = false" class="mr-5 white--text amber" elevation="0" color="#5A7797"><i class="material-icons mr-2">sms</i>
                 有新消息!
             </v-btn>
-            <v-btn v-else @click="toChat()" class="mr-5 white--text" elevation="0" color="#5A7797"><i class="material-icons mr-2">sms</i>
+            <v-btn v-else @click="toChat();haveNewChat = false" class="mr-5 white--text" elevation="0" color="#5A7797"><i class="material-icons mr-2">sms</i>
                 聊天
             </v-btn>
             <v-btn @click="logout" elevation="0" color="#5A7797" class="mr-5 white--text"><i class="material-icons mr-2">login</i>退出登录</v-btn>

@@ -38,7 +38,7 @@
       </v-dialog>
       <v-dialog v-model="dialogThreshold" width="500">
         <v-card justify="center">
-          <v-card-title>添加紧密度域值</v-card-title>
+          <v-card-title class="pb-0">添加紧密度域值</v-card-title>
           <v-card-text>
             <v-form v-model="newThresholdValid">
               <v-text-field
