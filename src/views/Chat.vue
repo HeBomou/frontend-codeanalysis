@@ -1,7 +1,15 @@
 <template>
   <v-app id="dependency">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
     <v-app-bar app clipped-left color="#5A7797">
       <span class="title ml-3 mr-5 white--text">我的消息</span>
+      <v-spacer />
+      <v-spacer />
+      <v-spacer />
+      <v-btn @click="$router.push('/team')" class="mr-5 white--text" elevation="0" color="#5A7797"><i class="material-icons mr-2">group</i>我的小组</v-btn>
+      <v-btn @click="$router.push('/project')" class="mr-5 white--text" elevation="0" color="#5A7797" ><i class="material-icons mr-2">insights</i>我的项目</v-btn>
+
       <!-- <v-spacer /> -->
     </v-app-bar>
     <v-content>
