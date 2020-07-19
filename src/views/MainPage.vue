@@ -84,7 +84,7 @@
       <span>连通域数：{{domainNum}}</span>
       <v-spacer />
       <v-spacer />
-
+      <v-btn @click="refresh()" class="mr-5 white--text" elevation="0" color="#5A7797" ><i class="material-icons mr-2">refresh</i>刷新</v-btn>
       <v-btn @click="toProject" class="mr-5 white--text" elevation="0" color="#5A7797" ><i class="material-icons mr-2">insights</i>我的项目</v-btn>
 
       <v-btn @click="logout" elevation="0" color="#5A7797" class="mr-5 white--text"><i class="material-icons mr-2">login</i>退出登录</v-btn>
@@ -967,6 +967,20 @@ export default {
         this.$router.push("/project");
         this.errMsg = "";
       }
+    },
+    refresh(){
+      getProject(this.projectId)
+      .then(res => {
+        //console.log("res.data:");
+        //console.log(res.data);
+        this.initProject(res.data);
+      })
+      .catch(err => {
+        this.overlay = false;
+        console.log(err);
+        this.Alert(err.response.data.errMsg);
+        
+      });
     }
   },
   mounted() {
