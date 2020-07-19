@@ -222,6 +222,15 @@
     
 
     <v-main>
+        <v-overlay :value="groups.length == 0" absolute opacity="0.3">
+            <v-btn
+                @click="dialogNewGroup = true"
+                color="#5A7797"
+                
+            >
+            创建您的第一个小组
+            </v-btn>
+        </v-overlay>
       <v-container
       >
         <v-tabs>
@@ -533,6 +542,7 @@ export default {
     },
     data(){
         return {
+            overlay: true,
             haveNewChat: false,
             func1: API.getProjectBasicAttribute_group,
             func2: API.postProject_group,
