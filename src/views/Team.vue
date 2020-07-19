@@ -3,6 +3,22 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet">
     <div>
+        <v-snackbar
+        v-model="snackbar"
+        >
+        {{ snackbarText }}
+
+        <template v-slot:action="{ attrs }">
+            <v-btn
+            color="pink"
+            text
+            v-bind="attrs"
+            @click="snackbar = false"
+            >
+            Close
+            </v-btn>
+        </template>
+        </v-snackbar>
         <v-dialog
             v-model="dialogErr"
             width="500">
@@ -17,10 +33,15 @@
             v-model="dialogInvite"
             width="500">
             <v-card>
-                <v-card-title>请复制以下链接发送到组员</v-card-title>
+                <v-card-title>请以下链接发送到组员</v-card-title>
                 <v-card-text>
                     <p>{{inviteLink}}</p>
-                    <v-btn color="error" @click="dialogInvite=false">确定</v-btn>
+                    <v-btn 
+                        color="error" 
+                        v-clipboard:error="onErrorCopy"
+                        v-clipboard:copy="inviteLink"  
+                        v-clipboard:success="onCopy" 
+                        @click="dialogInvite=false">复制到剪切版</v-btn>
                 </v-card-text>
             </v-card>
         </v-dialog>
@@ -250,9 +271,9 @@
                     </tr>
                 </thead>
                  <tbody>
-                    <tr v-if="user.level==='leader'">
+                    <tr v-if="user.level==='leader'" @click="setInvite">
                         <td></td>
-                        <td><v-icon @click="setInvite">mdi-plus</v-icon></td>
+                        <td><v-icon >mdi-plus</v-icon></td>
                         <td></td>
                     </tr>
                     <tr v-for="item in teamMember" :key="item.id">
@@ -542,6 +563,8 @@ export default {
     },
     data(){
         return {
+            snackbarText: "",
+            snackbar: false,
             overlay: true,
             haveNewChat: false,
             func1: API.getProjectBasicAttribute_group,
@@ -941,7 +964,17 @@ export default {
                 }
             })
             this.getGroups();
-        }
+        },onCopy(e){
+            console.log(e);
+            this.snackbar = true;
+            this.snackbarText = "复制成功";
+        },
+        // 复制失败
+        onErrorCopy(e){
+            console.log(e);
+            this.snackbar = true;
+            this.snackbarText = "复制失败";
+        },
         // isExecutor(user){
         //     if(user.id == 0){
         //         return true;
