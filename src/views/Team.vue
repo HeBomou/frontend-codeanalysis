@@ -7,6 +7,7 @@
         v-model="snackbar"
         timeout="1000"
         top
+        color="#5A7797"
         >
         {{ snackbarText }}
 
