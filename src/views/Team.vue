@@ -208,6 +208,7 @@
       app
       clipped
       color="grey lighten-4"
+      width="300px"
     >    
         <v-list shaped style="position: relative">
             <v-subheader>
@@ -245,7 +246,17 @@
     
 
     <v-main>
-        
+        <v-fab-transition >
+            <v-btn 
+                fab 
+                color="#5A7797" 
+                @click="dialogNewGroup=true"
+                absolute
+                right
+                style="position: fixed; top: 70%; left: 270px; z-index:99900"
+                v-show="drawer"
+            ><v-icon color="white">mdi-plus</v-icon></v-btn>
+        </v-fab-transition>
         <v-overlay :value="groups.length == 0" absolute opacity="0.3">
             <v-btn
                 @click="dialogNewGroup = true"
@@ -255,17 +266,7 @@
             创建您的第一个小组
             </v-btn>
         </v-overlay>
-        <v-fab-transition>
-                <v-btn 
-                    fab 
-                    color="#5A7797" 
-                    @click="dialogNewGroup=true"
-                    absolute
-                    right
-                    style="position: absolute; top: 70%; left: -30px;  z-index:999"
-                    v-show="drawer"
-                ><v-icon color="white">mdi-plus</v-icon></v-btn>
-            </v-fab-transition>
+       
       <v-container
         absolute
         style="position: absolute;"
@@ -564,6 +565,43 @@
                     <v-card style="width:1000%" class="ml-10 mr-10 mt-10">
                         <v-card-title>{{notice.title}} <v-spacer />{{notice.time}} </v-card-title>
                         <v-card-text><div class="text-wrapper">{{notice.content}}</div></v-card-text>
+                        <v-card-actions style="position: relative">
+                            <v-speed-dial
+                                v-model="notice.dial"
+                                direction="left"
+                                transition="slide-x-reverse-transition"
+                                style="position: absolute;top: 10;left: 90%"
+                                >
+                                <template v-slot:activator>
+                                    <v-btn 
+                                        fab 
+                                        color="pink" 
+                                        @click="notice.dial = !notice.dial"
+                                    >
+                                     
+                                        <span v-if="notice.dial" class="material-icons white--text">chevron_right</span>
+                                        <span v-else class="material-icons white--text">chevron_left</span>
+                                    </v-btn>
+                                </template>
+                                <v-btn
+                                    fab
+                                    dark
+                                    small
+                                    color="red"
+                                >
+                                    <v-icon>delete</v-icon>
+                                </v-btn>
+                                <v-btn
+                                    fab
+                                    dark
+                                    small
+                                    color="green"
+                                >
+                                    <v-icon>mdi-pencil</v-icon>
+                                </v-btn>
+                                
+                            </v-speed-dial>
+                        </v-card-actions>
                     </v-card>
                 </v-list-item>
             </v-list>
@@ -584,6 +622,7 @@ export default {
     data(){
         return {
             snackbarText: "",
+            
             snackbar: false,
             overlay: true,
             haveNewChat: false,
