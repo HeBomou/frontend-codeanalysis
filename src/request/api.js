@@ -346,7 +346,9 @@ export const API = {
      */
     getTask: (userId, groupId) => get("/task/"+ groupId + "/user/" + userId),
 
-    putConnectiveDomainPosition: (projectId, subgraphId, connectiveDomainId, dx, dy) => put("/project/" + projectId + "/subgraph/" + subgraphId + "/connectiveDomain/" + connectiveDomainId + "/position?relativeX=" + dx + "&relativeY=" + dy)
+    putConnectiveDomainPosition: (projectId, subgraphId, connectiveDomainId, dx, dy) => put("/project/" + projectId + "/subgraph/" + subgraphId + "/connectiveDomain/" + connectiveDomainId + "/position?relativeX=" + dx + "&relativeY=" + dy),
+
+    deleteNotice: (noticeId) => del("/group/notice/" + noticeId)
 
    
 

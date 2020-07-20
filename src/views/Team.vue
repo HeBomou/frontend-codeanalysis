@@ -1071,7 +1071,16 @@ export default {
         // 删除notice
         deleteNotice(notice){
             var delNot = () =>{
-                console.log(notice);
+                API.deleteNotice(notice.id).then(res => {
+                    console.log(res);
+                    this.getNotice();
+                }).catch(err => {
+                    if(typeof(err.response) != undefined){
+                        this.Alert(err.response.data.errMsg);
+                    }else {
+                        console.log(err);
+                    }
+                })
             };
             this.snack("haha!", delNot);
         },
