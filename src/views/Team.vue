@@ -203,6 +203,53 @@
                 </v-card-text>
             </v-card>
         </v-dialog>
+        <v-dialog
+            v-model="dialogUpdateNotice"
+            width="500">
+            <v-card>
+                <v-card-title>修改公告</v-card-title>
+                <v-card-text>
+                    <v-form
+                        v-model="updateNoticeValid"
+                        ref="form"
+                    >
+                        <v-text-field
+                            v-model="updateNoticeTitle"
+                            :rules="newNoticeRules.newNoticeTitleRules"
+                            label="标题"
+                            clearable
+                            required
+                            flat
+                            outlined
+                        ></v-text-field>
+                        <v-textarea
+                            v-model="updateNoticeText"
+                            :rules="newNoticeRules.newNoticeTextRules"
+                            label="公告内容"
+                            required
+                            flat
+                            outlined
+                        ></v-textarea>
+                        <v-btn
+                            class="mr-5 ml-5"
+                            color="success"
+                            :disabled="!updateNoticeValid"
+                            @click="confirmUpdateNotice();dialogUpdateNotice = false"
+                        >
+                        确定
+                        </v-btn>
+                        
+                        <v-btn
+                            class="mr-5 ml-5"
+                            color="error"
+                            @click="dialogUpdateNotice = false"
+                        >
+                        取消
+                        </v-btn>
+                    </v-form>
+                </v-card-text>
+            </v-card>
+        </v-dialog>
     </div>
     
     <v-app-bar
@@ -606,8 +653,8 @@
                                         @click="notice.dial = !notice.dial"
                                     >
                                      
-                                        <span v-if="notice.dial" class="material-icons white--text">chevron_right</span>
-                                        <span v-else class="material-icons white--text">chevron_left</span>
+                                        <span class="material-icons white--text">chevron_left</span>
+                                        <!-- <span v-else class="material-icons white--text">chevron_left</span> -->
                                     </v-btn>
                                 </template>
                                 <v-btn
@@ -624,6 +671,12 @@
                                     dark
                                     small
                                     color="green"
+                                    @click="
+                                        NoticeToBeUpdate = notice; 
+                                        dialogUpdateNotice = true;
+                                        updateNoticeText = notice.content;
+                                        updateNoticeTitle = notice.title;
+                                    "
                                 >
                                     <v-icon>mdi-pencil</v-icon>
                                 </v-btn>
@@ -664,6 +717,7 @@ export default {
             dialogDeleteGroup: false,
             dialogOutGroup: false,
             dialogNewNotice: false,
+            dialogUpdateNotice: false,
             groupTobeDeleted:{},
             drawer: true,
             groupChosenIndex: 1,//当前选中的组, 为groups列表的index。
@@ -685,6 +739,10 @@ export default {
                     v => !!v || 'text is required',
                 ]
             },
+            updateNoticeValid: true,
+            updateNoticeTitle: "",
+            updateNoticeText:"",
+            NoticeToBeUpdate: {},
             levels: [
                 "manager",
                 "member"
@@ -920,10 +978,28 @@ export default {
                 this.Alert(err.response.data.errMsg);
             })
         },
+        confirmUpdateNotice(){
+            this.NoticeToBeUpdate.content = this.updateNoticeText;
+            this.NoticeToBeUpdate.title = this.updateNoticeTitle;
+            API.putNotice(this.NoticeToBeUpdate.id, this.NoticeToBeUpdate).then(res => {
+                res;
+            }).catch(err => {
+                if(typeof(err.response) != undefined){
+                    this.Alert(err.response.data.errMsg);
+                }else {
+                    console.log(err);
+                }
+            })
+        },
         clearNewNotice(){
             this.newNoticeTitle = "";
             this.newNoticeText = "";
             this.dialogNewNotice = false;
+        },
+        clearUpdateNotice(){
+            this.updateNoticeTitle = "";
+            this.updateNoticeText = "";
+            this.dialogUpdateNotice = false;
         },
         chatTo(item){
             let routeUrl = this.$router.resolve({

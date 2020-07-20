@@ -348,7 +348,8 @@ export const API = {
 
     putConnectiveDomainPosition: (projectId, subgraphId, connectiveDomainId, dx, dy) => put("/project/" + projectId + "/subgraph/" + subgraphId + "/connectiveDomain/" + connectiveDomainId + "/position?relativeX=" + dx + "&relativeY=" + dy),
 
-    deleteNotice: (noticeId) => del("/group/notice/" + noticeId)
+    deleteNotice: (noticeId) => del("/group/notice/" + noticeId),
+    putNotice: (noticeId, notice) => put("/group/notice/" + noticeId, notice),
 
    
 
