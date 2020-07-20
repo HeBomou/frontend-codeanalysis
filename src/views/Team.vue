@@ -794,7 +794,7 @@ export default {
             this.taskChosen = {};
             this.newTask = {};
             this.taskMember = [];
-            this.groups = [];
+            //this.groups = [];
         },
         Alert(msg){
             // this.errMsg = msg;
