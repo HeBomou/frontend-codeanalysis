@@ -577,10 +577,10 @@
             
             <v-list>
                 <v-list-item v-if="hasHigherLevel(user.level, 'member')">
-                    <v-card color="#5A7797" style="width:1000%" class="ml-10 mr-10 mt-10" justify="center" align="center" @click="dialogNewNotice=true"  >
+                    <v-card style="width:1000%" class="ml-10 mr-10 mt-10" justify="center" align="center" @click="dialogNewNotice=true"  >
                         <v-col cols="5"></v-col>
                         <v-col cols="2">
-                            <v-card-title><v-icon size="50px" class="white--text">mdi-plus</v-icon></v-card-title>
+                            <v-card-title><v-icon size="50px" >mdi-plus</v-icon></v-card-title>
                         </v-col>
                         <v-col cols="5"></v-col>
                     </v-card>
@@ -589,9 +589,9 @@
                 v-for="(notice, i) in notices"
                 :key="i"
                 >
-                    <v-card style="width:1000%" class="ml-10 mr-10 mt-10 white--text" color="#5A7797">
+                    <v-card style="width:1000%" class="ml-10 mr-10 mt-10" >
                         <v-card-title>{{notice.title}} <v-spacer />{{notice.time}} </v-card-title>
-                        <v-card-text><div class="text-wrapper white--text">{{notice.content}}</div></v-card-text>
+                        <v-card-text><div class="text-wrapper ">{{notice.content}}</div></v-card-text>
                         <v-card-actions style="position: relative" v-if="hasHigherLevel(user.level, 'member')">
                             <v-speed-dial
                                 v-model="notice.dial"
@@ -960,6 +960,7 @@ export default {
                 console.log(res);
                 this.getNotice();
                 this.clearNewNotice();
+                this.snack("发布公告成功");
             }).catch(err => {
                 this.clearNewNotice();
                 this.Alert(err.response.data.errMsg);
