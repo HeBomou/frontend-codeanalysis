@@ -639,7 +639,7 @@
                     <v-card style="width:1000%" class="ml-10 mr-10 mt-10">
                         <v-card-title>{{notice.title}} <v-spacer />{{notice.time}} </v-card-title>
                         <v-card-text><div class="text-wrapper">{{notice.content}}</div></v-card-text>
-                        <v-card-actions style="position: relative">
+                        <v-card-actions style="position: relative" v-if="hasHigherLevel(user.level, 'member')">
                             <v-speed-dial
                                 v-model="notice.dial"
                                 direction="left"
