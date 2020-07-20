@@ -60,6 +60,7 @@
                         outlined
                     ></v-text-field>
                     <v-btn
+                        depressed
                         class="mr-5 ml-5"
                         color="success"
                         :disabled="!newGroupValid"
@@ -69,6 +70,7 @@
                     </v-btn>
                     
                     <v-btn
+                        depressed
                         class="mr-5 ml-5"
                         color="error"
                         @click="newGroupName='';dialogNewGroup=false;"
@@ -196,15 +198,27 @@
             </v-btn>
             <v-btn @click="logout" elevation="0" color="#5A7797" class="mr-5 white--text"><i class="material-icons mr-2">login</i>退出登录</v-btn>
         </v-app-bar>
-
+        <v-fab-transition>
+            <v-btn 
+                fab 
+                color="#5A7797" 
+                @click="dialogNewGroup=true"
+                absolute
+                right
+                style="position: relative; top: 70%; left: 220px;  z-index:999"
+                v-show="drawer"
+            ><v-icon color="white">mdi-plus</v-icon></v-btn>
+        </v-fab-transition>
     <v-navigation-drawer
       v-model="drawer"
       app
       clipped
       color="grey lighten-4"
-    >
-        <v-list shaped>
-            <v-subheader>GROUPS<v-spacer></v-spacer><v-icon @click="dialogNewGroup=true">mdi-plus</v-icon></v-subheader>      
+    >    
+        <v-list shaped style="position: relative">
+            <v-subheader>
+                GROUPS<v-spacer></v-spacer>
+            </v-subheader> 
             <v-list-item-group 
                 v-model="groupChosenIndex" 
                 color="primary" 
@@ -641,8 +655,12 @@ export default {
             isAddingTask: false,//是否正在使用添加的那一个
             menuDate: false,//date的menu是否打开
         }
-    }
-    ,methods: {
+    },computed: {
+      screenHeight() {
+        return document.documentElement.clientHeight;
+      }
+    },
+    methods: {
         clearData(){
             this.teamMember = [];
             this.notices = [];
