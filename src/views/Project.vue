@@ -63,7 +63,7 @@ export default {
                 //console.log(res.data);
                 this.haveNewChat = res.data;
             }).catch(err => {
-                if(typeof(err.response) != undefined){
+                if(typeof(err.response) != "undefined"){
                     this.Alert(err.response.data.errMsg);
                 }else {
                     console.log(err);

@@ -831,7 +831,8 @@ export default {
         change(val){
             console.log("change");
             console.log(val);
-            if(typeof(val) == undefined){
+            console.log(typeof(val));
+            if(typeof(val) == "undefined"){
                 //没有进行选择
                 return;
             }
@@ -872,7 +873,7 @@ export default {
                 this.mineTask = res.data;
 
             }).catch(err => {
-                if(typeof(err.response) != undefined){
+                if(typeof(err.response) != "undefined"){
                     this.Alert(err.response.data.errMsg);
                 }else {
                     console.log(err);
@@ -910,7 +911,7 @@ export default {
                 //this.$nextTick(() => {
                     //this.selectGroup(this.groups[this.groups.length - 1].id);//由于考虑到新的组在最后，所以获取小组后默认选择最后一个
                 //})
-                if(typeof(this.groupChosen.id) != undefined){
+                if(typeof(this.groupChosen.id) != "undefined"){
                     //之前选中了某组
                     if(this.groups.findIndex(item => item.id == this.groupChosen.id) != -1){
                         this.selectGroup(this.groupChosen.id);
@@ -948,7 +949,7 @@ export default {
             })
         },
         hasHigherLevel(from, to){
-            if(from == undefined){
+            if(typeof(from) == "undefined"){
                 console.log("cnm");
                 console.log(this.user);
             }
@@ -998,7 +999,7 @@ export default {
             API.putNotice(this.NoticeToBeUpdate.id, this.NoticeToBeUpdate).then(res => {
                 res;
             }).catch(err => {
-                if(typeof(err.response) != undefined){
+                if(typeof(err.response) != "undefined"){
                     this.Alert(err.response.data.errMsg);
                 }else {
                     console.log(err);
@@ -1045,7 +1046,7 @@ export default {
             //console.log(task);
         },
         pushNewTask(){
-            if(this.newTask.name == undefined){
+            if(typeof(this.newTask.name) == "undefined"){
                 return;
             }
             //确认给后端
@@ -1110,7 +1111,7 @@ export default {
                 console.log("taskMember");
                 console.log(this.taskMember);
             }).catch(err => {
-                if(typeof(err.response) != undefined){
+                if(typeof(err.response) != "undefined"){
                     this.Alert(err.response.data.errMsg);
                 }else {
                     console.log(err);
@@ -1128,7 +1129,7 @@ export default {
                 console.log(res);
                 this.getGroups();
             }).catch(err => {
-                if(typeof(err.response) != undefined){
+                if(typeof(err.response) != "undefined"){
                     this.Alert(err.response.data.errMsg);
                 }else {
                     console.log(err);
@@ -1140,7 +1141,7 @@ export default {
                 //console.log(res.data);
                 this.haveNewChat = res.data;
             }).catch(err => {
-                if(typeof(err.response) != undefined){
+                if(typeof(err.response) != "undefined"){
                     this.Alert(err.response.data.errMsg);
                 }else {
                     console.log(err);
@@ -1165,7 +1166,7 @@ export default {
                     console.log(res);
                     this.getNotice();
                 }).catch(err => {
-                    if(typeof(err.response) != undefined){
+                    if(typeof(err.response) != "undefined"){
                         this.Alert(err.response.data.errMsg);
                     }else {
                         console.log(err);
