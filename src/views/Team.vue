@@ -627,7 +627,7 @@
                     <v-card style="width:1000%" class="ml-10 mr-10 mt-10" justify="center" align="center" @click="dialogNewNotice=true"  >
                         <v-col cols="5"></v-col>
                         <v-col cols="2">
-                            <v-card-title><v-icon>mdi-plus</v-icon></v-card-title>
+                            <v-card-title><v-icon size="50px">mdi-plus</v-icon></v-card-title>
                         </v-col>
                         <v-col cols="5"></v-col>
                     </v-card>
