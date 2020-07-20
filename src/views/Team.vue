@@ -183,7 +183,11 @@
         clipped-left
         color="#5A7797"
         >
-            <span class="title ml-3 mr-5 white--text" >我的小组</span>
+        <v-app-bar-nav-icon @click="drawer=!drawer">
+            <i class="material-icons white--text" v-if="!drawer">keyboard_arrow_right</i>
+            <i class="material-icons white--text" v-else>keyboard_arrow_left</i>
+        </v-app-bar-nav-icon>
+            <span class="title white--text" >我的小组</span>
             <v-spacer />
             <v-spacer />
             <v-spacer />
@@ -198,17 +202,7 @@
             </v-btn>
             <v-btn @click="logout" elevation="0" color="#5A7797" class="mr-5 white--text"><i class="material-icons mr-2">login</i>退出登录</v-btn>
         </v-app-bar>
-        <v-fab-transition>
-            <v-btn 
-                fab 
-                color="#5A7797" 
-                @click="dialogNewGroup=true"
-                absolute
-                right
-                style="position: relative; top: 70%; left: 220px;  z-index:999"
-                v-show="drawer"
-            ><v-icon color="white">mdi-plus</v-icon></v-btn>
-        </v-fab-transition>
+        
     <v-navigation-drawer
       v-model="drawer"
       app
@@ -251,6 +245,7 @@
     
 
     <v-main>
+        
         <v-overlay :value="groups.length == 0" absolute opacity="0.3">
             <v-btn
                 @click="dialogNewGroup = true"
@@ -260,7 +255,20 @@
             创建您的第一个小组
             </v-btn>
         </v-overlay>
+        <v-fab-transition>
+                <v-btn 
+                    fab 
+                    color="#5A7797" 
+                    @click="dialogNewGroup=true"
+                    absolute
+                    right
+                    style="position: absolute; top: 70%; left: -30px;  z-index:999"
+                    v-show="drawer"
+                ><v-icon color="white">mdi-plus</v-icon></v-btn>
+            </v-fab-transition>
       <v-container
+        absolute
+        style="position: absolute;"
       >
         <v-tabs>
         <v-tab><i class="material-icons mr-2">insights</i>项目列表</v-tab>
@@ -349,6 +357,7 @@
             <v-container fluid>
                 <v-row>
                     <v-col cols="8">
+                        
                         <v-simple-table>
                             
                             <thead>
@@ -356,6 +365,7 @@
                                     <th>任务列表</th>
                                 </tr>
                             </thead>
+                            
                             <tbody>
                                 <tr @click="isAddingTask=true" v-if="hasHigherLevel(user.level, 'member')">
                                     <td>
@@ -368,18 +378,20 @@
                                         </v-row>
                                     </td>
                                 </tr>
-                                <tr v-for="item in tasks" :key="item.id" @click="selectTask(item)" :bgcolor="getColor(item)">
-                                    <td v-if="item.isFinished==0">
-                                        <v-row >
-                                            <v-checkbox 
-                                                v-model="item.isFinished" 
-                                                @change="updateTask(item)" 
-                                                
-                                            ></v-checkbox>
-                                            <p class="mt-5">{{item.name}}</p>
-                                        </v-row>
-                                    </td>
-                                </tr>
+                                <template v-for="item in tasks">
+                                    <tr :key="item.id" @click="selectTask(item)" :bgcolor="getColor(item)">
+                                        <td v-if="item.isFinished==0">
+                                            <v-row >
+                                                <v-checkbox 
+                                                    v-model="item.isFinished" 
+                                                    @change="updateTask(item)" 
+                                                    
+                                                ></v-checkbox>
+                                                <p class="mt-5">{{item.name}}</p>
+                                            </v-row>
+                                        </td>
+                                    </tr>
+                                </template>
                             </tbody>
                             <thead>
                                 <tr>
