@@ -287,13 +287,13 @@
                         <v-list-item-title v-text="item.name"></v-list-item-title>
                     </v-list-item-content>
                     <v-list-item-icon 
-                        @click="dialogDeleteGroup=true;groupTobeDeleted=item"
+                        @click="deleteGroup(item)"
                         v-if="user.level == 'leader'"
                     >
                         <i class="material-icons">clear</i>
                     </v-list-item-icon>
                     <v-list-item-icon 
-                        @click="dialogOutGroup=true;groupTobeDeleted=item"
+                        @click="dropGroup(item)"
                         v-else
                     >
                         <i class="material-icons">clear</i>
@@ -957,12 +957,15 @@ export default {
             })
         },
         deleteGroup(item){
-            API.deleteGroup(item.id).then(res => {
-                console.log(res);
-                this.getGroups();
-            }).catch(err => {
-                this.Alert(err.response.data.errMsg);
-            })
+            this.snack("是否删除小组‘" + item.name + "’", () => {
+                API.deleteGroup(item.id).then(res => {
+                    console.log(res);
+                    this.getGroups();
+                    this.snack("删除成功");
+                }).catch(err => {
+                    this.Alert(err.response.data.errMsg);
+                });
+            });
         },
         confirmNewNotice(){
             var myDate = new Date();
