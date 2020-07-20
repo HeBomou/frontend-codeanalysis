@@ -107,7 +107,7 @@
             width="500">
             <v-card>
                 <v-card-title>新建公告</v-card-title>
-                <v-card-text>
+                <v-card-text class="mt-3">
                     <v-form
                         v-model="newNoticeValid"
                         ref="form"
@@ -129,24 +129,31 @@
                             flat
                             outlined
                         ></v-textarea>
-                        <v-btn
+                        
+                    </v-form>
+                </v-card-text>
+                <v-divider class="mt-5"></v-divider>
+                <v-card-actions>
+                    <v-btn
+                            class="mr-5 ml-5"
+                            color="error"
+                            @click="clearNewNotice()"
+                            text
+                        >
+                        取消
+                    </v-btn>
+                    <v-spacer></v-spacer>
+                    <v-btn
                             class="mr-5 ml-5"
                             color="success"
                             :disabled="!newNoticeValid"
                             @click="confirmNewNotice"
+                            text
                         >
                         确定
-                        </v-btn>
+                    </v-btn>
                         
-                        <v-btn
-                            class="mr-5 ml-5"
-                            color="error"
-                            @click="clearNewNotice()"
-                        >
-                        取消
-                        </v-btn>
-                    </v-form>
-                </v-card-text>
+                </v-card-actions>
             </v-card>
         </v-dialog>
         <v-dialog
@@ -184,7 +191,6 @@
                         >
                         确定
                         </v-btn>
-                        
                         <v-btn
                             class="mr-5 ml-5"
                             color="error"
@@ -330,6 +336,7 @@
                                 </template>
                                 <v-list>
                                     <v-list-item
+                                         
                                         @click="deleteMember(item)"
                                         :disabled="!hasHigherLevel(user.level, item.level)"
                                     >
@@ -570,10 +577,10 @@
             
             <v-list>
                 <v-list-item v-if="hasHigherLevel(user.level, 'member')">
-                    <v-card style="width:1000%" class="ml-10 mr-10 mt-10" justify="center" align="center" @click="dialogNewNotice=true"  >
+                    <v-card color="#5A7797" style="width:1000%" class="ml-10 mr-10 mt-10" justify="center" align="center" @click="dialogNewNotice=true"  >
                         <v-col cols="5"></v-col>
                         <v-col cols="2">
-                            <v-card-title><v-icon size="50px">mdi-plus</v-icon></v-card-title>
+                            <v-card-title><v-icon size="50px" class="white--text">mdi-plus</v-icon></v-card-title>
                         </v-col>
                         <v-col cols="5"></v-col>
                     </v-card>
@@ -582,9 +589,9 @@
                 v-for="(notice, i) in notices"
                 :key="i"
                 >
-                    <v-card style="width:1000%" class="ml-10 mr-10 mt-10">
+                    <v-card style="width:1000%" class="ml-10 mr-10 mt-10 white--text" color="#5A7797">
                         <v-card-title>{{notice.title}} <v-spacer />{{notice.time}} </v-card-title>
-                        <v-card-text><div class="text-wrapper">{{notice.content}}</div></v-card-text>
+                        <v-card-text><div class="text-wrapper white--text">{{notice.content}}</div></v-card-text>
                         <v-card-actions style="position: relative" v-if="hasHigherLevel(user.level, 'member')">
                             <v-speed-dial
                                 v-model="notice.dial"
