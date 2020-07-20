@@ -797,8 +797,9 @@ export default {
             this.groups = [];
         },
         Alert(msg){
-            this.errMsg = msg;
-            this.dialogErr = true;
+            // this.errMsg = msg;
+            // this.dialogErr = true;
+            this.snack(msg);
         },
         toProject(){
             this.$router.push("/project");
