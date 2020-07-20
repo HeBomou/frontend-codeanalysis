@@ -13,6 +13,33 @@
         {{ snackbarText }}
 
         </v-snackbar>
+        <v-snackbar
+            v-model="snack_alert"
+            timeout="10000"
+            color="#5A7797"
+            rounded="pill"
+            bottom
+        >
+            {{ snack_alert_text }}
+            <template v-slot:action="{ attrs }">
+                <v-btn
+                color="white"
+                text
+                v-bind="attrs"
+                @click="snack_alert = false;snack_alert_func()"
+                >
+                确定
+                </v-btn>
+                <v-btn
+                color="white"
+                text
+                v-bind="attrs"
+                @click="snack_alert = false;snack_alert_func = () => {}"
+                >
+                取消
+                </v-btn>
+            </template>
+        </v-snackbar>
         <v-dialog
             v-model="dialogErr"
             width="500">
@@ -588,6 +615,7 @@
                                     dark
                                     small
                                     color="red"
+                                    @click="deleteNotice(notice)"
                                 >
                                     <v-icon>delete</v-icon>
                                 </v-btn>
@@ -705,6 +733,8 @@ export default {
             closeOnContentClick: false,
             isAddingTask: false,//是否正在使用添加的那一个
             menuDate: false,//date的menu是否打开
+            snack_alert_text: "",
+            snack_alert: false,
         }
     },computed: {
       screenHeight() {
@@ -1038,6 +1068,20 @@ export default {
             this.snackbar = true;
             this.snackbarText = "复制失败";
         },
+        // 删除notice
+        deleteNotice(notice){
+            var delNot = () =>{
+                console.log(notice);
+            };
+            this.snack("haha!", delNot);
+        },
+        snack(msg, func){
+            this.snack_alert_func = func;
+            this.snack_alert_text = msg;
+            this.snack_alert = true;
+        },
+        snack_alert_func: () => {},
+
         // isExecutor(user){
         //     if(user.id == 0){
         //         return true;
