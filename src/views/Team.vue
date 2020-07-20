@@ -38,17 +38,26 @@
         <v-dialog
             v-model="dialogInvite"
             width="500">
-            <v-card>
-                <v-card-title>请以下链接发送到组员</v-card-title>
+            <v-card color="#5A7797">
+                <v-card-title class="white--text">请将以下链接发送到组员</v-card-title>
                 <v-card-text>
-                    <p>{{inviteLink}}</p>
+                    <p class="white--text">{{inviteLink}}</p>
+                </v-card-text>
+                <v-card-actions>
+                     <v-spacer></v-spacer>
                     <v-btn 
-                        color="error" 
+                        right
+                        color="#5A7797" 
                         v-clipboard:error="onErrorCopy"
                         v-clipboard:copy="inviteLink"  
                         v-clipboard:success="onCopy" 
-                        @click="dialogInvite=false">复制到剪切版</v-btn>
-                </v-card-text>
+                        @click="dialogInvite=false"
+                        class="white--text"
+                        elevation="0"
+                        ><span class="material-icons">
+                            content_copy
+                            </span>复制到剪切版</v-btn>
+                </v-card-actions>
             </v-card>
         </v-dialog>
         <v-dialog
