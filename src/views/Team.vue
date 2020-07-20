@@ -94,54 +94,6 @@
             </v-card>
         </v-dialog>
         <v-dialog
-            v-model="dialogDeleteGroup"
-            width="500">
-            <v-card>
-                <v-card-title>删除小组"{{groupTobeDeleted.name}}"?</v-card-title>
-                <v-card-text>
-                    <v-btn
-                        class="mr-5 ml-5"
-                        color="success"
-                        @click="deleteGroup(groupTobeDeleted);dialogDeleteGroup=false"
-                    >
-                    确定
-                    </v-btn>
-                    
-                    <v-btn
-                        class="mr-5 ml-5"
-                        color="error"
-                        @click="dialogDeleteGroup=false"
-                    >
-                    取消
-                    </v-btn>
-                </v-card-text>
-            </v-card>
-        </v-dialog>
-         <v-dialog
-            v-model="dialogOutGroup"
-            width="500">
-            <v-card>
-                <v-card-title>退出小组"{{groupTobeDeleted.name}}"?</v-card-title>
-                <v-card-text>
-                    <v-btn
-                        class="mr-5 ml-5"
-                        color="success"
-                        @click="outGroup(groupTobeDeleted);dialogOutGroup=false"
-                    >
-                    确定
-                    </v-btn>
-                
-                    <v-btn
-                        class="mr-5 ml-5"
-                        color="error"
-                        @click="dialogOutGroup=false"
-                    >
-                    取消
-                    </v-btn>
-                </v-card-text>
-            </v-card>
-        </v-dialog>
-        <v-dialog
             v-model="dialogNewNotice"
             width="500">
             <v-card>
@@ -696,11 +648,9 @@ export default {
             dialogErr: false,
             dialogNewGroup: false,
             dialogInvite: false,
-            dialogDeleteGroup: false,
             dialogOutGroup: false,
             dialogNewNotice: false,
             dialogUpdateNotice: false,
-            groupTobeDeleted:{},
             drawer: true,
             groupChosenIndex: 1,//当前选中的组, 为groups列表的index。
             groupChosen: {id: -1, leaderId: 234, name: "group haha", inviteCode: 123123},
@@ -967,6 +917,21 @@ export default {
                 });
             });
         },
+        dropGroup(group){
+            this.snack("是否退出小组‘" + group.name + "’", () => {
+                API.deleteMember(group.id, this.user.id).then(res => {
+                    console.log(res);
+                    this.getGroups();
+                    this.snack("退出成功");
+                }).catch(err => {
+                    if(!(typeof(err.response) === "undefined")){
+                        this.Alert(err.response.data.errMsg);
+                    }else {
+                        console.log(err);
+                    }
+                });
+            })
+        },
         confirmNewNotice(){
             var myDate = new Date();
             API.postNotice({
@@ -1115,18 +1080,7 @@ export default {
             });
             window.open(routeUrl.href, '_blank');
         },
-        outGroup(group){
-            API.deleteMember(group.id, this.user.id).then(res => {
-                console.log(res);
-                this.getGroups();
-            }).catch(err => {
-                if(typeof(err.response) != "undefined"){
-                    this.Alert(err.response.data.errMsg);
-                }else {
-                    console.log(err);
-                }
-            })
-        },
+        
         refresh(){
             API.getContactNew(this.userId).then(res => {
                 //console.log(res.data);
