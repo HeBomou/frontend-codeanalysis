@@ -15,16 +15,15 @@
         <v-dialog
             v-model="dialog"
             width="500">
-            <v-card>
+            <v-card color="#5A7797" class="white--text">
                 <v-card-title>增加项目</v-card-title>
                 <v-card-text>
-                    <div>1.请上传maven项目；非maven项目请在项目根目录创建target文件夹，其中放进此项目编译的jar包</div>
-                    <div>2.建议使用国内的git仓库（gitee, gitlab），尽量不要使用github，因为会比较慢</div>
-                    <div>3.暂时不支持私有项目</div>
-                    <div></div>
-                    <v-form>
+                    <div class="white--text">1.请上传maven项目；非maven项目请在项目根目录创建target文件夹，其中放进此项目编译的jar包</div>
+                    <div class="white--text">2.建议使用国内的git仓库（gitee, gitlab），尽量不要使用github，因为会比较慢</div>
+                    <div class="white--text">3.暂时不支持私有项目</div>
+                    <v-form class="mt-5">
                         <v-text-field
-                            class="mr-5 ml-5"
+                            class="mr-0 ml-0"
                             v-model="projectName"
                             label="项目名"
                             clearable
@@ -33,10 +32,11 @@
                             outlined
                             rounded
                             :rules="nameRules"
+                            dark
                             >
                         </v-text-field>
                         <v-text-field
-                            class="mr-5 ml-5"
+                            class="mr-0 ml-0"
                             v-model="projectUrl"
                             label="git地址"
                             clearable
@@ -45,31 +45,35 @@
                             outlined
                             rounded
                             :rules="gitRules"
+                            dark
                             >
                         </v-text-field>
                     </v-form>
                 </v-card-text>
+                <v-divider class="mt-5"></v-divider>
                 <v-card-actions>
-                    <v-spacer />
-                        <v-btn
-                            color="success"                                        
-                            @click="addProject"
-                            :disabled="addProjectConfirmPressed"
-                        >
-                            <div v-if="addProjectConfirmPressed">
-                                <v-progress-circular indeterminate color="white"></v-progress-circular>
-                            </div>
-                            <div v-else>
-                                确定
-                            </div>
-                        </v-btn>
-                        
-                        <v-btn
+                    <v-btn
                             color="error"                                        
                             @click="dialog=false"
-                            
+                            text
                         >取消
-                        </v-btn>
+                    </v-btn>
+                    <v-spacer />
+                    <v-btn
+                        color="success"                                        
+                        @click="addProject"
+                        :disabled="addProjectConfirmPressed"
+                        text
+                    >
+                        <div v-if="addProjectConfirmPressed">
+                            <v-progress-circular indeterminate color="white"></v-progress-circular>
+                        </div>
+                        <div v-else>
+                            确定
+                        </div>
+                    </v-btn>
+                        
+                        
                 </v-card-actions>
             </v-card>
         </v-dialog>

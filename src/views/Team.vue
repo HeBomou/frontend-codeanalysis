@@ -105,7 +105,7 @@
         <v-dialog
             v-model="dialogNewNotice"
             width="500">
-            <v-card>
+            <v-card color="#5A7797" class="white--text">
                 <v-card-title>新建公告</v-card-title>
                 <v-card-text class="mt-3">
                     <v-form
@@ -120,6 +120,7 @@
                             required
                             flat
                             outlined
+                            dark
                         ></v-text-field>
                         <v-textarea
                             v-model="newNoticeText"
@@ -128,6 +129,7 @@
                             required
                             flat
                             outlined
+                            dark
                         ></v-textarea>
                         
                     </v-form>
