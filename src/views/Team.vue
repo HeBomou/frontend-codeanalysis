@@ -1173,7 +1173,7 @@ export default {
                     }
                 })
             };
-            this.snack("haha!", delNot);
+            this.snack("是否删除此公告？", delNot);
         },
         snack(msg, func){
             this.snack_alert_func = func;
