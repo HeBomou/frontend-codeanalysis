@@ -721,7 +721,7 @@ export default {
             groupTobeDeleted:{},
             drawer: true,
             groupChosenIndex: 1,//当前选中的组, 为groups列表的index。
-            groupChosen: {id: 123, leaderId: 234, name: "group haha", inviteCode: 123123},
+            groupChosen: {id: -1, leaderId: 234, name: "group haha", inviteCode: 123123},
             searchProject: 1,//项目列表中正在搜索的项目
             isLoading: true,
             mandatory: true,
@@ -829,7 +829,12 @@ export default {
         },
         //gourp side bar进行选择的事件回调函数
         change(val){
-            //console.log(val);
+            console.log("change");
+            console.log(val);
+            if(typeof(val) == undefined){
+                //没有进行选择
+                return;
+            }
             this.selectGroup(this.groups[val].id);
             //console.log(this.groupChosen);
         },
@@ -903,8 +908,17 @@ export default {
                     return;
                 }
                 //this.$nextTick(() => {
-                    this.selectGroup(this.groups[this.groups.length - 1].id);//由于考虑到新的组在最后，所以获取小组后默认选择最后一个
+                    //this.selectGroup(this.groups[this.groups.length - 1].id);//由于考虑到新的组在最后，所以获取小组后默认选择最后一个
                 //})
+                if(typeof(this.groupChosen.id) != undefined){
+                    //之前选中了某组
+                    if(this.groups.findIndex(item => item.id == this.groupChosen.id) != -1){
+                        this.selectGroup(this.groupChosen.id);
+                        return;
+                    }
+                }
+                this.selectGroup(this.groups[this.groups.length - 1].id);//由于考虑到新的组在最后，所以获取小组后默认选择最后一个
+
             }).catch(err => this.Alert(err));
         },
         confirmNewGroup(){
