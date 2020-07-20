@@ -455,7 +455,7 @@
                                 </tr>
                                 <template v-for="item in tasks">
                                     <tr :key="item.id" @click="selectTask(item)" :bgcolor="getColor(item)">
-                                        <td v-if="item.isFinished==0">
+                                        <td v-if="item.isFinished==0 && !isMineTask(item)">
                                             <v-row >
                                                 <v-checkbox 
                                                     v-model="item.isFinished" 
@@ -475,7 +475,7 @@
                             </thead>
                             <tbody>
                                 <tr v-for="item in tasks" :key="item.id" @click="selectTask(item)" :bgcolor="getColor(item)">
-                                    <td v-if="isMineTask(item)">
+                                    <td v-if="isMineTask(item) && !item.isFinished">
                                         <v-row >
                                             <v-checkbox 
                                                 v-model="item.isFinished" 
