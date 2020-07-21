@@ -16,7 +16,7 @@
         <v-dialog
             v-model="dialog"
             width="500">
-            <v-card color="#5A7797" class="white--text">
+            <v-card  class="white--text" style="background-color: red; background-image: linear-gradient(#e66465, #9198e5);">
                 <v-card-title>增加项目</v-card-title>
                 <v-card-text>
                     <div class="white--text">1.请上传maven项目；非maven项目请在项目根目录创建target文件夹，其中放进此项目编译的jar包</div>
@@ -51,7 +51,7 @@
                         </v-text-field>
                     </v-form>
                 </v-card-text>
-                <v-divider class="mt-5"></v-divider>
+                <v-divider class="mt-5" ></v-divider>
                 <v-card-actions>
                     <v-btn
                             color="error"                                        

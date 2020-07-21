@@ -18,14 +18,15 @@
         </v-card>
       </v-dialog>
       <v-dialog v-model="dialogDeleteSubgraph" width="500px">
-        <v-card>
-          <v-card-title>删除子图</v-card-title>
-          <v-card-text color="red">子图被删除后无法恢复，且所有标注都会被删除！</v-card-text>
+        <v-card  color="#5A7797" class="white--text">
+          <v-card-title >删除子图</v-card-title>
+          <v-card-text class="white--text">子图被删除后无法恢复，且所有标注都会被删除！</v-card-text>
+          <v-divider />
           <v-card-actions>
+            <v-btn text color="error" @click="dialogDeleteSubgraph=false;">取消</v-btn>
             <v-spacer />
-            <v-btn color="success" @click="deleteSubgraphConfirmed()">确定</v-btn>
+            <v-btn text color="success" @click="deleteSubgraphConfirmed()">确定</v-btn>
 
-            <v-btn color="error" @click="dialogDeleteSubgraph=false;">取消</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
