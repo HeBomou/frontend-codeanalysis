@@ -805,6 +805,7 @@ export default {
          * 选择了某个小组，UI进行选择，调用后端，更新页面显示的相关信息。
          */
         selectGroup(groupId){
+            this.taskChosen = {};
             this.groupChosenIndex = this.groups.findIndex(item => item.id === groupId);
             this.groupChosen = this.groups[this.groupChosenIndex];
             //this.$refs.ProjectComponentTeam.setProjects();
