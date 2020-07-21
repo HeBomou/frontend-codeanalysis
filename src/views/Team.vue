@@ -392,16 +392,13 @@
         <v-tab-item>
             <v-container fluid>
                 <v-row>
-                    <v-col cols="8">
-                        
+                    <v-col>
                         <v-simple-table>
-                            
                             <thead>
                                 <tr>
                                     <th>任务列表</th>
                                 </tr>
                             </thead>
-                            
                             <tbody>
                                 <tr @click="isAddingTask=true" v-if="hasHigherLevel(user.level, 'member')">
                                     <td>
@@ -468,8 +465,10 @@
                             </tbody>
                         </v-simple-table>
                     </v-col>
-                    <v-col cols="4">
-                        <v-card v-if="taskChosen.id!=undefined">
+                    <v-slide-y-transition
+                    >
+                    <v-col cols="4" v-if="taskChosen.id!=undefined">
+                        <v-card >
                             <v-card-actions >
                                 <v-container fluid>
                                     <v-row>
@@ -575,6 +574,7 @@
                             </v-card-actions>
                         </v-card>
                     </v-col>
+                    </v-slide-y-transition>
 
                 </v-row>
             </v-container>
