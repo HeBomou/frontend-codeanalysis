@@ -593,6 +593,11 @@
                         <v-col cols="5"></v-col>
                     </v-card>
                 </v-list-item>
+                <v-slide-y-transition
+                    class="py-0"
+                    group
+                    tag="v-list"
+                >
                 <v-list-item
                 v-for="(notice, i) in notices"
                 :key="i"
@@ -646,6 +651,7 @@
                         </v-card-actions>
                     </v-card>
                 </v-list-item>
+                </v-slide-y-transition>
             </v-list>
         </v-tab-item>
     </v-tabs>
