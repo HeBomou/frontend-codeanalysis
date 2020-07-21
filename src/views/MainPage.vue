@@ -6,6 +6,7 @@
       <v-progress-circular indeterminate></v-progress-circular>
     </v-overlay>
     <div>
+      <SnackbarAlertComponent ref="snackbar_alert_component"></SnackbarAlertComponent>
       <v-dialog v-model="SourceCodedialog" width="70%">
         <v-card>
           <v-card-title>{{this.vertexSelected == undefined ? "" : this.vertexSelected.functionName}}</v-card-title>
@@ -250,6 +251,7 @@
 
 <script>
 import DepGraph from "@/components/DepGraph";
+import SnackbarAlertComponent from "../components/SnackbarAlert";
 import {
   getProject,
   putVertex,
@@ -267,7 +269,8 @@ export default {
     source: String
   },
   components: {
-    DepGraph
+    DepGraph,
+    SnackbarAlertComponent
   },
   data() {
     return {
@@ -589,8 +592,10 @@ export default {
       // console.log((this.vertexs[0][1]).functionName);
     },
     Alert(msg) {
-      this.errMsg = msg;
-      this.dialogErr = true;
+      // this.errMsg = msg;
+      // this.dialogErr = true;
+      this.$refs.snackbar_alert_component.snack(msg);
+
     },
     /**
      * 初始化项目
