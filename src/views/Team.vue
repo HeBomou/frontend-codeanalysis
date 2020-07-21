@@ -63,15 +63,15 @@
         <v-dialog
             v-model="dialogNewGroup"
             width="500">
-            <v-card>
+            <v-card class="white--text" color="#5A7797">
                 <v-card-title>创建小组</v-card-title>
                 <v-card-text>
                     <v-form
                         v-model="newGroupValid"
                         ref="form"
+                        class="mt-3"
                     >
                         <v-text-field
-                        class="mr-5 ml-5"
                         v-model="newGroupName"
                         :rules="newGroupNameRules"
                         label="Group Name"
@@ -79,27 +79,33 @@
                         required
                         flat
                         outlined
+                        dark
                     ></v-text-field>
+                    </v-form>
+                </v-card-text>
+                <v-divider class="mt-0"></v-divider>
+                <v-card-actions>
+                    <v-btn
+                        depressed
+                        class="mr-5 ml-5"
+                        color="error"
+                        @click="newGroupName='';dialogNewGroup=false;"
+                        text
+                    >
+                    取消
+                    </v-btn>
+                    <v-spacer />
                     <v-btn
                         depressed
                         class="mr-5 ml-5"
                         color="success"
                         :disabled="!newGroupValid"
                         @click="confirmNewGroup"
+                        text
                     >
                     确定
                     </v-btn>
-                    
-                    <v-btn
-                        depressed
-                        class="mr-5 ml-5"
-                        color="error"
-                        @click="newGroupName='';dialogNewGroup=false;"
-                    >
-                    取消
-                    </v-btn>
-                    </v-form>
-                </v-card-text>
+                </v-card-actions>
             </v-card>
         </v-dialog>
         <v-dialog
