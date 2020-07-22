@@ -249,18 +249,20 @@
                     <v-list-item-content>
                         <v-list-item-title v-text="item.name"></v-list-item-title>
                     </v-list-item-content>
-                    <v-list-item-icon 
-                        @click="deleteGroup(item)"
-                        v-if="user.level == 'leader'"
-                    >
-                        <i class="material-icons">clear</i>
-                    </v-list-item-icon>
-                    <v-list-item-icon 
-                        @click="dropGroup(item)"
-                        v-else
-                    >
-                        <i class="material-icons">clear</i>
-                    </v-list-item-icon>
+                    <!-- <div v-if="item.id == groupChosen.id"> -->
+                        <v-list-item-icon
+                            @click="deleteGroup(item)"
+                            v-if="user.level == 'leader' && item.id == groupChosen.id"
+                        >
+                            <i class="material-icons">clear</i>
+                        </v-list-item-icon>
+                        <v-list-item-icon  
+                            @click="dropGroup(item)"
+                            v-if="user.level != 'leader' && item.id == groupChosen.id"
+                        >
+                            <i class="material-icons">clear</i>
+                        </v-list-item-icon>
+                    <!-- <div> -->
                 </v-list-item>
             </v-list-item-group>
         </v-list>
