@@ -549,6 +549,17 @@
                                         <div class="text-wrapper">{{taskChosen.info}}</div>
                                         </v-card-text>
                                     </v-row>
+                                    <div v-if="hasHigherLevel(user.level, 'member')">
+                                        <v-row>
+                                            <v-divider class="mb-5"></v-divider>
+                                        </v-row>
+                                        <v-row>
+                                            <v-spacer />
+                                            <v-btn text color="red" @click="deleteTask()">删除任务</v-btn>
+                                            <v-spacer />
+
+                                        </v-row>
+                                    </div>
                                 </v-container>
                             </v-card-actions>
                         </v-card>
@@ -831,6 +842,9 @@ export default {
             //获取当前小组所有task
             API.getAllTask(this.groupChosen.id).then(res => {
                 this.tasks = res.data;
+                if(this.tasks.length == 0){
+                    this.taskChosen = {};
+                }
             }).catch(err => {
                 console.log(err);
                 this.Alert(err.response.data.errMsg);
@@ -1131,6 +1145,18 @@ export default {
         snack(msg, btns){
             this.$refs.snackbar_alert_component.snack(msg, btns);
         },
+        deleteTask(){
+            API.deleteTask(this.taskChosen.id).then(res => {
+                console.log(res);
+                this.getTasks();
+            }).catch(err => {
+                if(typeof(err.response) != "undefined"){
+                        this.Alert(err.response.data.errMsg);
+                    }else {
+                        console.log(err);
+                    }
+            })
+        }
 
         // isExecutor(user){
         //     if(user.id == 0){
