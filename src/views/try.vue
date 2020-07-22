@@ -8,33 +8,7 @@
       <v-btn @click="debug4()">4</v-btn>
       <snack ref="ha"></snack>
       <dialogAlert ref="dia"></dialogAlert>
-      <v-dialog v-model="dialog" width="500">
-        <v-card justify="center" color="#5A7797" class="white--text">
-          <v-card-title>{{msg}}</v-card-title>
-          <v-divider />
-          <v-card-actions>
-              <!-- <v-spacer v-if="i != 0"></v-spacer> -->
-              <v-spacer v-if="!btns[1]" />
-
-              <v-btn 
-                :color="btns[0].color"
-                text
-              >
-                {{btns[0].text}}
-              </v-btn>
-              <v-spacer />
-              <v-btn 
-                v-if="btns[1]"
-                :color="btns[1].color"
-                text
-              >
-                {{btns[1].text}}
-              </v-btn>
-              
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-
+     
 </div>
 </template>
 
@@ -65,12 +39,15 @@ export default {
       this.$refs.dia.Alert("haha");
     },
     debug2(){
-      this.dialog = true;
+      this.$refs.dia.Alert("haha2", () => {console.log("2")});
+
     },
     debug3(){
+      this.$refs.dia.Alert("haha3", () => {console.log("haha3")}, () => {console.log("haha4")});
       
     },
     debug4(){
+      this.$refs.dia.Alert("haha");
 
     },
     
