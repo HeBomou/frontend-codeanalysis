@@ -4,6 +4,7 @@
       rel="stylesheet">
     <div>
         <SnackbarAlertComponent ref="snackbar_alert_component"></SnackbarAlertComponent>
+        <DialogAlertComponent ref="dialog_alert_component"></DialogAlertComponent>
         <v-dialog
             v-model="dialogErr"
             width="500">
@@ -661,11 +662,13 @@
 <script>
 import {getAllGroup, getMembers, postGroup, putMember, API} from "../request/api";
 import SnackbarAlertComponent from "../components/SnackbarAlert";
-import ProjectComponent from "../components/ProjectComponent"
+import ProjectComponent from "../components/ProjectComponent";
+import DialogAlertComponent from "../components/DialogAlert";
 export default {
     components:{
         ProjectComponent,
-        SnackbarAlertComponent
+        SnackbarAlertComponent,
+        DialogAlertComponent
     },
     data(){
         return {
@@ -934,7 +937,7 @@ export default {
             })
         },
         deleteGroup(item){
-            this.snack("是否删除小组‘" + item.name + "’", () => {
+            this.alert_dialog("是否删除小组‘" + item.name + "’", () => {
                 API.deleteGroup(item.id).then(res => {
                     console.log(res);
                     this.getGroups();
@@ -942,10 +945,10 @@ export default {
                 }).catch(err => {
                     this.Alert(err.response.data.errMsg);
                 });
-            });
+            }, () => {});
         },
         dropGroup(group){
-            this.snack("是否退出小组‘" + group.name + "’", () => {
+            this.alert_dialog("是否退出小组‘" + group.name + "’", () => {
                 API.deleteMember(group.id, this.user.id).then(res => {
                     console.log(res);
                     this.getGroups();
@@ -957,7 +960,7 @@ export default {
                         console.log(err);
                     }
                 });
-            })
+            }, () => {});
         },
         confirmNewNotice(){
             var myDate = new Date();
@@ -1152,6 +1155,9 @@ export default {
         },
         snack(msg, btns){
             this.$refs.snackbar_alert_component.snack(msg, btns);
+        },
+        alert_dialog(msg, func1, func2){
+            this.$refs.dialog_alert_component.Alert(msg, func1, func2)
         },
         deleteTask(){
             this.snack("是否删除任务 " + this.taskChosen.name, () => {
