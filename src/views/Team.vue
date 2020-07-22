@@ -146,7 +146,7 @@
         <v-dialog
             v-model="dialogUpdateNotice"
             width="500">
-            <v-card>
+            <v-card color="#5A7797" class="white--text">
                 <v-card-title>修改公告</v-card-title>
                 <v-card-text>
                     <v-form
@@ -160,6 +160,7 @@
                             clearable
                             required
                             flat
+                            dark
                             outlined
                         ></v-text-field>
                         <v-textarea
@@ -168,25 +169,32 @@
                             label="公告内容"
                             required
                             flat
+                            dark
                             outlined
                         ></v-textarea>
+                    </v-form>
+                </v-card-text>
+                <v-divider />
+                <v-card-actions>
+                     <v-btn
+                            class="mr-5 ml-5"
+                            color="error"
+                            @click="dialogUpdateNotice = false"
+                            text
+                        >
+                        取消
+                        </v-btn>
+                        <v-spacer />
                         <v-btn
                             class="mr-5 ml-5"
                             color="success"
                             :disabled="!updateNoticeValid"
                             @click="confirmUpdateNotice();dialogUpdateNotice = false"
+                            text
                         >
                         确定
                         </v-btn>
-                        <v-btn
-                            class="mr-5 ml-5"
-                            color="error"
-                            @click="dialogUpdateNotice = false"
-                        >
-                        取消
-                        </v-btn>
-                    </v-form>
-                </v-card-text>
+                </v-card-actions>
             </v-card>
         </v-dialog>
     </div>
