@@ -1,5 +1,8 @@
 <template>
     <v-app id="admin">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <SnackbarAlertComponent ref="snackbar_alert_component"></SnackbarAlertComponent>
+        <DialogAlertComponent ref="dialog_alert_component"></DialogAlertComponent>
         <v-dialog
         v-model="dialogErr"
         width="500">
@@ -59,20 +62,21 @@
        <v-app-bar
             app
             clipped-left
-            color="amber"
+            color="#5A7797"
+            class="white--text"
         > 
-            <span class="title ml-3 mr-5">管理员:&nbsp;<span class="font-weight-light">{{adminname}}</span></span>
+            <span class="title ml-3 mr-5">管理员:&nbsp;<span class="font-weight-light white--text">{{adminname}}</span></span>
 
             <v-spacer />
             <v-spacer />
             <v-spacer />
             <v-spacer />
 
-            <v-btn @click="adminLogout">退出登录</v-btn>
+            <v-btn text @click="adminLogout" class="white--text"><i class="material-icons mr-2">login</i>退出登录</v-btn>
 
         </v-app-bar>
-        <v-content>
-            <v-card>
+        <v-main>
+            <v-card class="mb-5 mr-5 ml-5 mt-5">
                 <v-card-title>基本信息</v-card-title>
                 <v-card-text>
                     <v-list-item
@@ -92,7 +96,7 @@
                     </v-list-item>
                 </v-card-text>
             </v-card>
-            <v-card>
+            <v-card class="mb-5 mr-5 ml-5">
                 <v-card-title>
                     用户列表
                     <v-spacer></v-spacer>
@@ -118,7 +122,7 @@
                     </v-data-table>
                 </v-card-text>
             </v-card>
-            <v-card>
+            <v-card class="mb-5 mr-5 ml-5 mt-5">
                 <v-card-title>
                     项目列表
                     <v-spacer></v-spacer>
@@ -145,13 +149,46 @@
                     </v-data-table>
                 </v-card-text>
             </v-card>
-        </v-content>
+            <v-card class="mb-5 mr-5 ml-5 mt-5">
+                <v-card-title>
+                    小组列表
+                    <v-spacer></v-spacer>
+                    <v-text-field
+                        v-model="searchGroup"
+                        append-icon="mdi-magnify"
+                        label="Search"
+                        single-line
+                        hide-details
+                    ></v-text-field>
+                </v-card-title>
+                <v-card-text>
+                    <v-data-table
+                        :loading="isLoading"
+                        loading-text="Loading... Please wait"
+                        :headers="groupDetailHeaders"
+                        :items="groupDetail"
+                        :search="searchGroup"
+                        @click:row="checkGroup"
+                    >
+                        <!-- <template v-slot:item.id="props">
+                            <v-icon @click="checkGroup(props.item.id)">mdi-plus</v-icon>
+                        </template> -->
+                    </v-data-table>
+                </v-card-text>
+            </v-card>
+        </v-main>
     </v-app>
 
 </template>
 <script>
-import {getProjectBasicAttributeAll, getAllUsers, getProjectProfile, getProjectsSingle} from "../request/api";
+import {getProjectBasicAttributeAll, getAllUsers, getProjectProfile, getProjectsSingle, API} from "../request/api";
+import SnackbarAlertComponent from "../components/SnackbarAlert";
+import DialogAlertComponent from "../components/DialogAlert";
 export default {
+    components: {
+      SnackbarAlertComponent,
+      DialogAlertComponent
+    },
     data(){
         return {
             errMsg: "",
@@ -190,8 +227,20 @@ export default {
                 edgeAnotationNum: "边标注数",
                 connectiveDomainAnotationNum: "连通域标注数",
             },
+            groupDetail: [
+                {id: 1, name: "1", noticeNum: 0, taskNum: 0, memberNum: 1},
+                {id: 2, name: "2", noticeNum: 0, taskNum: 0, memberNum: 2},
+                {id: 3, name: "3", noticeNum: 0, taskNum: 0, memberNum: 3}
+            ],
+            groupDetailHeaders: [
+                {text: "小组名", value: "name"},
+                {text: "公告数", value: "noticeNum"},
+                {text: "任务数", value: "taskNum"},
+                {text: "人数", value: "memberNum"},
+            ],
             searchProject: null,
             searchUser: null,
+            searchGroup: null
         }
     }, mounted(){
         if(this.$store.getters.adminId == 0){
@@ -210,12 +259,47 @@ export default {
             this.users = res.data;
         }).catch(err => {
             this.Alert(err.response.data.errMsg);
+        });
+        API.getGroupStatistic().then(res => {
+            console.log(res);
+            this.groupDetail = res.data;
+            this.groupDetail.forEach(item => {
+                if(!item.noticeNum && typeof item.noticeNum != "undefined" && item.noticeNum != 0){
+                    //判断是否是null
+                    item.noticeNum = 0;
+                }
+                if(!item.taskNum && typeof item.taskNum != "undefined" && item.taskNum != 0){
+                    item.taskNum = 0;
+                }
+            });
+            console.log(this.groupDetail);
+        }).catch(err => {
+            if(typeof err.resopnse.data.errMsg === "undefined"){
+                console.log(err);
+            }else {
+                this.Alert(err.resopnse.data.errMsg);
+            }
         })
     }, methods: {
+        debug(msg){
+            if(!msg){
+                console.log("haha");
+                return;
+            }
+            console.log(msg);
+        },
         Alert(msg){
-            this.errMsg = msg;
-            this.dialogErr = true;
-        },clickProject(){
+        // this.errMsg = msg;
+        // this.dialog = true;
+            this.dialog_alert(msg);
+        },
+        snack(msg, btns){
+            this.$refs.snackbar_alert_component.snack(msg, btns);
+        },
+        dialog_alert(msg, func1, func2){
+            this.$refs.dialog_alert_component.Alert(msg, func1, func2);
+        },
+        clickProject(){
             //console.log("haha");
         },checkProject(id){
             //console.log(id);
@@ -250,6 +334,9 @@ export default {
                 console.log(err);
             })
             //console.log(id);
+        },
+        checkGroup(group){
+            this.Alert("选中小组" + group.id);
         }
     }
 }
