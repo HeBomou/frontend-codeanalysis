@@ -212,7 +212,7 @@
               <v-card-title>紧密度</v-card-title>
               <v-card-text>{{edgeSelected.closeness}}</v-card-text>
             </v-card>
-            <v-card class="mt-5">
+            <v-card class="mt-5" v-if="selectType != 0">
               <v-card-title>标注</v-card-title>
               <v-card-text>
                 <v-textarea v-model="tag" auto-grow outlined></v-textarea>
@@ -394,7 +394,7 @@ export default {
       isTreeSelectVertex: false,
 
       //当前选中的是顶点,1:顶点，2：边，3：连通域
-      selectType: 1,
+      selectType: 0,
       //所有的threshold
       thresholds: [0, 1],
       thresholdSelected: 0,
