@@ -1154,16 +1154,21 @@ export default {
             this.$refs.snackbar_alert_component.snack(msg, btns);
         },
         deleteTask(){
-            API.deleteTask(this.taskChosen.id).then(res => {
+            this.snack("是否删除任务 " + this.taskChosen.name, () => {
+                API.deleteTask(this.taskChosen.id).then(res => {
                 console.log(res);
                 this.getTasks();
-            }).catch(err => {
-                if(typeof(err.response) != "undefined"){
-                        this.Alert(err.response.data.errMsg);
-                    }else {
-                        console.log(err);
-                    }
-            })
+                this.taskChosen = {};
+                
+                }).catch(err => {
+                    if(typeof(err.response) != "undefined"){
+                            this.Alert(err.response.data.errMsg);
+                        }else {
+                            console.log(err);
+                        }
+                });
+            });
+            
         }
 
         // isExecutor(user){
