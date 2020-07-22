@@ -930,11 +930,26 @@ export default {
             return levelr.index;
         },
         deleteMember(user){
-            API.deleteMember(this.groupChosen.id, user.id).then(res => {
-                console.log(res);
-            }).catch(err => {
-                console.log(err);
-            })
+            this.alert_dialog("是否删除组员 " + user.username, () => {
+                API.deleteMember(this.groupChosen.id, user.id).then(res => {
+                    console.log(res);
+                    this.snack("删除成功");
+                    getMembers(this.groupChosen.id).then(res => {
+                        //console.log(res);
+                        //TODO:抽象为一个方法
+                        this.teamMember = res.data;
+                        this.user = this.teamMember.find(item => {
+                            return item.id == this.userId;
+                        });
+                    }).catch(err => {
+                        console.log(err);
+                        this.Alert(err.response.data.errMsg);
+                    });
+                }).catch(err => {
+                    console.log(err);
+                });
+            }, () => {});
+            
         },
         deleteGroup(item){
             this.alert_dialog("是否删除小组‘" + item.name + "’", () => {
