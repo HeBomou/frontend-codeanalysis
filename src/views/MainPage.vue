@@ -30,14 +30,14 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
-      <v-dialog v-model="dialogErr" width="500">
+      <!-- <v-dialog v-model="dialogErr" width="500">
         <v-card justify="center">
           <v-card-title>{{errMsg}}</v-card-title>
           <v-card-text>
             <v-btn color="error" @click="dialogConfirm">确定</v-btn>
           </v-card-text>
         </v-card>
-      </v-dialog>
+      </v-dialog> -->
       <v-dialog v-model="dialogThreshold" width="500">
         <v-card justify="center">
           <v-card-title class="pb-0">添加紧密度域值</v-card-title>
@@ -967,13 +967,13 @@ export default {
       });
       return result;
     },
-    dialogConfirm(){
-      this.dialogErr = false;
-      if(this.errMsg == "项目正在解析"){
-        this.$router.push("/project");
-        this.errMsg = "";
-      }
-    },
+    // dialogConfirm(){
+    //   this.dialogErr = false;
+    //   if(this.errMsg == "项目正在解析"){
+        
+    //     this.errMsg = "";
+    //   }
+    // },
     refresh(){
       getProject(this.projectId)
       .then(res => {
@@ -984,7 +984,8 @@ export default {
       .catch(err => {
         this.overlay = false;
         console.log(err);
-        this.Alert(err.response.data.errMsg);
+
+          this.Alert(err.response.data.errMsg);
         
       });
     }
@@ -1012,7 +1013,14 @@ export default {
       .catch(err => {
         this.overlay = false;
         console.log(err);
-        this.Alert(err.response.data.errMsg);
+        if(err.response.data.errMsg == "项目正在解析"){
+          setTimeout(() => {this.$router.push("/project");}, 1000);
+          this.$refs.snackbar_alert_component.snack("项目正在解析或解析失败", [{text: "确定", func: () => {
+            this.$router.push("/project");
+          }}]);
+        }else {
+          this.Alert(err.response.data.errMsg);
+        }
         
       });
   }
