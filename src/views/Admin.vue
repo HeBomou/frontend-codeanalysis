@@ -94,6 +94,13 @@
                             </v-list-item-title>
                         </v-list-item-content>
                     </v-list-item>
+                    <v-list-item>
+                        <v-list-item-content>
+                            <v-list-item-title>
+                                小组总数：{{groupDetail.length}}
+                            </v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
                 </v-card-text>
             </v-card>
             <v-card class="mb-5 mr-5 ml-5">
