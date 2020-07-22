@@ -6,6 +6,8 @@
           <v-divider />
           <v-card-actions>
               <!-- <v-spacer v-if="i != 0"></v-spacer> -->
+              <v-spacer v-if="!btns[1]" />
+
               <v-btn 
                 :color="btns[0].color"
                 text
@@ -14,11 +16,13 @@
               </v-btn>
               <v-spacer />
               <v-btn 
+                v-if="btns[1]"
                 :color="btns[1].color"
                 text
               >
                 {{btns[1].text}}
               </v-btn>
+              
           </v-card-actions>
         </v-card>
       </v-dialog>
