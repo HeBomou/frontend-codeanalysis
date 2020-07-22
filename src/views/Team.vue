@@ -327,7 +327,7 @@
                                     mdi-plus
                                     </v-icon> -->
                                     <v-btn fab height="30" width="30" elevation="2" v-on="on">
-                                        <i class="material-icons">more_vert</i>
+                                        <i class="material-icons">settings</i>
                                     </v-btn>
                                 </template>
                                 <v-list>
