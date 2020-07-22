@@ -1,6 +1,8 @@
 <template>
   <div>
         <!--    <v-parallax src="https://cdn.vuetifyjs.com/images/parallax/material.jpg" height="100%">-->
+    <SnackbarAlertComponent ref="snackbar_alert_component"></SnackbarAlertComponent>
+    <DialogAlertComponent ref="dialog_alert_component"></DialogAlertComponent>
     <v-dialog
       v-model="dialog"
       width="500">
@@ -156,13 +158,19 @@
 </template>
 
 <script>
-  import {postAdmin, addAdmin} from "../request/api"
+  import {postAdmin, addAdmin} from "../request/api";
+  import SnackbarAlertComponent from "../components/SnackbarAlert";
+  import DialogAlertComponent from "../components/DialogAlert";
   export default {
     name: 'Login',
     computed: {
       screenHeight() {
         return document.documentElement.clientHeight;
       }
+    },
+    components: {
+      SnackbarAlertComponent,
+      DialogAlertComponent
     },
 
     data (){
@@ -217,7 +225,7 @@
         ////console.log(res);
         addAdmin(this.userName, this.password, this.inviteCode).then(res => {
           console.log(res);
-          this.Alert("注册成功");
+          this.snack("注册成功");
         })
           .catch(err => {
             //console.log(err.response.data.errMsg);
@@ -225,8 +233,15 @@
           })
       },
       Alert(msg){
-        this.errMsg = msg;
-        this.dialog = true;
+        // this.errMsg = msg;
+        // this.dialog = true;
+        this.dialog_alert(msg);
+      },
+      snack(msg, btns){
+        this.$refs.snackbar_alert_component.snack(msg, btns);
+      },
+      dialog_alert(msg, func1, func2){
+        this.$refs.dialog_alert_component.Alert(msg, func1, func2);
       },
       isUser(){
         this.$router.push('/login');
