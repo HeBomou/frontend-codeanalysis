@@ -355,7 +355,15 @@ export const API = {
      */
     putNotice: (noticeId, notice) => put("/group/notice/" + noticeId, notice),
 
+    /**
+     * 删除任务
+     */
     deleteTask: (id) => del("/task/" + id),   
+
+    /**
+     * 获得小组统计信息
+     */
+    getGroupStatistic: () => get("/group/statistic"),
 
 }
 
