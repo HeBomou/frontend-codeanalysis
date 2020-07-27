@@ -34,6 +34,10 @@ export default {
      this.thresholds.push(haha);
      this.thresholdSelected = haha;
    }
+  },
+  mounted(){
+    let haha = {text: 123};
+    console.log(typeof haha.name.text);
   }
 };
 </script>
