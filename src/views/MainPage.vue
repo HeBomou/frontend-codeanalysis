@@ -159,7 +159,7 @@
               <!-- <v-list-item-title>搜索顶点</v-list-item-title>
               <SearchComponent></SearchComponent>-->
               <v-card-title style="height: 10%" class="pt-0 pb-0">
-                dependency
+                Dependency
                 <v-spacer />
                 <v-btn text color="#5A7797" elevation="0" @click="centerTracker+=1">
                   <span class="material-icons">
