@@ -71,7 +71,7 @@
             <v-spacer />
             <v-spacer />
             <v-spacer />
-            <v-btn @click="refresh()" class="mr-5 white--text" elevation="0" color="#5A7797" ><i class="material-icons mr-2">refresh</i>刷新</v-btn>
+            <v-btn @click="refresh('刷新成功')" class="mr-5 white--text" elevation="0" color="#5A7797" ><i class="material-icons mr-2">refresh</i>刷新</v-btn>
             <v-btn text @click="adminLogout" class="white--text"><i class="material-icons mr-2">login</i>退出登录</v-btn>
 
         </v-app-bar>
@@ -257,41 +257,46 @@ export default {
         this.adminname = this.$store.state.adminName;
         this.refresh();
     }, methods: {
-        refresh(){
+        refresh(msg){
             this.isLoading = true;
             getProjectBasicAttributeAll().then(res => {
                 //console.log(res);
                 this.projects = res.data;
                 this.isLoading = false;
-            }).catch(err => {
-                this.Alert(err.response.data.errMsg);
-            });
-            getAllUsers().then(res => {
-                //console.log(res);
-                this.users = res.data;
-            }).catch(err => {
-                this.Alert(err.response.data.errMsg);
-            });
-            API.getGroupStatistic().then(res => {
-                console.log(res);
-                this.groupDetail = res.data;
-                this.groupDetail.forEach(item => {
-                    if(!item.noticeNum && typeof item.noticeNum != "undefined" && item.noticeNum != 0){
-                        //判断是否是null
-                        item.noticeNum = 0;
-                    }
-                    if(!item.taskNum && typeof item.taskNum != "undefined" && item.taskNum != 0){
-                        item.taskNum = 0;
-                    }
+                getAllUsers().then(res => {
+                    //console.log(res);
+                    this.users = res.data;
+                    API.getGroupStatistic().then(res => {
+                        //console.log(res);
+                        if(typeof msg != "undefined"){
+                            this.snack(msg);
+                        }
+                        this.groupDetail = res.data;
+                        this.groupDetail.forEach(item => {
+                            if(!item.noticeNum && typeof item.noticeNum != "undefined" && item.noticeNum != 0){
+                                //判断是否是null
+                                item.noticeNum = 0;
+                            }
+                            if(!item.taskNum && typeof item.taskNum != "undefined" && item.taskNum != 0){
+                                item.taskNum = 0;
+                            }
+                        });
+                        console.log(this.groupDetail);
+                    }).catch(err => {
+                        if(typeof err.resopnse.data.errMsg === "undefined"){
+                            console.log(err);
+                        }else {
+                            this.Alert(err.resopnse.data.errMsg);
+                        }
+                    });
+                }).catch(err => {
+                    this.Alert(err.response.data.errMsg);
                 });
-                console.log(this.groupDetail);
             }).catch(err => {
-                if(typeof err.resopnse.data.errMsg === "undefined"){
-                    console.log(err);
-                }else {
-                    this.Alert(err.resopnse.data.errMsg);
-                }
+                this.Alert(err.response.data.errMsg);
             });
+            
+           
         },
         debug(msg){
             if(!msg){
