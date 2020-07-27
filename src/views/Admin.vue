@@ -233,6 +233,7 @@ export default {
                 vertexAnotationNum: "顶点标注数",
                 edgeAnotationNum: "边标注数",
                 connectiveDomainAnotationNum: "连通域标注数",
+                isGroupId: "项目类型"
             },
             groupDetail: [
                 {id: 1, name: "1", noticeNum: 0, taskNum: 0, memberNum: 1},
@@ -317,9 +318,14 @@ export default {
             // })
             this.dialogProject = true;
             getProjectProfile(id).then(res => {
-                //console.log(res);
+                console.log(res);
                 this.projectDetail = res.data;
-                delete this.projectDetail.id;
+                //delete this.projectDetail.id;
+                if(this.projectDetail.isGroupId){
+                    this.projectDetail.isGroupId = "小组项目";
+                }else {
+                    this.projectDetail.isGroupId = "个人项目";
+                }
                 
 
             }).catch(err => {
