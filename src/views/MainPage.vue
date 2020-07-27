@@ -131,6 +131,7 @@
                     </v-row>
                   </v-card-actions>
                 </v-card>
+
               </v-col>
               <v-col cols="6">
                 <v-card height="200px">
@@ -176,36 +177,45 @@
                 ></DepGraph>
               </v-card-text>
             </v-card>
-            <v-card v-if="selectType!=3">
-              <v-card-text align="center">
-                <!-- <v-form
-                      align="center"
-                      justify="center"
-                >-->
+            <v-scroll-y-transition>
+              <v-card v-if="selectType!=3" >
+                <v-card-text align="center">
+                  <!-- <v-form
+                        align="center"
+                        justify="center"
+                  >-->
 
-                <v-btn text color="#5A7797" elevation="0" class="mr-5" @click="checkDomain">
-                  <span class="material-icons">
-                    view_quilt
-                  </span>
-                  查看所在连通域</v-btn>
-                <v-btn text color="#5A7797" elevation="0" class="mr-5" v-if="selectType==1" @click="SourceCodedialog=true">
-                  <span class="material-icons">
-                    code
-                  </span>查看源代码</v-btn>
-                <v-btn text color="#5A7797" elevation="0" class="mr-5" @click="setAsStart" v-if="selectType==1">
-                  <span class="material-icons">
-                    arrow_forward
-                  </span>
-                  设置为起点</v-btn>
-                <v-btn text color="#5A7797" elevation="0" class="mr-5" @click="setAsEnd" v-if="selectType==1">
-                  <span class="material-icons">
-                    arrow_back
-                  </span>
-                  设置为终点</v-btn>
+                  <v-btn text color="#5A7797" elevation="0" class="mr-5" @click="checkDomain">
+                    <span class="material-icons">
+                      view_quilt
+                    </span>
+                    查看所在连通域</v-btn>
+            <v-scroll-y-transition>
+                  <v-btn text color="#5A7797" elevation="0" class="mr-5" v-if="selectType==1" @click="SourceCodedialog=true">
+                    <span class="material-icons">
+                      code
+                    </span>查看源代码</v-btn>
+            </v-scroll-y-transition>
+            <v-scroll-y-transition>
+                  <v-btn text color="#5A7797" elevation="0" class="mr-5" @click="setAsStart" v-if="selectType==1">
+                    <span class="material-icons">
+                      arrow_forward
+                    </span>
+                    设置为起点</v-btn>
+            </v-scroll-y-transition>
+            <v-scroll-y-transition>
+                  <v-btn text color="#5A7797" elevation="0" class="mr-5" @click="setAsEnd" v-if="selectType==1">
+                    <span class="material-icons">
+                      arrow_back
+                    </span>
+                    设置为终点</v-btn>
+            </v-scroll-y-transition>
 
-                <!-- </v-form> -->
-              </v-card-text>
-            </v-card>
+
+                  <!-- </v-form> -->
+                </v-card-text>
+              </v-card>
+            </v-scroll-y-transition>
             <v-card>
               <v-card-text>
                 <v-treeview
@@ -233,11 +243,12 @@
           </v-col>
 
           <v-col cols="2">
-            <v-card class="mt-5" v-if="selectType==1" hidden></v-card>
+            <v-scroll-y-transition>
             <v-card class="mt-5" v-if="selectType==2">
               <v-card-title>紧密度</v-card-title>
               <v-card-text>{{edgeSelected.closeness}}</v-card-text>
             </v-card>
+            </v-scroll-y-transition>
             <v-card class="mt-5">
               <v-card-title>标注</v-card-title>
               <v-card-text>
