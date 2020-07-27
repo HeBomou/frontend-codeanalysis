@@ -924,10 +924,9 @@ export default {
       this.updateVertexPos(this.$store.state.project.vertexMap.get(vertex.id));
     },
     selectPath(path) {
-      //console.log(path);
+      console.log(path);
       this.graphSelectedItem = null;
       this.graphSelectedConnectiveDomainId = null;
-
       this.pathToShow = path;
     },
     //添加一个紧密度域值

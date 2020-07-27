@@ -398,6 +398,7 @@
                                                 v-model="newTask.name" 
                                                 @change="pushNewTask()"
                                                 label="new task"/>
+                                           
                                         </v-row>
                                     </td>
                                 </tr>
@@ -411,6 +412,8 @@
                                                     
                                                 ></v-checkbox>
                                                 <p class="mt-5">{{item.name}}</p>
+                                                <v-spacer />
+                                                <p class="mt-5 mr-5">{{item.deadline}}</p>
                                             </v-row>
                                         </td>
                                     </tr>
@@ -430,6 +433,8 @@
                                                 @change="updateTask(item)" 
                                             ></v-checkbox>
                                             <p class="mt-5">{{item.name}}</p>
+                                            <v-spacer />
+                                            <p class="mt-5 mr-5">{{item.deadline}}</p>
                                         </v-row>
                                     </td>
                                 </tr>
@@ -449,6 +454,8 @@
                                                 @change="updateTask(item)">
                                             </v-checkbox>
                                             <p class="mt-5">{{item.name}}</p>
+                                            <v-spacer />
+                                            <p class="mt-5 mr-5">{{item.deadline}}</p>
                                         </v-row>
                                     </td>
                                 </tr>
