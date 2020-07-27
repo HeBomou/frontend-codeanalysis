@@ -1,56 +1,39 @@
 <template>
 <div>
- <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-      <!-- <i class="material-icons">face</i> -->
-      <v-btn @click="debug1()">1</v-btn>
-      <v-btn @click="debug2()">2</v-btn>
-      <v-btn @click="debug3()">3</v-btn>
-      <v-btn @click="debug4()">4</v-btn>
-      <snack ref="ha"></snack>
-      <dialogAlert ref="dia"></dialogAlert>
+  <v-autocomplete
+    @input="selectThreshold()"
+    v-model="thresholdSelected"
+    :items="thresholds"
+    append-outer-icon="mdi-plus"
+    @click:append-outer="add()"
+  >
+  </v-autocomplete>
      
 </div>
 </template>
 
 <script>
-import snack from "../components/SnackbarAlert";
-import dialogAlert from "../components/DialogAlert";
+
 export default {
   name: "app",
-
-  components: {
-   snack,
-   dialogAlert
-  },
   data(){
     return {
-      dialog: false,
-      msg: "haha",
-      btns: [
-        {text: "取消", func: () => {}, color: "error"}, 
-        // {text: "确定", func: () => {}, color: "success"}
-      ]
+      thresholds: [0, 1],
+      thresholdSelected: 0,
     }
   },
   methods: {
-    debug1(){
-      //this.snack("haha");
-      //this.$refs.ha.snack("haha");
-      this.$refs.dia.Alert("haha");
-    },
-    debug2(){
-      this.$refs.dia.Alert("haha2", () => {console.log("2")});
-
-    },
-    debug3(){
-      this.$refs.dia.Alert("haha3", () => {console.log("haha3")}, () => {console.log("haha4")});
-      
-    },
-    debug4(){
-      this.$refs.dia.Alert("haha");
-
-    },
-    
+   selectThreshold(){
+     console.log(this.thresholdSelected);
+   },
+   debug(){
+     console.log("debug");
+   },
+   add(){
+     let haha = Math.ceil(Math.random()*10);
+     this.thresholds.push(haha);
+     this.thresholdSelected = haha;
+   }
   }
 };
 </script>

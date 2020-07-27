@@ -39,18 +39,19 @@
         </v-card>
       </v-dialog> -->
       <v-dialog v-model="dialogThreshold" width="500">
-        <v-card justify="center">
-          <v-card-title class="pb-0">添加紧密度域值</v-card-title>
+        <v-card justify="center" color="#5A7797">
+          <v-card-title class="pb-0 white--text">添加紧密度域值</v-card-title>
           <v-card-text>
             <v-form v-model="newThresholdValid">
               <v-text-field
-                class="mr-5 ml-5"
+                class="mr-5 ml-5 mt-5"
                 v-model="newThreshold"
                 :rules="isThreholdRules"
                 label="紧密度域值"
                 required
                 flat
                 outlined
+                dark
                 rounded
               ></v-text-field>
               <v-text-field
@@ -60,12 +61,18 @@
                 label="新子图名称"
                 required
                 flat
+                dark
                 outlined
                 rounded
               ></v-text-field>
-              <v-btn color="success" @click="addThreshold()" :disabled="!newThresholdValid">确定</v-btn>
             </v-form>
           </v-card-text>
+          <v-divider />
+          <v-card-actions>
+              <v-btn text color="error" @click="dialogThreshold=false;newThreshold = ''" >取消</v-btn>
+              <v-spacer />
+              <v-btn text color="success" @click="addThreshold()" :disabled="!newThresholdValid">确定</v-btn>
+          </v-card-actions>
         </v-card>
       </v-dialog>
     </div>
@@ -106,7 +113,7 @@
                   <v-card-title>紧密度域值</v-card-title>
                   <v-card-text>
                     <v-autocomplete
-                      @update:search-input="selectThreshold()"
+                      @input="selectThreshold()"
                       v-model="thresholdSelected"
                       :items="thresholds"
                       append-outer-icon="mdi-plus"
@@ -865,18 +872,22 @@ export default {
     //添加一个紧密度域值
     addThreshold() {
       //console.log("addThreshold");
+          this.dialogThreshold = false;
+
       addSubgraph(this.projectId, this.newThreshold, this.newThresholdName)
         .then(res => {
           //console.log("addThreshold success");
           //console.log(res);
-          this.dialogThreshold = false;
+          this.Alert("添加成功");
           this.$store.commit("addSubGraph", res.data);
-          this.reloadThresholds();
+          //this.reloadThresholds();
+          this.thresholds.push(this.newThreshold);
           this.thresholdSelected = this.newThreshold;
+          this.newThreshold = 0;
           this.selectThreshold();
         })
         .catch(err => {
-          this.dialogThreshold = false;
+          // this.dialogThreshold = false;
           this.Alert(err.response.data.errMsg);
         });
     },
@@ -914,7 +925,7 @@ export default {
       });
 
     },
-    //更新Thresholds
+    //获取Thresholds
     reloadThresholds() {
       let sMap = this.$store.state.project.subgraphMap;
       this.thresholds = [];
