@@ -107,18 +107,26 @@
     <v-main>
       <v-container fluid>
         <v-row>
-          <v-col cols="10">
+          <v-col cols="10" class="pt-0">
             <!-- <v-list
               dense
               class="grey lighten-4"
             >-->
             <v-row>
               <!-- <v-col cols="12"> -->
-              <v-col cols="6">
-                <v-card height="200px">
-                  <v-card-title>紧密度域值</v-card-title>
-                  <v-card-text>
+              <v-col cols="6" class="pt-0">
+                <v-card height="120px">
+                  <v-card-title class="pb-0">
+                    紧密度域值 
+                    <v-spacer />
+                    <v-btn text color="#5A7797" elevation="0" @click="dialogDeleteSubgraph=true" class="pr-0">
+                        <span class="material-icons">
+                          blur_off
+                        </span>
+                        删除子图</v-btn></v-card-title>
+                  <v-card-text class="pb-0">
                     <v-autocomplete
+                      class="pt-0"
                       @input="selectThreshold()"
                       v-model="thresholdSelected"
                       :items="thresholds"
@@ -127,22 +135,13 @@
                     >
                     </v-autocomplete>
                   </v-card-text>
-                  <v-card-actions>
-                    <v-row justify="center">
-                      <v-btn text color="#5A7797" elevation="0" @click="dialogDeleteSubgraph=true">
-                        <span class="material-icons">
-                          blur_off
-                        </span>
-                        删除子图</v-btn>
-                    </v-row>
-                  </v-card-actions>
                 </v-card>
 
               </v-col>
-              <v-col cols="6">
-                <v-card height="200px">
-                  <v-card-title>顶点搜索</v-card-title>
-                  <v-card-text>
+              <v-col cols="6" class="pt-0">
+                <v-card height="120px" class="pt-0">
+                  <v-card-title class="pb-0">顶点搜索</v-card-title>
+                  <v-card-text class="pt-0">
                     <v-autocomplete
                       @update-items="updateItems"
                       v-model="searchVertex"
@@ -156,10 +155,10 @@
               <!-- </v-col> -->
             </v-row>
 
-            <v-card style="height: 500px">
+            <v-card style="height: 650px">
               <!-- <v-list-item-title>搜索顶点</v-list-item-title>
               <SearchComponent></SearchComponent>-->
-              <v-card-title style="height: 20%">
+              <v-card-title style="height: 10%" class="pt-0 pb-0">
                 dependency
                 <v-spacer />
                 <v-btn text color="#5A7797" elevation="0" @click="centerTracker+=1">
@@ -168,7 +167,7 @@
                   </span>
                   移动到当前选中对象</v-btn>
               </v-card-title>
-              <v-card-text style="height: 80%">
+              <v-card-text style="height: 90%">
                 <DepGraph
                   v-bind:subgraphId="subgraphId"
                   v-bind:pathToShow="pathToShow"
@@ -196,26 +195,27 @@
                       view_quilt
                     </span>
                     查看所在连通域</v-btn>
-            <v-scroll-y-transition>
-                  <v-btn text color="#5A7797" elevation="0" class="mr-5" v-if="selectType==1" @click="SourceCodedialog=true">
-                    <span class="material-icons">
-                      code
-                    </span>查看源代码</v-btn>
-            </v-scroll-y-transition>
-            <v-scroll-y-transition>
-                  <v-btn text color="#5A7797" elevation="0" class="mr-5" @click="setAsStart" v-if="selectType==1">
-                    <span class="material-icons">
-                      arrow_forward
-                    </span>
-                    设置为起点</v-btn>
-            </v-scroll-y-transition>
-            <v-scroll-y-transition>
-                  <v-btn text color="#5A7797" elevation="0" class="mr-5" @click="setAsEnd" v-if="selectType==1">
-                    <span class="material-icons">
-                      arrow_back
-                    </span>
-                    设置为终点</v-btn>
-            </v-scroll-y-transition>
+                  <v-scroll-y-transition>
+                    <v-btn text color="#5A7797" elevation="0" class="mr-5" v-if="selectType==1" @click="SourceCodedialog=true">
+                      <span class="material-icons">
+                        code
+                      </span>查看源代码
+                    </v-btn>
+                  </v-scroll-y-transition>
+                  <v-scroll-y-transition>
+                    <v-btn text color="#5A7797" elevation="0" class="mr-5" @click="setAsStart" v-if="selectType==1">
+                      <span class="material-icons">
+                        arrow_forward
+                      </span>
+                      设置为起点</v-btn>
+                  </v-scroll-y-transition>
+                  <v-scroll-y-transition>
+                    <v-btn text color="#5A7797" elevation="0" class="mr-5" @click="setAsEnd" v-if="selectType==1">
+                      <span class="material-icons">
+                        arrow_back
+                      </span>
+                      设置为终点</v-btn>
+                  </v-scroll-y-transition>
 
 
                   <!-- </v-form> -->
@@ -248,14 +248,14 @@
             <!-- </v-list> -->
           </v-col>
 
-          <v-col cols="2">
+          <v-col cols="2" class="pt-0">
             <v-scroll-y-transition>
-            <v-card class="mt-5" v-if="selectType==2">
-              <v-card-title>紧密度</v-card-title>
-              <v-card-text>{{edgeSelected.closeness}}</v-card-text>
-            </v-card>
+              <v-card class="mb-5" v-if="selectType==2">
+                <v-card-title>紧密度</v-card-title>
+                <v-card-text>{{edgeSelected.closeness}}</v-card-text>
+              </v-card>
             </v-scroll-y-transition>
-            <v-card class="mt-5">
+            <v-card class="mt-0">
               <v-card-title>标注</v-card-title>
               <v-card-text>
                 <v-textarea v-model="tag" auto-grow outlined></v-textarea>
