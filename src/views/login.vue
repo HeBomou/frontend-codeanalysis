@@ -226,7 +226,11 @@
             this.$router.push('/project');
         }).catch(err => {
           this.loginPressed =false;
-          this.Alert(err.response.data.errMsg);
+          if(typeof err.response === "undefined" || typeof err.response.data === "undefined" || typeof err.response.data.errMsg === "undefined"){
+              console.log(err);
+            }else {
+              this.Alert(err.response.data.errMsg);
+            }
         });
 
       },
@@ -242,7 +246,11 @@
           .catch(err => {
             //console.log(err.response.data.errMsg);
             this.signUpPressed = false;
-            this.Alert(err.response.data.errMsg);
+            if(typeof err.response === "undefined" || typeof err.response.data === "undefined" || typeof err.response.data.errMsg === "undefined"){
+              console.log(err);
+            }else {
+              this.Alert(err.response.data.errMsg);
+            }
           })
       },
       Alert(msg){
