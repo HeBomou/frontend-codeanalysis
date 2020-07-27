@@ -236,8 +236,8 @@ export default {
         setProjects(id){
             this.isLoading = true;
             this.entityId = id;
-            console.log("setProjects");
-            console.log(this.entityId);
+            //console.log("setProjects");
+            //console.log(this.entityId);
             this.getProjectBasicAttribute(this.entityId).then(res => {
                 this.projects = res.data;
                 this.projects.forEach(p => {
