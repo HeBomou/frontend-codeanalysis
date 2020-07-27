@@ -104,7 +104,7 @@
       </v-btn>
       <v-btn @click="logout" elevation="0" color="#5A7797" class="mr-5 white--text"><i class="material-icons mr-2">login</i>退出登录</v-btn>
     </v-app-bar>
-    <v-content >
+    <v-main>
       <v-container fluid>
         <v-row>
           <v-col cols="10">
@@ -307,7 +307,7 @@
           </v-col>
         </v-row>
       </v-container>
-    </v-content>
+    </v-main>
   </v-app>
 </template>
 
