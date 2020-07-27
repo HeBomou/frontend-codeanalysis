@@ -728,31 +728,16 @@ export default {
 
             ],
             teamMember: [
-                {id: 1, username: "leo", level: "manager"},
-                {id: 2, username: "yzj", level: "leader"}
             ],
             notices: [
-                {title: "标题1", person: "leo", time: "2020-1-1", content: "-孙哥，他们去恰烧烤\n-你说的他们⾸先是谁，去那⾥恰，什么时候去的，我⼀问三不知。就我都没去，你都知道的，我，我不知道你⼀直在那⼉问。这种⼈是不是脑淤⾎啊我发觉，就别⼈不知道的⼀直在那问，那我叫你说你⼜说不归⼀，说不清楚。你⾃⼰是不是语⾔表达能⼒特别差，还是⾃⼰的脑回路有问题嘛。"},
-                {title: "标题2", person: "yzj", time: "2020-1-1", content: "1111111111111111111111111          "},
             ],
             tasks: [
-                {id:1, groupId: 1, name: "推翻共产党", info: "草泥马", deadline:"2020-1-1", isFinished: 0},
-                {id:2, groupId: 1, name: "暗杀习近平", info: "肛交致死", deadline:"2020-1-2", isFinished: 1},
-                {id:3, groupId: 1, name: "迎娶彭丽媛", info: "按F进入", deadline:"2020-1-3", isFinished: 0}
             ],
             taskChosen: {},
-            newTask: {id: 0, groupId: 0, name: "", info: "", isFinished: 0},
+            newTask: {},
             taskMember: [
-                {id: 1, username: "leo", level: "manager", chosen: false},
-                {id: 2, username: "yzj", level: "leader", chosen: true}
             ],
             groups: [
-                {id: 123, leaderId: 234, name: "group haha", inviteCode: 123123},
-                {id: 234, leaderId: 333, name: "hahasdf df", inviteCode: 234234},
-                {id: 3, leaderId: 333, name: "3", inviteCode: 234234},
-                {id: 4, leaderId: 333, name: "4", inviteCode: 234234}
-
-
             ],
             mineTask: [],
             newGroupNameRules:[
@@ -802,9 +787,9 @@ export default {
         },
         //gourp side bar进行选择的事件回调函数
         change(val){
-            console.log("change");
-            console.log(val);
-            console.log(typeof(val));
+            // console.log("change");
+            // console.log(val);
+            // console.log(typeof(val));
             if(typeof(val) == "undefined"){
                 //没有进行选择
                 return;
@@ -842,8 +827,8 @@ export default {
         },
         getMineTask(groupId){
             API.getTask(this.userId, groupId).then(res => {
-                res;
-                console.log(res);
+                //res;
+                //console.log(res);
                 this.mineTask = res.data;
 
             }).catch(err => {
@@ -880,7 +865,7 @@ export default {
         getGroups(){
             this.clearData();
             getAllGroup(this.userId).then(res => {
-                console.log(res);
+                //console.log(res);
                 this.groups = res.data;
                 if(this.groups.length == 0){
                     return;
@@ -927,7 +912,6 @@ export default {
         },
         hasHigherLevel(from, to){
             if(typeof(from) == "undefined"){
-                console.log("cnm");
                 console.log(this.user);
             }
             let index1 = this.getLevelIndex(from);
@@ -963,7 +947,8 @@ export default {
         deleteGroup(item){
             this.alert_dialog("是否删除小组‘" + item.name + "’", () => {
                 API.deleteGroup(item.id).then(res => {
-                    console.log(res);
+                    //console.log(res);
+                    res;
                     this.getGroups();
                     this.snack("删除成功");
                 }).catch(err => {
@@ -974,7 +959,8 @@ export default {
         dropGroup(group){
             this.alert_dialog("是否退出小组‘" + group.name + "’", () => {
                 API.deleteMember(group.id, this.user.id).then(res => {
-                    console.log(res);
+                    //console.log(res);
+                    res;
                     this.getGroups();
                     this.snack("退出成功");
                 }).catch(err => {
@@ -995,7 +981,8 @@ export default {
                 content: this.newNoticeText,
                 time: myDate.getFullYear() + "-" + (myDate.getMonth() + 1) + "-" + myDate.getDate()
             }).then(res => {
-                console.log(res);
+                //console.log(res);
+                res;
                 this.getNotice();
                 this.clearNewNotice();
                 this.snack("发布公告成功");
@@ -1048,10 +1035,11 @@ export default {
                 task.isFinished = 0;
             }
             API.putTask(task).then(res => {
-                console.log(res);
+                //console.log(res);
+                res;
             }).catch(err => {
-                    console.log(err);
-                    this.Alert(err.response.data.errMsg);
+                console.log(err);
+                this.Alert(err.response.data.errMsg);
 
             })
             //console.log(task);
@@ -1089,6 +1077,8 @@ export default {
                 this.getMineTask(this.groupChosen.id);
             }).catch(err => {
                 console.log(err);
+                this.Alert(err.response.data.errMsg);
+
             })
         },
         selectTask(task){
@@ -1111,16 +1101,16 @@ export default {
                         return;
                     }
                     if(chosenIds.findIndex(id => id == member.id) != -1){
-                        console.log(chosenIds.findIndex(id => id == member.id));
+                        //console.log(chosenIds.findIndex(id => id == member.id));
                         member.chosen = true;
                     }else{
-                        console.log(chosenIds.findIndex(id => id == member.id));
+                        //console.log(chosenIds.findIndex(id => id == member.id));
                         member.chosen = false;
                         
                     }
                 });
-                console.log("taskMember");
-                console.log(this.taskMember);
+                // console.log("taskMember");
+                // console.log(this.taskMember);
             }).catch(err => {
                 if(typeof(err.response) != "undefined"){
                     this.Alert(err.response.data.errMsg);
@@ -1149,14 +1139,16 @@ export default {
             })
             this.getGroups();
         },onCopy(e){
-            console.log(e);
+            e;
+            //console.log(e);
             // this.snackbar = true;
             // this.snackbarText = "复制成功";
             this.snack("复制成功");
         },
         // 复制失败
         onErrorCopy(e){
-            console.log(e);
+            e;
+            //console.log(e);
             // this.snackbar = true;
             // this.snackbarText = "复制失败";
             this.snack("复制失败");
@@ -1165,7 +1157,8 @@ export default {
         deleteNotice(notice){
             var delNot = () =>{
                 API.deleteNotice(notice.id).then(res => {
-                    console.log(res);
+                    //console.log(res);
+                    res;
                     this.getNotice();
                 }).catch(err => {
                     if(typeof(err.response) != "undefined"){
@@ -1186,7 +1179,8 @@ export default {
         deleteTask(){
             this.snack("是否删除任务 " + this.taskChosen.name, () => {
                 API.deleteTask(this.taskChosen.id).then(res => {
-                console.log(res);
+                //console.log(res);
+                res;
                 this.getTasks();
                 this.taskChosen = {};
                 
