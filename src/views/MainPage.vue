@@ -242,12 +242,17 @@
               <v-card-title>标注</v-card-title>
               <v-card-text>
                 <v-textarea v-model="tag" auto-grow outlined></v-textarea>
+              </v-card-text>
+              <v-divider />
+              <v-card-actions>
+                <v-spacer />
                 <v-btn text color="#5A7797" elevation="0" @click="saveTag">
                   <span class="material-icons">
                   save
                   </span>
                   保存</v-btn>
-              </v-card-text>
+                <v-spacer />
+              </v-card-actions>
             </v-card>
             <v-card class="mt-5">
               <v-card-title>路径搜索</v-card-title>
