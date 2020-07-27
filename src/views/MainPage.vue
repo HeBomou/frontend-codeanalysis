@@ -920,12 +920,13 @@ export default {
     //添加一个紧密度域值
     addThreshold() {
       //console.log("addThreshold");
-          this.dialogThreshold = false;
-
+      this.dialogThreshold = false;
+      this.overlay = true;
       addSubgraph(this.projectId, this.newThreshold, this.newThresholdName)
         .then(res => {
           //console.log("addThreshold success");
           //console.log(res);
+          this.overlay = false;
           this.Alert("添加成功");
           this.$store.commit("addSubGraph", res.data);
           //this.reloadThresholds();
@@ -935,6 +936,7 @@ export default {
           this.selectThreshold();
         })
         .catch(err => {
+          this.overlay = false;
           // this.dialogThreshold = false;
           this.Alert(err.response.data.errMsg);
         });
