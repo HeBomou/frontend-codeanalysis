@@ -96,6 +96,12 @@
       <v-btn @click="refresh()" class="mr-5 white--text" elevation="0" color="#5A7797" ><i class="material-icons mr-2">refresh</i>刷新</v-btn>
       <v-btn @click="toProject" class="mr-5 white--text" elevation="0" color="#5A7797" ><i class="material-icons mr-2">insights</i>我的项目</v-btn>
       <v-btn @click="$router.push('/team')" class="mr-5 white--text" elevation="0" color="#5A7797"><i class="material-icons mr-2">group</i>我的小组</v-btn>
+      <v-btn v-if="haveNewChat" @click="toChat();haveNewChat = false" class="mr-5 white--text amber" elevation="0" color="#5A7797"><i class="material-icons mr-2">sms</i>
+          有新消息!
+      </v-btn>
+      <v-btn v-else @click="toChat();haveNewChat = false" class="mr-5 white--text" elevation="0" color="#5A7797"><i class="material-icons mr-2">sms</i>
+          聊天
+      </v-btn>
       <v-btn @click="logout" elevation="0" color="#5A7797" class="mr-5 white--text"><i class="material-icons mr-2">login</i>退出登录</v-btn>
     </v-app-bar>
     <v-content >
@@ -337,6 +343,7 @@ export default {
       dialogDeleteSubgraph: false,
       SourceCodedialog: false,
       overlay: true,
+      haveNewChat: false,
       path: 0,
       //顶点
       vertexNum: 5,
@@ -472,6 +479,12 @@ export default {
     };
   },
   methods: {
+    toChat(){
+      let routeUrl = this.$router.resolve({
+          path: "/chat",
+      });
+      window.open(routeUrl.href, '_blank');
+    },
     updateItems(text) {
       text;
       //   yourGetItemsMethod(text).then( (response) => {
@@ -1036,36 +1049,18 @@ export default {
     //   }
     // },
     refresh(){
-      getProject(this.projectId)
-      .then(res => {
-        //console.log("res.data:");
-        //console.log(res.data);
-        this.initProject(res.data);
+      this.overlay = true;
+      API.getContactNew(this.$store.getters.userId).then(res => {
+          //console.log(res.data);
+          this.haveNewChat = res.data;
+      }).catch(err => {
+          if(typeof(err.response) != "undefined"){
+              this.Alert(err.response.data.errMsg);
+          }else {
+              console.log(err);
+          }
       })
-      .catch(err => {
-        this.overlay = false;
-        console.log(err);
-
-          this.Alert(err.response.data.errMsg);
-        
-      });
-    }
-  },
-  mounted() {
-    let userId = this.$store.getters.userId;
-    //console.log("********************");
-    //console.log(userId);
-    if (userId == 0) {
-      //代表没有登录
-      this.$router.push("/login");
-    }
-    //初始化各个数据
-    //console.log("mounted");
-    //TODO:debug
-    this.projectId = this.$store.getters.projectId;
-    //this.projectId = 1;
-    //console.log("project id:" + this.projectId);
-    getProject(this.projectId)
+      getProject(this.projectId)
       .then(res => {
         //console.log("res.data:");
         //console.log(res.data);
@@ -1084,6 +1079,23 @@ export default {
         }
         
       });
+    }
+  },
+  mounted() {
+    let userId = this.$store.getters.userId;
+    //console.log("********************");
+    //console.log(userId);
+    if (userId == 0) {
+      //代表没有登录
+      this.$router.push("/login");
+    }
+    //初始化各个数据
+    //console.log("mounted");
+    //TODO:debug
+    this.projectId = this.$store.getters.projectId;
+    //this.projectId = 1;
+    //console.log("project id:" + this.projectId);
+    this.refresh();
   }
 };
 </script>
