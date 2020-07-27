@@ -320,7 +320,7 @@ export default {
             getProjectProfile(id).then(res => {
                 console.log(res);
                 this.projectDetail = res.data;
-                //delete this.projectDetail.id;
+                delete this.projectDetail.id;
                 if(this.projectDetail.isGroupId){
                     this.projectDetail.isGroupId = "小组项目";
                 }else {
