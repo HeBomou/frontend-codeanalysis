@@ -175,7 +175,7 @@
                         :headers="groupDetailHeaders"
                         :items="groupDetail"
                         :search="searchGroup"
-                        @click:row="checkGroup"
+                        
                     >
                         <!-- <template v-slot:item.id="props">
                             <v-icon @click="checkGroup(props.item.id)">mdi-plus</v-icon>
@@ -254,7 +254,7 @@ export default {
         if(this.$store.getters.adminId == 0){
             this.$router.push("/adminLogin");
         }
-        this.adminname = this.$store.state.adminName;
+        this.adminname = this.$store.getters.adminName;
         this.refresh();
     }, methods: {
         refresh(msg){

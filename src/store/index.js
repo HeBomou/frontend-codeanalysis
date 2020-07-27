@@ -26,7 +26,7 @@ export default new Vuex.Store({
     userId: 0,
     projectId: 0,
     adminId: 0,
-    adminName: "leo"
+    adminName: 0
 
 
   },
@@ -68,6 +68,7 @@ export default new Vuex.Store({
         });
     },setAdminName(state, data){
       state.adminName = data;
+      localStorage.adminName = data;
     },
     initProject(state, data) {
       state.projectId = data.dynamicVo.id;
@@ -202,6 +203,12 @@ export default new Vuex.Store({
         state.projectId = localStorage.getItem('projectId');
       }
       return state.projectId;
+    },
+    adminName(state) {
+      if (!state.adminName || state.adminName == 0){
+        state.adminName = localStorage.getItem('adminName');
+      }
+      return state.adminName;
     }
   }
 })
