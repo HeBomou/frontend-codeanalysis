@@ -119,15 +119,15 @@
                       append-outer-icon="mdi-plus"
                       @click:append-outer="dialogThreshold=true"
                     >
-                      <template v-slot:item="data">
-                        {{data.item}}
-                        <v-icon @click="debug">mdi-wronge</v-icon>
-                      </template>
                     </v-autocomplete>
                   </v-card-text>
                   <v-card-actions>
                     <v-row justify="center">
-                      <v-btn outlined color="#5A7797" elevation="0" @click="dialogDeleteSubgraph=true">删除子图</v-btn>
+                      <v-btn text color="#5A7797" elevation="0" @click="dialogDeleteSubgraph=true">
+                        <span class="material-icons">
+                          blur_off
+                        </span>
+                        删除子图</v-btn>
                     </v-row>
                   </v-card-actions>
                 </v-card>
@@ -155,7 +155,11 @@
               <v-card-title style="height: 20%">
                 dependency
                 <v-spacer />
-                <v-btn outlined color="#5A7797" elevation="0" @click="centerTracker+=1">移动到当前选中对象</v-btn>
+                <v-btn text color="#5A7797" elevation="0" @click="centerTracker+=1">
+                  <span class="material-icons">
+                     location_searching
+                  </span>
+                  移动到当前选中对象</v-btn>
               </v-card-title>
               <v-card-text style="height: 80%">
                 <DepGraph
@@ -179,10 +183,25 @@
                       justify="center"
                 >-->
 
-                <v-btn outlined color="#5A7797" elevation="0" class="mr-5" @click="checkDomain">查看所在连通域</v-btn>
-                <v-btn outlined color="#5A7797" elevation="0" class="mr-5" v-if="selectType==1" @click="SourceCodedialog=true">查看源代码</v-btn>
-                <v-btn outlined color="#5A7797" elevation="0" class="mr-5" @click="setAsStart" v-if="selectType==1">设置为起点</v-btn>
-                <v-btn outlined color="#5A7797" elevation="0" class="mr-5" @click="setAsEnd" v-if="selectType==1">设置为终点</v-btn>
+                <v-btn text color="#5A7797" elevation="0" class="mr-5" @click="checkDomain">
+                  <span class="material-icons">
+                    view_quilt
+                  </span>
+                  查看所在连通域</v-btn>
+                <v-btn text color="#5A7797" elevation="0" class="mr-5" v-if="selectType==1" @click="SourceCodedialog=true">
+                  <span class="material-icons">
+                    code
+                  </span>查看源代码</v-btn>
+                <v-btn text color="#5A7797" elevation="0" class="mr-5" @click="setAsStart" v-if="selectType==1">
+                  <span class="material-icons">
+                    arrow_forward
+                  </span>
+                  设置为起点</v-btn>
+                <v-btn text color="#5A7797" elevation="0" class="mr-5" @click="setAsEnd" v-if="selectType==1">
+                  <span class="material-icons">
+                    arrow_back
+                  </span>
+                  设置为终点</v-btn>
 
                 <!-- </v-form> -->
               </v-card-text>
@@ -223,7 +242,11 @@
               <v-card-title>标注</v-card-title>
               <v-card-text>
                 <v-textarea v-model="tag" auto-grow outlined></v-textarea>
-                <v-btn outlined color="#5A7797" elevation="0" @click="saveTag">保存</v-btn>
+                <v-btn text color="#5A7797" elevation="0" @click="saveTag">
+                  <span class="material-icons">
+                  save
+                  </span>
+                  保存</v-btn>
               </v-card-text>
             </v-card>
             <v-card class="mt-5">
@@ -233,8 +256,17 @@
                 <v-autocomplete @update-items="updateItems" v-model="startVertex" :items="vertexs"></v-autocomplete>
                 <v-list-item-title>终点</v-list-item-title>
                 <v-autocomplete @update-items="updateItems" v-model="endVertex" :items="vertexs"></v-autocomplete>
-                <v-btn outlined color="#5A7797" elevation="0" @click="searchPath">搜索</v-btn>
               </v-card-text>
+              <v-divider />
+              <v-card-actions>
+                <v-spacer />
+                <v-btn text color="#5A7797" elevation="0" @click="searchPath">
+                  <span class="material-icons">
+                    timeline
+                  </span>
+                  查找路径</v-btn>
+                <v-spacer />
+              </v-card-actions>
             </v-card>
 
             <!-- <v-row> -->
