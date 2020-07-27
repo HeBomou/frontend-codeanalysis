@@ -106,7 +106,7 @@
                   <v-card-title>紧密度域值</v-card-title>
                   <v-card-text>
                     <v-autocomplete
-                      @update:search-input="selectThreshold()"
+                      @input="selectThreshold()"
                       v-model="thresholdSelected"
                       :items="thresholds"
                       append-outer-icon="mdi-plus"
@@ -871,7 +871,8 @@ export default {
           //console.log(res);
           this.dialogThreshold = false;
           this.$store.commit("addSubGraph", res.data);
-          this.reloadThresholds();
+          //this.reloadThresholds();
+          this.thresholds.push(this.newThreshold);
           this.thresholdSelected = this.newThreshold;
           this.selectThreshold();
         })
@@ -914,7 +915,7 @@ export default {
       });
 
     },
-    //更新Thresholds
+    //获取Thresholds
     reloadThresholds() {
       let sMap = this.$store.state.project.subgraphMap;
       this.thresholds = [];
