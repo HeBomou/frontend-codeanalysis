@@ -236,9 +236,6 @@ export default {
                 isGroupId: "项目类型"
             },
             groupDetail: [
-                {id: 1, name: "1", noticeNum: 0, taskNum: 0, memberNum: 1},
-                {id: 2, name: "2", noticeNum: 0, taskNum: 0, memberNum: 2},
-                {id: 3, name: "3", noticeNum: 0, taskNum: 0, memberNum: 3}
             ],
             groupDetailHeaders: [
                 {text: "小组名", value: "name"},
@@ -281,7 +278,7 @@ export default {
                                 item.taskNum = 0;
                             }
                         });
-                        console.log(this.groupDetail);
+                        //console.log(this.groupDetail);
                     }).catch(err => {
                         if(typeof err.resopnse.data.errMsg === "undefined"){
                             console.log(err);
@@ -327,7 +324,7 @@ export default {
             // })
             this.dialogProject = true;
             getProjectProfile(id).then(res => {
-                console.log(res);
+                //console.log(res);
                 this.projectDetail = res.data;
                 delete this.projectDetail.id;
                 if(this.projectDetail.isGroupId){
